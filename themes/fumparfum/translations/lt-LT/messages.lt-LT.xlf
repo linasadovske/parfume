@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="/home/adiprojects/domains/projects.adisoft.lt/public_html/fum/themes/fumparfum/modules/csoft_instagramfeeds/views/templates/hook/csInstagramFeeds.tpl" source-language="lt-LT" target-language="lt-LT" datatype="plaintext">
+    <body>
+      <trans-unit id="1c1b60339acf1e643e1b513a7906f418">
+        <source>Instagram srautas</source>
+        <target>Instagram srautas</target>
+        <note>Context:
+File: /home/adiprojects/domains/projects.adisoft.lt/public_html/fum/themes/fumparfum/modules/csoft_instagramfeeds/views/templates/hook/csInstagramFeeds.tpl:21</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="/home/adiprojects/domains/projects.adisoft.lt/public_html/fum/themes/fumparfum/modules/ps_banner/ps_banner.tpl" source-language="lt-LT" target-language="lt-LT" datatype="plaintext">
+    <body>
+      <trans-unit id="bff59c310e5dbc40ad00567a3cf8d103">
+        <source>Shop now</source>
+        <target>Shop now</target>
+        <note>Context:
+File: /home/adiprojects/domains/projects.adisoft.lt/public_html/fum/themes/fumparfum/modules/ps_banner/ps_banner.tpl:57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="/home/adiprojects/domains/projects.adisoft.lt/public_html/fum/themes/fumparfum/templates/_partials/footer.tpl" source-language="lt-LT" target-language="lt-LT" datatype="plaintext">
+    <body>
+      <trans-unit id="a129ef8050bf52f9538c666fa60d66ba">
+        <source>Made by</source>
+        <target>Made by</target>
+        <note>Context:
+File: /home/adiprojects/domains/projects.adisoft.lt/public_html/fum/themes/fumparfum/templates/_partials/footer.tpl:121</note>
+      </trans-unit>
+      <trans-unit id="dbef18e2b910e5f7cc286b9e405778b4">
+        <source>Adisoft</source>
+        <target>Adisoft</target>
+        <note>Context:
+File: /home/adiprojects/domains/projects.adisoft.lt/public_html/fum/themes/fumparfum/templates/_partials/footer.tpl:123</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

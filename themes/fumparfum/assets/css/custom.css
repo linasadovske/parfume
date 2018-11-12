@@ -1,0 +1,70 @@
+/*
+ * Custom code goes here.
+ * A template should always ship with an empty custom.css
+ */
+
+body {
+    overflow-x: hidden;
+}
+
+#header .header-nav #_desktop_contact_link #contact-link > * {
+    display: inline;
+    margin-right: 1em;
+}
+
+.header-nav,
+footer .copyright {
+    font-size: 12px;
+}
+
+#index #carousel {
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+#index .carousel .carousel-inner {
+    margin-bottom: 0;
+    height: auto;
+}
+
+#index .carousel figure {
+    margin-bottom: 0;
+}
+
+.full-width {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+.parallax {
+    height: 500px;
+    background-attachment: fixed;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+@media only screen and (max-device-width: 1366px) {
+    .parallax {
+        background-attachment: scroll;
+    }
+}
+
+#csinstagramfeed img {
+    max-width: 100%;
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
+    -webkit-transition: all .5s;
+    -o-transition: all .5s;
+    -moz-transition: all .5s;
+    transition: all .5s;
+}
+
+#csinstagramfeed img:hover {
+    -webkit-filter: grayscale(0);
+    filter: grayscale(0);
+}
