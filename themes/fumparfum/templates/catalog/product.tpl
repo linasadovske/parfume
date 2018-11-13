@@ -337,7 +337,7 @@
 
                 <div class="tab-content" id="tab-content">
 
-                 <div class="tab-pane fade in{if $product.description} active{/if}" id="description" role="tabpanel">
+                 <div class="tab-pane fade in show{if $product.description} active{/if}" id="description" role="tabpanel">
 
                    {block name='product_description'}
 

@@ -100,7 +100,7 @@
 
           <span class="icon-prev hidden-xs" aria-hidden="true">
 
-            <i class="material-icons">&#xE5CB;</i>
+            {* <i class="material-icons">&#xE5CB;</i> *}
 
           </span>
 
@@ -112,7 +112,7 @@
 
           <span class="icon-next" aria-hidden="true">
 
-            <i class="material-icons">&#xE5CC;</i>
+            {* <i class="material-icons">&#xE5CC;</i> *}
 
           </span>
 

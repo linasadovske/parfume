@@ -1,6 +1,9 @@
 .top-menu {
+    background-color: black;
   &[data-depth="1"] {
-    margin: 0.625rem;
+    padding: 0.625rem;
+    display: flex;
+    flex-direction: column;
   }
   a:not([data-depth="0"]) {
     display: block;
@@ -37,8 +40,8 @@
     box-shadow: 2px 1px 11px 2px rgba(0, 0, 0, 0.1);
     border: none;
     margin-left: 0.9375rem;
-    width: calc(100% - 30px);
-    min-width: calc(100% - 30px);
+    width: calc(100% - 30vw);
+    min-width: calc(100% - 30vw);
     z-index: 18;
     display: none;
     ul[data-depth="1"] > li {
@@ -101,14 +104,16 @@
     }
     .collapse {
       display: none;
-      &.in {
+      &.in,
+        &.show {
         display: block;
       }
     }
     .sub-menu {
       &.collapse {
         display: none;
-        &.in {
+        &.in,
+        &.show {
           display: block;
         }
       }

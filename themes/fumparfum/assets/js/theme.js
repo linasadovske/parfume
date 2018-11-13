@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 27);
+/******/ 	return __webpack_require__(__webpack_require__.s = 30);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -265,559 +265,6518 @@ module.exports = exports['default'];
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! VelocityJS.org (1.5.0). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */ /*************************
- Velocity jQuery Shim
- *************************/ /*! VelocityJS.org jQuery Shim (1.0.1). (C) 2014 The jQuery Foundation. MIT @license: en.wikipedia.org/wiki/MIT_License. */ /* This file contains the jQuery functions that Velocity relies on, thereby removing Velocity's dependency on a full copy of jQuery, and allowing it to work in any environment. */ /* These shimmed functions are only used if jQuery isn't present. If both this shim and jQuery are loaded, Velocity defaults to jQuery proper. */(function(window){"use strict"; /***************
-	 Setup
-	 ***************/ /* If jQuery is already loaded, there's no point in loading this shim. */if(window.jQuery){return;} /* jQuery base. */var $=function $(selector,context){return new $.fn.init(selector,context);}; /********************
-	 Private Methods
-	 ********************/ /* jQuery */$.isWindow = function(obj){ /* jshint eqeqeq: false */return obj && obj === obj.window;}; /* jQuery */$.type = function(obj){if(!obj){return obj + "";}return typeof obj === "object" || typeof obj === "function"?class2type[toString.call(obj)] || "object":typeof obj;}; /* jQuery */$.isArray = Array.isArray || function(obj){return $.type(obj) === "array";}; /* jQuery */function isArraylike(obj){var length=obj.length,type=$.type(obj);if(type === "function" || $.isWindow(obj)){return false;}if(obj.nodeType === 1 && length){return true;}return type === "array" || length === 0 || typeof length === "number" && length > 0 && length - 1 in obj;} /***************
-	 $ Methods
-	 ***************/ /* jQuery: Support removed for IE<9. */$.isPlainObject = function(obj){var key;if(!obj || $.type(obj) !== "object" || obj.nodeType || $.isWindow(obj)){return false;}try{if(obj.constructor && !hasOwn.call(obj,"constructor") && !hasOwn.call(obj.constructor.prototype,"isPrototypeOf")){return false;}}catch(e) {return false;}for(key in obj) {}return key === undefined || hasOwn.call(obj,key);}; /* jQuery */$.each = function(obj,callback,args){var value,i=0,length=obj.length,isArray=isArraylike(obj);if(args){if(isArray){for(;i < length;i++) {value = callback.apply(obj[i],args);if(value === false){break;}}}else {for(i in obj) {if(!obj.hasOwnProperty(i)){continue;}value = callback.apply(obj[i],args);if(value === false){break;}}}}else {if(isArray){for(;i < length;i++) {value = callback.call(obj[i],i,obj[i]);if(value === false){break;}}}else {for(i in obj) {if(!obj.hasOwnProperty(i)){continue;}value = callback.call(obj[i],i,obj[i]);if(value === false){break;}}}}return obj;}; /* Custom */$.data = function(node,key,value){ /* $.getData() */if(value === undefined){var getId=node[$.expando],store=getId && cache[getId];if(key === undefined){return store;}else if(store){if(key in store){return store[key];}} /* $.setData() */}else if(key !== undefined){var setId=node[$.expando] || (node[$.expando] = ++$.uuid);cache[setId] = cache[setId] || {};cache[setId][key] = value;return value;}}; /* Custom */$.removeData = function(node,keys){var id=node[$.expando],store=id && cache[id];if(store){ // Cleanup the entire store if no keys are provided.
-if(!keys){delete cache[id];}else {$.each(keys,function(_,key){delete store[key];});}}}; /* jQuery */$.extend = function(){var src,copyIsArray,copy,name,options,clone,target=arguments[0] || {},i=1,length=arguments.length,deep=false;if(typeof target === "boolean"){deep = target;target = arguments[i] || {};i++;}if(typeof target !== "object" && $.type(target) !== "function"){target = {};}if(i === length){target = this;i--;}for(;i < length;i++) {if(options = arguments[i]){for(name in options) {if(!options.hasOwnProperty(name)){continue;}src = target[name];copy = options[name];if(target === copy){continue;}if(deep && copy && ($.isPlainObject(copy) || (copyIsArray = $.isArray(copy)))){if(copyIsArray){copyIsArray = false;clone = src && $.isArray(src)?src:[];}else {clone = src && $.isPlainObject(src)?src:{};}target[name] = $.extend(deep,clone,copy);}else if(copy !== undefined){target[name] = copy;}}}}return target;}; /* jQuery 1.4.3 */$.queue = function(elem,type,data){function $makeArray(arr,results){var ret=results || [];if(arr){if(isArraylike(Object(arr))){ /* $.merge */(function(first,second){var len=+second.length,j=0,i=first.length;while(j < len) {first[i++] = second[j++];}if(len !== len){while(second[j] !== undefined) {first[i++] = second[j++];}}first.length = i;return first;})(ret,typeof arr === "string"?[arr]:arr);}else {[].push.call(ret,arr);}}return ret;}if(!elem){return;}type = (type || "fx") + "queue";var q=$.data(elem,type);if(!data){return q || [];}if(!q || $.isArray(data)){q = $.data(elem,type,$makeArray(data));}else {q.push(data);}return q;}; /* jQuery 1.4.3 */$.dequeue = function(elems,type){ /* Custom: Embed element iteration. */$.each(elems.nodeType?[elems]:elems,function(i,elem){type = type || "fx";var queue=$.queue(elem,type),fn=queue.shift();if(fn === "inprogress"){fn = queue.shift();}if(fn){if(type === "fx"){queue.unshift("inprogress");}fn.call(elem,function(){$.dequeue(elem,type);});}});}; /******************
-	 $.fn Methods
-	 ******************/ /* jQuery */$.fn = $.prototype = {init:function init(selector){ /* Just return the element wrapped inside an array; don't proceed with the actual jQuery node wrapping process. */if(selector.nodeType){this[0] = selector;return this;}else {throw new Error("Not a DOM node.");}},offset:function offset(){ /* jQuery altered code: Dropped disconnected DOM node checking. */var box=this[0].getBoundingClientRect?this[0].getBoundingClientRect():{top:0,left:0};return {top:box.top + (window.pageYOffset || document.scrollTop || 0) - (document.clientTop || 0),left:box.left + (window.pageXOffset || document.scrollLeft || 0) - (document.clientLeft || 0)};},position:function position(){ /* jQuery */function offsetParentFn(elem){var offsetParent=elem.offsetParent;while(offsetParent && offsetParent.nodeName.toLowerCase() !== "html" && offsetParent.style && offsetParent.style.position === "static") {offsetParent = offsetParent.offsetParent;}return offsetParent || document;} /* Zepto */var elem=this[0],offsetParent=offsetParentFn(elem),offset=this.offset(),parentOffset=/^(?:body|html)$/i.test(offsetParent.nodeName)?{top:0,left:0}:$(offsetParent).offset();offset.top -= parseFloat(elem.style.marginTop) || 0;offset.left -= parseFloat(elem.style.marginLeft) || 0;if(offsetParent.style){parentOffset.top += parseFloat(offsetParent.style.borderTopWidth) || 0;parentOffset.left += parseFloat(offsetParent.style.borderLeftWidth) || 0;}return {top:offset.top - parentOffset.top,left:offset.left - parentOffset.left};}}; /**********************
-	 Private Variables
-	 **********************/ /* For $.data() */var cache={};$.expando = "velocity" + new Date().getTime();$.uuid = 0; /* For $.queue() */var class2type={},hasOwn=class2type.hasOwnProperty,toString=class2type.toString;var types="Boolean Number String Function Array Date RegExp Object Error".split(" ");for(var i=0;i < types.length;i++) {class2type["[object " + types[i] + "]"] = types[i].toLowerCase();} /* Makes $(node) possible, without having to call init. */$.fn.init.prototype = $.fn; /* Globalize Velocity onto the window, and assign its Utilities property. */window.Velocity = {Utilities:$};})(window); /******************
- Velocity.js
- ******************/(function(factory){"use strict"; /* CommonJS module. */if(typeof module === "object" && typeof module.exports === "object"){module.exports = factory(); /* AMD module. */}else if(true){!(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
-				__WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); /* Browser globals. */}else {factory();}})(function(){"use strict";return (function(global,window,document,undefined){ /***************
-		 Summary
-		 ***************/ /*
-		 - CSS: CSS stack that works independently from the rest of Velocity.
-		 - animate(): Core animation method that iterates over the targeted elements and queues the incoming call onto each element individually.
-		 - Pre-Queueing: Prepare the element for animation by instantiating its data cache and processing the call's options.
-		 - Queueing: The logic that runs once the call has reached its point of execution in the element's $.queue() stack.
-		 Most logic is placed here to avoid risking it becoming stale (if the element's properties have changed).
-		 - Pushing: Consolidation of the tween data followed by its push onto the global in-progress calls container.
-		 - tick(): The single requestAnimationFrame loop responsible for tweening all in-progress calls.
-		 - completeCall(): Handles the cleanup process for each Velocity call.
-		 */ /*********************
-		 Helper Functions
-		 *********************/ /* IE detection. Gist: https://gist.github.com/julianshapiro/9098609 */var IE=(function(){if(document.documentMode){return document.documentMode;}else {for(var i=7;i > 4;i--) {var div=document.createElement("div");div.innerHTML = "<!--[if IE " + i + "]><span></span><![endif]-->";if(div.getElementsByTagName("span").length){div = null;return i;}}}return undefined;})(); /* rAF shim. Gist: https://gist.github.com/julianshapiro/9497513 */var rAFShim=(function(){var timeLast=0;return window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback){var timeCurrent=new Date().getTime(),timeDelta; /* Dynamically set delay on a per-tick basis to match 60fps. */ /* Technique by Erik Moller. MIT license: https://gist.github.com/paulirish/1579671 */timeDelta = Math.max(0,16 - (timeCurrent - timeLast));timeLast = timeCurrent + timeDelta;return setTimeout(function(){callback(timeCurrent + timeDelta);},timeDelta);};})();var performance=(function(){var perf=window.performance || {};if(typeof perf.now !== "function"){var nowOffset=perf.timing && perf.timing.navigationStart?perf.timing.navigationStart:new Date().getTime();perf.now = function(){return new Date().getTime() - nowOffset;};}return perf;})(); /* Array compacting. Copyright Lo-Dash. MIT License: https://github.com/lodash/lodash/blob/master/LICENSE.txt */function compactSparseArray(array){var index=-1,length=array?array.length:0,result=[];while(++index < length) {var value=array[index];if(value){result.push(value);}}return result;} /**
-		 * Shim for "fixing" IE's lack of support (IE < 9) for applying slice
-		 * on host objects like NamedNodeMap, NodeList, and HTMLCollection
-		 * (technically, since host objects have been implementation-dependent,
-		 * at least before ES2015, IE hasn't needed to work this way).
-		 * Also works on strings, fixes IE < 9 to allow an explicit undefined
-		 * for the 2nd argument (as in Firefox), and prevents errors when
-		 * called on other DOM objects.
-		 */var _slice=(function(){var slice=Array.prototype.slice;try{ // Can't be used with DOM elements in IE < 9
-slice.call(document.documentElement);return slice;}catch(e) { // Fails in IE < 9
-// This will work for genuine arrays, array-like objects, 
-// NamedNodeMap (attributes, entities, notations),
-// NodeList (e.g., getElementsByTagName), HTMLCollection (e.g., childNodes),
-return function(begin,end){var len=this.length;if(typeof begin !== "number"){begin = 0;} // IE < 9 gets unhappy with an undefined end argument
-if(typeof end !== "number"){end = len;} // For native Array objects, we use the native slice function
-if(this.slice){return slice.call(this,begin,end);} // For array like object we handle it ourselves.
-var i,cloned=[], // Handle negative value for "begin"
-start=begin >= 0?begin:Math.max(0,len + begin), // Handle negative value for "end"
-upTo=end < 0?len + end:Math.min(end,len), // Actual expected size of the slice
-size=upTo - start;if(size > 0){cloned = new Array(size);if(this.charAt){for(i = 0;i < size;i++) {cloned[i] = this.charAt(start + i);}}else {for(i = 0;i < size;i++) {cloned[i] = this[start + i];}}}return cloned;};}})(); /* .indexOf doesn't exist in IE<9 */var _inArray=function _inArray(){if(Array.prototype.includes){return function(arr,val){return arr.includes(val);};}if(Array.prototype.indexOf){return function(arr,val){return arr.indexOf(val) >= 0;};}return function(arr,val){for(var i=0;i < arr.length;i++) {if(arr[i] === val){return true;}}return false;};};function sanitizeElements(elements){ /* Unwrap jQuery/Zepto objects. */if(Type.isWrapped(elements)){elements = _slice.call(elements); /* Wrap a single element in an array so that $.each() can iterate with the element instead of its node's children. */}else if(Type.isNode(elements)){elements = [elements];}return elements;}var Type={isNumber:function isNumber(variable){return typeof variable === "number";},isString:function isString(variable){return typeof variable === "string";},isArray:Array.isArray || function(variable){return Object.prototype.toString.call(variable) === "[object Array]";},isFunction:function isFunction(variable){return Object.prototype.toString.call(variable) === "[object Function]";},isNode:function isNode(variable){return variable && variable.nodeType;}, /* Determine if variable is an array-like wrapped jQuery, Zepto or similar element, or even a NodeList etc. */ /* NOTE: HTMLFormElements also have a length. */isWrapped:function isWrapped(variable){return variable && variable !== window && Type.isNumber(variable.length) && !Type.isString(variable) && !Type.isFunction(variable) && !Type.isNode(variable) && (variable.length === 0 || Type.isNode(variable[0]));},isSVG:function isSVG(variable){return window.SVGElement && variable instanceof window.SVGElement;},isEmptyObject:function isEmptyObject(variable){for(var name in variable) {if(variable.hasOwnProperty(name)){return false;}}return true;}}; /*****************
-		 Dependencies
-		 *****************/var $,isJQuery=false;if(global.fn && global.fn.jquery){$ = global;isJQuery = true;}else {$ = window.Velocity.Utilities;}if(IE <= 8 && !isJQuery){throw new Error("Velocity: IE8 and below require jQuery to be loaded before Velocity.");}else if(IE <= 7){ /* Revert to jQuery's $.animate(), and lose Velocity's extra features. */jQuery.fn.velocity = jQuery.fn.animate; /* Now that $.fn.velocity is aliased, abort this Velocity declaration. */return;} /*****************
-		 Constants
-		 *****************/var DURATION_DEFAULT=400,EASING_DEFAULT="swing"; /*************
-		 State
-		 *************/var Velocity={ /* Container for page-wide Velocity state data. */State:{ /* Detect mobile devices to determine if mobileHA should be turned on. */isMobile:/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent), /* The mobileHA option's behavior changes on older Android devices (Gingerbread, versions 2.3.3-2.3.7). */isAndroid:/Android/i.test(navigator.userAgent),isGingerbread:/Android 2\.3\.[3-7]/i.test(navigator.userAgent),isChrome:window.chrome,isFirefox:/Firefox/i.test(navigator.userAgent), /* Create a cached element for re-use when checking for CSS property prefixes. */prefixElement:document.createElement("div"), /* Cache every prefix match to avoid repeating lookups. */prefixMatches:{}, /* Cache the anchor used for animating window scrolling. */scrollAnchor:null, /* Cache the browser-specific property names associated with the scroll anchor. */scrollPropertyLeft:null,scrollPropertyTop:null, /* Keep track of whether our RAF tick is running. */isTicking:false, /* Container for every in-progress call to Velocity. */calls:[],delayedElements:{count:0}}, /* Velocity's custom CSS stack. Made global for unit testing. */CSS:{ /* Defined below. */}, /* A shim of the jQuery utility functions used by Velocity -- provided by Velocity's optional jQuery shim. */Utilities:$, /* Container for the user's custom animation redirects that are referenced by name in place of the properties map argument. */Redirects:{ /* Manually registered by the user. */},Easings:{ /* Defined below. */}, /* Attempt to use ES6 Promises by default. Users can override this with a third-party promises library. */Promise:window.Promise, /* Velocity option defaults, which can be overriden by the user. */defaults:{queue:"",duration:DURATION_DEFAULT,easing:EASING_DEFAULT,begin:undefined,complete:undefined,progress:undefined,display:undefined,visibility:undefined,loop:false,delay:false,mobileHA:true, /* Advanced: Set to false to prevent property values from being cached between consecutive Velocity-initiated chain calls. */_cacheValues:true, /* Advanced: Set to false if the promise should always resolve on empty element lists. */promiseRejectEmpty:true}, /* A design goal of Velocity is to cache data wherever possible in order to avoid DOM requerying. Accordingly, each element has a data cache. */init:function init(element){$.data(element,"velocity",{ /* Store whether this is an SVG element, since its properties are retrieved and updated differently than standard HTML elements. */isSVG:Type.isSVG(element), /* Keep track of whether the element is currently being animated by Velocity.
-					 This is used to ensure that property values are not transferred between non-consecutive (stale) calls. */isAnimating:false, /* A reference to the element's live computedStyle object. Learn more here: https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle */computedStyle:null, /* Tween data is cached for each animation on the element so that data can be passed across calls --
-					 in particular, end values are used as subsequent start values in consecutive Velocity calls. */tweensContainer:null, /* The full root property values of each CSS hook being animated on this element are cached so that:
-					 1) Concurrently-animating hooks sharing the same root can have their root values' merged into one while tweening.
-					 2) Post-hook-injection root values can be transferred over to consecutively chained Velocity calls as starting root values. */rootPropertyValueCache:{}, /* A cache for transform updates, which must be manually flushed via CSS.flushTransformCache(). */transformCache:{}});}, /* A parallel to jQuery's $.css(), used for getting/setting Velocity's hooked CSS properties. */hook:null, /* Defined below. */ /* Velocity-wide animation time remapping for testing purposes. */mock:false,version:{major:1,minor:5,patch:0}, /* Set to 1 or 2 (most verbose) to output debug info to console. */debug:false, /* Use rAF high resolution timestamp when available */timestamp:true, /* Pause all animations */pauseAll:function pauseAll(queueName){var currentTime=new Date().getTime();$.each(Velocity.State.calls,function(i,activeCall){if(activeCall){ /* If we have a queueName and this call is not on that queue, skip */if(queueName !== undefined && (activeCall[2].queue !== queueName || activeCall[2].queue === false)){return true;} /* Set call to paused */activeCall[5] = {resume:false};}}); /* Pause timers on any currently delayed calls */$.each(Velocity.State.delayedElements,function(k,element){if(!element){return;}pauseDelayOnElement(element,currentTime);});}, /* Resume all animations */resumeAll:function resumeAll(queueName){var currentTime=new Date().getTime();$.each(Velocity.State.calls,function(i,activeCall){if(activeCall){ /* If we have a queueName and this call is not on that queue, skip */if(queueName !== undefined && (activeCall[2].queue !== queueName || activeCall[2].queue === false)){return true;} /* Set call to resumed if it was paused */if(activeCall[5]){activeCall[5].resume = true;}}}); /* Resume timers on any currently delayed calls */$.each(Velocity.State.delayedElements,function(k,element){if(!element){return;}resumeDelayOnElement(element,currentTime);});}}; /* Retrieve the appropriate scroll anchor and property name for the browser: https://developer.mozilla.org/en-US/docs/Web/API/Window.scrollY */if(window.pageYOffset !== undefined){Velocity.State.scrollAnchor = window;Velocity.State.scrollPropertyLeft = "pageXOffset";Velocity.State.scrollPropertyTop = "pageYOffset";}else {Velocity.State.scrollAnchor = document.documentElement || document.body.parentNode || document.body;Velocity.State.scrollPropertyLeft = "scrollLeft";Velocity.State.scrollPropertyTop = "scrollTop";} /* Shorthand alias for jQuery's $.data() utility. */function Data(element){ /* Hardcode a reference to the plugin name. */var response=$.data(element,"velocity"); /* jQuery <=1.4.2 returns null instead of undefined when no match is found. We normalize this behavior. */return response === null?undefined:response;} /**************
-		 Delay Timer
-		 **************/function pauseDelayOnElement(element,currentTime){ /* Check for any delay timers, and pause the set timeouts (while preserving time data)
-			 to be resumed when the "resume" command is issued */var data=Data(element);if(data && data.delayTimer && !data.delayPaused){data.delayRemaining = data.delay - currentTime + data.delayBegin;data.delayPaused = true;clearTimeout(data.delayTimer.setTimeout);}}function resumeDelayOnElement(element,currentTime){ /* Check for any paused timers and resume */var data=Data(element);if(data && data.delayTimer && data.delayPaused){ /* If the element was mid-delay, re initiate the timeout with the remaining delay */data.delayPaused = false;data.delayTimer.setTimeout = setTimeout(data.delayTimer.next,data.delayRemaining);}} /**************
-		 Easing
-		 **************/ /* Step easing generator. */function generateStep(steps){return function(p){return Math.round(p * steps) * (1 / steps);};} /* Bezier curve function generator. Copyright Gaetan Renaudeau. MIT License: http://en.wikipedia.org/wiki/MIT_License */function generateBezier(mX1,mY1,mX2,mY2){var NEWTON_ITERATIONS=4,NEWTON_MIN_SLOPE=0.001,SUBDIVISION_PRECISION=0.0000001,SUBDIVISION_MAX_ITERATIONS=10,kSplineTableSize=11,kSampleStepSize=1.0 / (kSplineTableSize - 1.0),float32ArraySupported=("Float32Array" in window); /* Must contain four arguments. */if(arguments.length !== 4){return false;} /* Arguments must be numbers. */for(var i=0;i < 4;++i) {if(typeof arguments[i] !== "number" || isNaN(arguments[i]) || !isFinite(arguments[i])){return false;}} /* X values must be in the [0, 1] range. */mX1 = Math.min(mX1,1);mX2 = Math.min(mX2,1);mX1 = Math.max(mX1,0);mX2 = Math.max(mX2,0);var mSampleValues=float32ArraySupported?new Float32Array(kSplineTableSize):new Array(kSplineTableSize);function A(aA1,aA2){return 1.0 - 3.0 * aA2 + 3.0 * aA1;}function B(aA1,aA2){return 3.0 * aA2 - 6.0 * aA1;}function C(aA1){return 3.0 * aA1;}function calcBezier(aT,aA1,aA2){return ((A(aA1,aA2) * aT + B(aA1,aA2)) * aT + C(aA1)) * aT;}function getSlope(aT,aA1,aA2){return 3.0 * A(aA1,aA2) * aT * aT + 2.0 * B(aA1,aA2) * aT + C(aA1);}function newtonRaphsonIterate(aX,aGuessT){for(var i=0;i < NEWTON_ITERATIONS;++i) {var currentSlope=getSlope(aGuessT,mX1,mX2);if(currentSlope === 0.0){return aGuessT;}var currentX=calcBezier(aGuessT,mX1,mX2) - aX;aGuessT -= currentX / currentSlope;}return aGuessT;}function calcSampleValues(){for(var i=0;i < kSplineTableSize;++i) {mSampleValues[i] = calcBezier(i * kSampleStepSize,mX1,mX2);}}function binarySubdivide(aX,aA,aB){var currentX,currentT,i=0;do {currentT = aA + (aB - aA) / 2.0;currentX = calcBezier(currentT,mX1,mX2) - aX;if(currentX > 0.0){aB = currentT;}else {aA = currentT;}}while(Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);return currentT;}function getTForX(aX){var intervalStart=0.0,currentSample=1,lastSample=kSplineTableSize - 1;for(;currentSample !== lastSample && mSampleValues[currentSample] <= aX;++currentSample) {intervalStart += kSampleStepSize;}--currentSample;var dist=(aX - mSampleValues[currentSample]) / (mSampleValues[currentSample + 1] - mSampleValues[currentSample]),guessForT=intervalStart + dist * kSampleStepSize,initialSlope=getSlope(guessForT,mX1,mX2);if(initialSlope >= NEWTON_MIN_SLOPE){return newtonRaphsonIterate(aX,guessForT);}else if(initialSlope === 0.0){return guessForT;}else {return binarySubdivide(aX,intervalStart,intervalStart + kSampleStepSize);}}var _precomputed=false;function precompute(){_precomputed = true;if(mX1 !== mY1 || mX2 !== mY2){calcSampleValues();}}var f=function f(aX){if(!_precomputed){precompute();}if(mX1 === mY1 && mX2 === mY2){return aX;}if(aX === 0){return 0;}if(aX === 1){return 1;}return calcBezier(getTForX(aX),mY1,mY2);};f.getControlPoints = function(){return [{x:mX1,y:mY1},{x:mX2,y:mY2}];};var str="generateBezier(" + [mX1,mY1,mX2,mY2] + ")";f.toString = function(){return str;};return f;} /* Runge-Kutta spring physics function generator. Adapted from Framer.js, copyright Koen Bok. MIT License: http://en.wikipedia.org/wiki/MIT_License */ /* Given a tension, friction, and duration, a simulation at 60FPS will first run without a defined duration in order to calculate the full path. A second pass
-		 then adjusts the time delta -- using the relation between actual time and duration -- to calculate the path for the duration-constrained animation. */var generateSpringRK4=(function(){function springAccelerationForState(state){return -state.tension * state.x - state.friction * state.v;}function springEvaluateStateWithDerivative(initialState,dt,derivative){var state={x:initialState.x + derivative.dx * dt,v:initialState.v + derivative.dv * dt,tension:initialState.tension,friction:initialState.friction};return {dx:state.v,dv:springAccelerationForState(state)};}function springIntegrateState(state,dt){var a={dx:state.v,dv:springAccelerationForState(state)},b=springEvaluateStateWithDerivative(state,dt * 0.5,a),c=springEvaluateStateWithDerivative(state,dt * 0.5,b),d=springEvaluateStateWithDerivative(state,dt,c),dxdt=1.0 / 6.0 * (a.dx + 2.0 * (b.dx + c.dx) + d.dx),dvdt=1.0 / 6.0 * (a.dv + 2.0 * (b.dv + c.dv) + d.dv);state.x = state.x + dxdt * dt;state.v = state.v + dvdt * dt;return state;}return function springRK4Factory(tension,friction,duration){var initState={x:-1,v:0,tension:null,friction:null},path=[0],time_lapsed=0,tolerance=1 / 10000,DT=16 / 1000,have_duration,dt,last_state;tension = parseFloat(tension) || 500;friction = parseFloat(friction) || 20;duration = duration || null;initState.tension = tension;initState.friction = friction;have_duration = duration !== null; /* Calculate the actual time it takes for this animation to complete with the provided conditions. */if(have_duration){ /* Run the simulation without a duration. */time_lapsed = springRK4Factory(tension,friction); /* Compute the adjusted time delta. */dt = time_lapsed / duration * DT;}else {dt = DT;}while(true) { /* Next/step function .*/last_state = springIntegrateState(last_state || initState,dt); /* Store the position. */path.push(1 + last_state.x);time_lapsed += 16; /* If the change threshold is reached, break. */if(!(Math.abs(last_state.x) > tolerance && Math.abs(last_state.v) > tolerance)){break;}} /* If duration is not defined, return the actual time required for completing this animation. Otherwise, return a closure that holds the
-				 computed path and returns a snapshot of the position according to a given percentComplete. */return !have_duration?time_lapsed:function(percentComplete){return path[percentComplete * (path.length - 1) | 0];};};})(); /* jQuery easings. */Velocity.Easings = {linear:function linear(p){return p;},swing:function swing(p){return 0.5 - Math.cos(p * Math.PI) / 2;}, /* Bonus "spring" easing, which is a less exaggerated version of easeInOutElastic. */spring:function spring(p){return 1 - Math.cos(p * 4.5 * Math.PI) * Math.exp(-p * 6);}}; /* CSS3 and Robert Penner easings. */$.each([["ease",[0.25,0.1,0.25,1.0]],["ease-in",[0.42,0.0,1.00,1.0]],["ease-out",[0.00,0.0,0.58,1.0]],["ease-in-out",[0.42,0.0,0.58,1.0]],["easeInSine",[0.47,0,0.745,0.715]],["easeOutSine",[0.39,0.575,0.565,1]],["easeInOutSine",[0.445,0.05,0.55,0.95]],["easeInQuad",[0.55,0.085,0.68,0.53]],["easeOutQuad",[0.25,0.46,0.45,0.94]],["easeInOutQuad",[0.455,0.03,0.515,0.955]],["easeInCubic",[0.55,0.055,0.675,0.19]],["easeOutCubic",[0.215,0.61,0.355,1]],["easeInOutCubic",[0.645,0.045,0.355,1]],["easeInQuart",[0.895,0.03,0.685,0.22]],["easeOutQuart",[0.165,0.84,0.44,1]],["easeInOutQuart",[0.77,0,0.175,1]],["easeInQuint",[0.755,0.05,0.855,0.06]],["easeOutQuint",[0.23,1,0.32,1]],["easeInOutQuint",[0.86,0,0.07,1]],["easeInExpo",[0.95,0.05,0.795,0.035]],["easeOutExpo",[0.19,1,0.22,1]],["easeInOutExpo",[1,0,0,1]],["easeInCirc",[0.6,0.04,0.98,0.335]],["easeOutCirc",[0.075,0.82,0.165,1]],["easeInOutCirc",[0.785,0.135,0.15,0.86]]],function(i,easingArray){Velocity.Easings[easingArray[0]] = generateBezier.apply(null,easingArray[1]);}); /* Determine the appropriate easing type given an easing input. */function getEasing(value,duration){var easing=value; /* The easing option can either be a string that references a pre-registered easing,
-			 or it can be a two-/four-item array of integers to be converted into a bezier/spring function. */if(Type.isString(value)){ /* Ensure that the easing has been assigned to jQuery's Velocity.Easings object. */if(!Velocity.Easings[value]){easing = false;}}else if(Type.isArray(value) && value.length === 1){easing = generateStep.apply(null,value);}else if(Type.isArray(value) && value.length === 2){ /* springRK4 must be passed the animation's duration. */ /* Note: If the springRK4 array contains non-numbers, generateSpringRK4() returns an easing
-				 function generated with default tension and friction values. */easing = generateSpringRK4.apply(null,value.concat([duration]));}else if(Type.isArray(value) && value.length === 4){ /* Note: If the bezier array contains non-numbers, generateBezier() returns false. */easing = generateBezier.apply(null,value);}else {easing = false;} /* Revert to the Velocity-wide default easing type, or fall back to "swing" (which is also jQuery's default)
-			 if the Velocity-wide default has been incorrectly modified. */if(easing === false){if(Velocity.Easings[Velocity.defaults.easing]){easing = Velocity.defaults.easing;}else {easing = EASING_DEFAULT;}}return easing;} /*****************
-		 CSS Stack
-		 *****************/ /* The CSS object is a highly condensed and performant CSS stack that fully replaces jQuery's.
-		 It handles the validation, getting, and setting of both standard CSS properties and CSS property hooks. */ /* Note: A "CSS" shorthand is aliased so that our code is easier to read. */var CSS=Velocity.CSS = { /*************
-			 RegEx
-			 *************/RegEx:{isHex:/^#([A-f\d]{3}){1,2}$/i, /* Unwrap a property value's surrounding text, e.g. "rgba(4, 3, 2, 1)" ==> "4, 3, 2, 1" and "rect(4px 3px 2px 1px)" ==> "4px 3px 2px 1px". */valueUnwrap:/^[A-z]+\((.*)\)$/i,wrappedValueAlreadyExtracted:/[0-9.]+ [0-9.]+ [0-9.]+( [0-9.]+)?/, /* Split a multi-value property into an array of subvalues, e.g. "rgba(4, 3, 2, 1) 4px 3px 2px 1px" ==> [ "rgba(4, 3, 2, 1)", "4px", "3px", "2px", "1px" ]. */valueSplit:/([A-z]+\(.+\))|(([A-z0-9#-.]+?)(?=\s|$))/ig}, /************
-			 Lists
-			 ************/Lists:{colors:["fill","stroke","stopColor","color","backgroundColor","borderColor","borderTopColor","borderRightColor","borderBottomColor","borderLeftColor","outlineColor"],transformsBase:["translateX","translateY","scale","scaleX","scaleY","skewX","skewY","rotateZ"],transforms3D:["transformPerspective","translateZ","scaleZ","rotateX","rotateY"],units:["%", // relative
-"em","ex","ch","rem", // font relative
-"vw","vh","vmin","vmax", // viewport relative
-"cm","mm","Q","in","pc","pt","px", // absolute lengths
-"deg","grad","rad","turn", // angles
-"s","ms" // time
-],colorNames:{"aliceblue":"240,248,255","antiquewhite":"250,235,215","aquamarine":"127,255,212","aqua":"0,255,255","azure":"240,255,255","beige":"245,245,220","bisque":"255,228,196","black":"0,0,0","blanchedalmond":"255,235,205","blueviolet":"138,43,226","blue":"0,0,255","brown":"165,42,42","burlywood":"222,184,135","cadetblue":"95,158,160","chartreuse":"127,255,0","chocolate":"210,105,30","coral":"255,127,80","cornflowerblue":"100,149,237","cornsilk":"255,248,220","crimson":"220,20,60","cyan":"0,255,255","darkblue":"0,0,139","darkcyan":"0,139,139","darkgoldenrod":"184,134,11","darkgray":"169,169,169","darkgrey":"169,169,169","darkgreen":"0,100,0","darkkhaki":"189,183,107","darkmagenta":"139,0,139","darkolivegreen":"85,107,47","darkorange":"255,140,0","darkorchid":"153,50,204","darkred":"139,0,0","darksalmon":"233,150,122","darkseagreen":"143,188,143","darkslateblue":"72,61,139","darkslategray":"47,79,79","darkturquoise":"0,206,209","darkviolet":"148,0,211","deeppink":"255,20,147","deepskyblue":"0,191,255","dimgray":"105,105,105","dimgrey":"105,105,105","dodgerblue":"30,144,255","firebrick":"178,34,34","floralwhite":"255,250,240","forestgreen":"34,139,34","fuchsia":"255,0,255","gainsboro":"220,220,220","ghostwhite":"248,248,255","gold":"255,215,0","goldenrod":"218,165,32","gray":"128,128,128","grey":"128,128,128","greenyellow":"173,255,47","green":"0,128,0","honeydew":"240,255,240","hotpink":"255,105,180","indianred":"205,92,92","indigo":"75,0,130","ivory":"255,255,240","khaki":"240,230,140","lavenderblush":"255,240,245","lavender":"230,230,250","lawngreen":"124,252,0","lemonchiffon":"255,250,205","lightblue":"173,216,230","lightcoral":"240,128,128","lightcyan":"224,255,255","lightgoldenrodyellow":"250,250,210","lightgray":"211,211,211","lightgrey":"211,211,211","lightgreen":"144,238,144","lightpink":"255,182,193","lightsalmon":"255,160,122","lightseagreen":"32,178,170","lightskyblue":"135,206,250","lightslategray":"119,136,153","lightsteelblue":"176,196,222","lightyellow":"255,255,224","limegreen":"50,205,50","lime":"0,255,0","linen":"250,240,230","magenta":"255,0,255","maroon":"128,0,0","mediumaquamarine":"102,205,170","mediumblue":"0,0,205","mediumorchid":"186,85,211","mediumpurple":"147,112,219","mediumseagreen":"60,179,113","mediumslateblue":"123,104,238","mediumspringgreen":"0,250,154","mediumturquoise":"72,209,204","mediumvioletred":"199,21,133","midnightblue":"25,25,112","mintcream":"245,255,250","mistyrose":"255,228,225","moccasin":"255,228,181","navajowhite":"255,222,173","navy":"0,0,128","oldlace":"253,245,230","olivedrab":"107,142,35","olive":"128,128,0","orangered":"255,69,0","orange":"255,165,0","orchid":"218,112,214","palegoldenrod":"238,232,170","palegreen":"152,251,152","paleturquoise":"175,238,238","palevioletred":"219,112,147","papayawhip":"255,239,213","peachpuff":"255,218,185","peru":"205,133,63","pink":"255,192,203","plum":"221,160,221","powderblue":"176,224,230","purple":"128,0,128","red":"255,0,0","rosybrown":"188,143,143","royalblue":"65,105,225","saddlebrown":"139,69,19","salmon":"250,128,114","sandybrown":"244,164,96","seagreen":"46,139,87","seashell":"255,245,238","sienna":"160,82,45","silver":"192,192,192","skyblue":"135,206,235","slateblue":"106,90,205","slategray":"112,128,144","snow":"255,250,250","springgreen":"0,255,127","steelblue":"70,130,180","tan":"210,180,140","teal":"0,128,128","thistle":"216,191,216","tomato":"255,99,71","turquoise":"64,224,208","violet":"238,130,238","wheat":"245,222,179","whitesmoke":"245,245,245","white":"255,255,255","yellowgreen":"154,205,50","yellow":"255,255,0"}}, /************
-			 Hooks
-			 ************/ /* Hooks allow a subproperty (e.g. "boxShadowBlur") of a compound-value CSS property
-			 (e.g. "boxShadow: X Y Blur Spread Color") to be animated as if it were a discrete property. */ /* Note: Beyond enabling fine-grained property animation, hooking is necessary since Velocity only
-			 tweens properties with single numeric values; unlike CSS transitions, Velocity does not interpolate compound-values. */Hooks:{ /********************
-				 Registration
-				 ********************/ /* Templates are a concise way of indicating which subproperties must be individually registered for each compound-value CSS property. */ /* Each template consists of the compound-value's base name, its constituent subproperty names, and those subproperties' default values. */templates:{"textShadow":["Color X Y Blur","black 0px 0px 0px"],"boxShadow":["Color X Y Blur Spread","black 0px 0px 0px 0px"],"clip":["Top Right Bottom Left","0px 0px 0px 0px"],"backgroundPosition":["X Y","0% 0%"],"transformOrigin":["X Y Z","50% 50% 0px"],"perspectiveOrigin":["X Y","50% 50%"]}, /* A "registered" hook is one that has been converted from its template form into a live,
-				 tweenable property. It contains data to associate it with its root property. */registered:{ /* Note: A registered hook looks like this ==> textShadowBlur: [ "textShadow", 3 ],
-					 which consists of the subproperty's name, the associated root property's name,
-					 and the subproperty's position in the root's value. */}, /* Convert the templates into individual hooks then append them to the registered object above. */register:function register(){ /* Color hooks registration: Colors are defaulted to white -- as opposed to black -- since colors that are
-					 currently set to "transparent" default to their respective template below when color-animated,
-					 and white is typically a closer match to transparent than black is. An exception is made for text ("color"),
-					 which is almost always set closer to black than white. */for(var i=0;i < CSS.Lists.colors.length;i++) {var rgbComponents=CSS.Lists.colors[i] === "color"?"0 0 0 1":"255 255 255 1";CSS.Hooks.templates[CSS.Lists.colors[i]] = ["Red Green Blue Alpha",rgbComponents];}var rootProperty,hookTemplate,hookNames; /* In IE, color values inside compound-value properties are positioned at the end the value instead of at the beginning.
-					 Thus, we re-arrange the templates accordingly. */if(IE){for(rootProperty in CSS.Hooks.templates) {if(!CSS.Hooks.templates.hasOwnProperty(rootProperty)){continue;}hookTemplate = CSS.Hooks.templates[rootProperty];hookNames = hookTemplate[0].split(" ");var defaultValues=hookTemplate[1].match(CSS.RegEx.valueSplit);if(hookNames[0] === "Color"){ /* Reposition both the hook's name and its default value to the end of their respective strings. */hookNames.push(hookNames.shift());defaultValues.push(defaultValues.shift()); /* Replace the existing template for the hook's root property. */CSS.Hooks.templates[rootProperty] = [hookNames.join(" "),defaultValues.join(" ")];}}} /* Hook registration. */for(rootProperty in CSS.Hooks.templates) {if(!CSS.Hooks.templates.hasOwnProperty(rootProperty)){continue;}hookTemplate = CSS.Hooks.templates[rootProperty];hookNames = hookTemplate[0].split(" ");for(var j in hookNames) {if(!hookNames.hasOwnProperty(j)){continue;}var fullHookName=rootProperty + hookNames[j],hookPosition=j; /* For each hook, register its full name (e.g. textShadowBlur) with its root property (e.g. textShadow)
-							 and the hook's position in its template's default value string. */CSS.Hooks.registered[fullHookName] = [rootProperty,hookPosition];}}}, /*****************************
-				 Injection and Extraction
-				 *****************************/ /* Look up the root property associated with the hook (e.g. return "textShadow" for "textShadowBlur"). */ /* Since a hook cannot be set directly (the browser won't recognize it), style updating for hooks is routed through the hook's root property. */getRoot:function getRoot(property){var hookData=CSS.Hooks.registered[property];if(hookData){return hookData[0];}else { /* If there was no hook match, return the property name untouched. */return property;}},getUnit:function getUnit(str,start){var unit=(str.substr(start || 0,5).match(/^[a-z%]+/) || [])[0] || "";if(unit && _inArray(CSS.Lists.units,unit)){return unit;}return "";},fixColors:function fixColors(str){return str.replace(/(rgba?\(\s*)?(\b[a-z]+\b)/g,function($0,$1,$2){if(CSS.Lists.colorNames.hasOwnProperty($2)){return ($1?$1:"rgba(") + CSS.Lists.colorNames[$2] + ($1?"":",1)");}return $1 + $2;});}, /* Convert any rootPropertyValue, null or otherwise, into a space-delimited list of hook values so that
-				 the targeted hook can be injected or extracted at its standard position. */cleanRootPropertyValue:function cleanRootPropertyValue(rootProperty,rootPropertyValue){ /* If the rootPropertyValue is wrapped with "rgb()", "clip()", etc., remove the wrapping to normalize the value before manipulation. */if(CSS.RegEx.valueUnwrap.test(rootPropertyValue)){rootPropertyValue = rootPropertyValue.match(CSS.RegEx.valueUnwrap)[1];} /* If rootPropertyValue is a CSS null-value (from which there's inherently no hook value to extract),
-					 default to the root's default value as defined in CSS.Hooks.templates. */ /* Note: CSS null-values include "none", "auto", and "transparent". They must be converted into their
-					 zero-values (e.g. textShadow: "none" ==> textShadow: "0px 0px 0px black") for hook manipulation to proceed. */if(CSS.Values.isCSSNullValue(rootPropertyValue)){rootPropertyValue = CSS.Hooks.templates[rootProperty][1];}return rootPropertyValue;}, /* Extracted the hook's value from its root property's value. This is used to get the starting value of an animating hook. */extractValue:function extractValue(fullHookName,rootPropertyValue){var hookData=CSS.Hooks.registered[fullHookName];if(hookData){var hookRoot=hookData[0],hookPosition=hookData[1];rootPropertyValue = CSS.Hooks.cleanRootPropertyValue(hookRoot,rootPropertyValue); /* Split rootPropertyValue into its constituent hook values then grab the desired hook at its standard position. */return rootPropertyValue.toString().match(CSS.RegEx.valueSplit)[hookPosition];}else { /* If the provided fullHookName isn't a registered hook, return the rootPropertyValue that was passed in. */return rootPropertyValue;}}, /* Inject the hook's value into its root property's value. This is used to piece back together the root property
-				 once Velocity has updated one of its individually hooked values through tweening. */injectValue:function injectValue(fullHookName,hookValue,rootPropertyValue){var hookData=CSS.Hooks.registered[fullHookName];if(hookData){var hookRoot=hookData[0],hookPosition=hookData[1],rootPropertyValueParts,rootPropertyValueUpdated;rootPropertyValue = CSS.Hooks.cleanRootPropertyValue(hookRoot,rootPropertyValue); /* Split rootPropertyValue into its individual hook values, replace the targeted value with hookValue,
-						 then reconstruct the rootPropertyValue string. */rootPropertyValueParts = rootPropertyValue.toString().match(CSS.RegEx.valueSplit);rootPropertyValueParts[hookPosition] = hookValue;rootPropertyValueUpdated = rootPropertyValueParts.join(" ");return rootPropertyValueUpdated;}else { /* If the provided fullHookName isn't a registered hook, return the rootPropertyValue that was passed in. */return rootPropertyValue;}}}, /*******************
-			 Normalizations
-			 *******************/ /* Normalizations standardize CSS property manipulation by pollyfilling browser-specific implementations (e.g. opacity)
-			 and reformatting special properties (e.g. clip, rgba) to look like standard ones. */Normalizations:{ /* Normalizations are passed a normalization target (either the property's name, its extracted value, or its injected value),
-				 the targeted element (which may need to be queried), and the targeted property value. */registered:{clip:function clip(type,element,propertyValue){switch(type){case "name":return "clip"; /* Clip needs to be unwrapped and stripped of its commas during extraction. */case "extract":var extracted; /* If Velocity also extracted this value, skip extraction. */if(CSS.RegEx.wrappedValueAlreadyExtracted.test(propertyValue)){extracted = propertyValue;}else { /* Remove the "rect()" wrapper. */extracted = propertyValue.toString().match(CSS.RegEx.valueUnwrap); /* Strip off commas. */extracted = extracted?extracted[1].replace(/,(\s+)?/g," "):propertyValue;}return extracted; /* Clip needs to be re-wrapped during injection. */case "inject":return "rect(" + propertyValue + ")";}},blur:function blur(type,element,propertyValue){switch(type){case "name":return Velocity.State.isFirefox?"filter":"-webkit-filter";case "extract":var extracted=parseFloat(propertyValue); /* If extracted is NaN, meaning the value isn't already extracted. */if(!(extracted || extracted === 0)){var blurComponent=propertyValue.toString().match(/blur\(([0-9]+[A-z]+)\)/i); /* If the filter string had a blur component, return just the blur value and unit type. */if(blurComponent){extracted = blurComponent[1]; /* If the component doesn't exist, default blur to 0. */}else {extracted = 0;}}return extracted; /* Blur needs to be re-wrapped during injection. */case "inject": /* For the blur effect to be fully de-applied, it needs to be set to "none" instead of 0. */if(!parseFloat(propertyValue)){return "none";}else {return "blur(" + propertyValue + ")";}}}, /* <=IE8 do not support the standard opacity property. They use filter:alpha(opacity=INT) instead. */opacity:function opacity(type,element,propertyValue){if(IE <= 8){switch(type){case "name":return "filter";case "extract": /* <=IE8 return a "filter" value of "alpha(opacity=\d{1,3})".
-									 Extract the value and convert it to a decimal value to match the standard CSS opacity property's formatting. */var extracted=propertyValue.toString().match(/alpha\(opacity=(.*)\)/i);if(extracted){ /* Convert to decimal value. */propertyValue = extracted[1] / 100;}else { /* When extracting opacity, default to 1 since a null value means opacity hasn't been set. */propertyValue = 1;}return propertyValue;case "inject": /* Opacified elements are required to have their zoom property set to a non-zero value. */element.style.zoom = 1; /* Setting the filter property on elements with certain font property combinations can result in a
-									 highly unappealing ultra-bolding effect. There's no way to remedy this throughout a tween, but dropping the
-									 value altogether (when opacity hits 1) at leasts ensures that the glitch is gone post-tweening. */if(parseFloat(propertyValue) >= 1){return "";}else { /* As per the filter property's spec, convert the decimal value to a whole number and wrap the value. */return "alpha(opacity=" + parseInt(parseFloat(propertyValue) * 100,10) + ")";}} /* With all other browsers, normalization is not required; return the same values that were passed in. */}else {switch(type){case "name":return "opacity";case "extract":return propertyValue;case "inject":return propertyValue;}}}}, /*****************************
-				 Batched Registrations
-				 *****************************/ /* Note: Batched normalizations extend the CSS.Normalizations.registered object. */register:function register(){ /*****************
-					 Transforms
-					 *****************/ /* Transforms are the subproperties contained by the CSS "transform" property. Transforms must undergo normalization
-					 so that they can be referenced in a properties map by their individual names. */ /* Note: When transforms are "set", they are actually assigned to a per-element transformCache. When all transform
-					 setting is complete complete, CSS.flushTransformCache() must be manually called to flush the values to the DOM.
-					 Transform setting is batched in this way to improve performance: the transform style only needs to be updated
-					 once when multiple transform subproperties are being animated simultaneously. */ /* Note: IE9 and Android Gingerbread have support for 2D -- but not 3D -- transforms. Since animating unsupported
-					 transform properties results in the browser ignoring the *entire* transform string, we prevent these 3D values
-					 from being normalized for these browsers so that tweening skips these properties altogether
-					 (since it will ignore them as being unsupported by the browser.) */if((!IE || IE > 9) && !Velocity.State.isGingerbread){ /* Note: Since the standalone CSS "perspective" property and the CSS transform "perspective" subproperty
-						 share the same name, the latter is given a unique token within Velocity: "transformPerspective". */CSS.Lists.transformsBase = CSS.Lists.transformsBase.concat(CSS.Lists.transforms3D);}for(var i=0;i < CSS.Lists.transformsBase.length;i++) { /* Wrap the dynamically generated normalization function in a new scope so that transformName's value is
-						 paired with its respective function. (Otherwise, all functions would take the final for loop's transformName.) */(function(){var transformName=CSS.Lists.transformsBase[i];CSS.Normalizations.registered[transformName] = function(type,element,propertyValue){switch(type){ /* The normalized property name is the parent "transform" property -- the property that is actually set in CSS. */case "name":return "transform"; /* Transform values are cached onto a per-element transformCache object. */case "extract": /* If this transform has yet to be assigned a value, return its null value. */if(Data(element) === undefined || Data(element).transformCache[transformName] === undefined){ /* Scale CSS.Lists.transformsBase default to 1 whereas all other transform properties default to 0. */return (/^scale/i.test(transformName)?1:0); /* When transform values are set, they are wrapped in parentheses as per the CSS spec.
-											 Thus, when extracting their values (for tween calculations), we strip off the parentheses. */}return Data(element).transformCache[transformName].replace(/[()]/g,"");case "inject":var invalid=false; /* If an individual transform property contains an unsupported unit type, the browser ignores the *entire* transform property.
-										 Thus, protect users from themselves by skipping setting for transform values supplied with invalid unit types. */ /* Switch on the base transform type; ignore the axis by removing the last letter from the transform's name. */switch(transformName.substr(0,transformName.length - 1)){ /* Whitelist unit types for each transform. */case "translate":invalid = !/(%|px|em|rem|vw|vh|\d)$/i.test(propertyValue);break; /* Since an axis-free "scale" property is supported as well, a little hack is used here to detect it by chopping off its last letter. */case "scal":case "scale": /* Chrome on Android has a bug in which scaled elements blur if their initial scale
-												 value is below 1 (which can happen with forcefeeding). Thus, we detect a yet-unset scale property
-												 and ensure that its first value is always 1. More info: http://stackoverflow.com/questions/10417890/css3-animations-with-transform-causes-blurred-elements-on-webkit/10417962#10417962 */if(Velocity.State.isAndroid && Data(element).transformCache[transformName] === undefined && propertyValue < 1){propertyValue = 1;}invalid = !/(\d)$/i.test(propertyValue);break;case "skew":invalid = !/(deg|\d)$/i.test(propertyValue);break;case "rotate":invalid = !/(deg|\d)$/i.test(propertyValue);break;}if(!invalid){ /* As per the CSS spec, wrap the value in parentheses. */Data(element).transformCache[transformName] = "(" + propertyValue + ")";} /* Although the value is set on the transformCache object, return the newly-updated value for the calling code to process as normal. */return Data(element).transformCache[transformName];}};})();} /*************
-					 Colors
-					 *************/ /* Since Velocity only animates a single numeric value per property, color animation is achieved by hooking the individual RGBA components of CSS color properties.
-					 Accordingly, color values must be normalized (e.g. "#ff0000", "red", and "rgb(255, 0, 0)" ==> "255 0 0 1") so that their components can be injected/extracted by CSS.Hooks logic. */for(var j=0;j < CSS.Lists.colors.length;j++) { /* Wrap the dynamically generated normalization function in a new scope so that colorName's value is paired with its respective function.
-						 (Otherwise, all functions would take the final for loop's colorName.) */(function(){var colorName=CSS.Lists.colors[j]; /* Note: In IE<=8, which support rgb but not rgba, color properties are reverted to rgb by stripping off the alpha component. */CSS.Normalizations.registered[colorName] = function(type,element,propertyValue){switch(type){case "name":return colorName; /* Convert all color values into the rgb format. (Old IE can return hex values and color names instead of rgb/rgba.) */case "extract":var extracted; /* If the color is already in its hookable form (e.g. "255 255 255 1") due to having been previously extracted, skip extraction. */if(CSS.RegEx.wrappedValueAlreadyExtracted.test(propertyValue)){extracted = propertyValue;}else {var converted,colorNames={black:"rgb(0, 0, 0)",blue:"rgb(0, 0, 255)",gray:"rgb(128, 128, 128)",green:"rgb(0, 128, 0)",red:"rgb(255, 0, 0)",white:"rgb(255, 255, 255)"}; /* Convert color names to rgb. */if(/^[A-z]+$/i.test(propertyValue)){if(colorNames[propertyValue] !== undefined){converted = colorNames[propertyValue];}else { /* If an unmatched color name is provided, default to black. */converted = colorNames.black;} /* Convert hex values to rgb. */}else if(CSS.RegEx.isHex.test(propertyValue)){converted = "rgb(" + CSS.Values.hexToRgb(propertyValue).join(" ") + ")"; /* If the provided color doesn't match any of the accepted color formats, default to black. */}else if(!/^rgba?\(/i.test(propertyValue)){converted = colorNames.black;} /* Remove the surrounding "rgb/rgba()" string then replace commas with spaces and strip
-											 repeated spaces (in case the value included spaces to begin with). */extracted = (converted || propertyValue).toString().match(CSS.RegEx.valueUnwrap)[1].replace(/,(\s+)?/g," ");} /* So long as this isn't <=IE8, add a fourth (alpha) component if it's missing and default it to 1 (visible). */if((!IE || IE > 8) && extracted.split(" ").length === 3){extracted += " 1";}return extracted;case "inject": /* If we have a pattern then it might already have the right values */if(/^rgb/.test(propertyValue)){return propertyValue;} /* If this is IE<=8 and an alpha component exists, strip it off. */if(IE <= 8){if(propertyValue.split(" ").length === 4){propertyValue = propertyValue.split(/\s+/).slice(0,3).join(" ");} /* Otherwise, add a fourth (alpha) component if it's missing and default it to 1 (visible). */}else if(propertyValue.split(" ").length === 3){propertyValue += " 1";} /* Re-insert the browser-appropriate wrapper("rgb/rgba()"), insert commas, and strip off decimal units
-										 on all values but the fourth (R, G, and B only accept whole numbers). */return (IE <= 8?"rgb":"rgba") + "(" + propertyValue.replace(/\s+/g,",").replace(/\.(\d)+(?=,)/g,"") + ")";}};})();} /**************
-					 Dimensions
-					 **************/function augmentDimension(name,element,wantInner){var isBorderBox=CSS.getPropertyValue(element,"boxSizing").toString().toLowerCase() === "border-box";if(isBorderBox === (wantInner || false)){ /* in box-sizing mode, the CSS width / height accessors already give the outerWidth / outerHeight. */var i,value,augment=0,sides=name === "width"?["Left","Right"]:["Top","Bottom"],fields=["padding" + sides[0],"padding" + sides[1],"border" + sides[0] + "Width","border" + sides[1] + "Width"];for(i = 0;i < fields.length;i++) {value = parseFloat(CSS.getPropertyValue(element,fields[i]));if(!isNaN(value)){augment += value;}}return wantInner?-augment:augment;}return 0;}function getDimension(name,wantInner){return function(type,element,propertyValue){switch(type){case "name":return name;case "extract":return parseFloat(propertyValue) + augmentDimension(name,element,wantInner);case "inject":return parseFloat(propertyValue) - augmentDimension(name,element,wantInner) + "px";}};}CSS.Normalizations.registered.innerWidth = getDimension("width",true);CSS.Normalizations.registered.innerHeight = getDimension("height",true);CSS.Normalizations.registered.outerWidth = getDimension("width");CSS.Normalizations.registered.outerHeight = getDimension("height");}}, /************************
-			 CSS Property Names
-			 ************************/Names:{ /* Camelcase a property name into its JavaScript notation (e.g. "background-color" ==> "backgroundColor").
-				 Camelcasing is used to normalize property names between and across calls. */camelCase:function camelCase(property){return property.replace(/-(\w)/g,function(match,subMatch){return subMatch.toUpperCase();});}, /* For SVG elements, some properties (namely, dimensional ones) are GET/SET via the element's HTML attributes (instead of via CSS styles). */SVGAttribute:function SVGAttribute(property){var SVGAttributes="width|height|x|y|cx|cy|r|rx|ry|x1|x2|y1|y2"; /* Certain browsers require an SVG transform to be applied as an attribute. (Otherwise, application via CSS is preferable due to 3D support.) */if(IE || Velocity.State.isAndroid && !Velocity.State.isChrome){SVGAttributes += "|transform";}return new RegExp("^(" + SVGAttributes + ")$","i").test(property);}, /* Determine whether a property should be set with a vendor prefix. */ /* If a prefixed version of the property exists, return it. Otherwise, return the original property name.
-				 If the property is not at all supported by the browser, return a false flag. */prefixCheck:function prefixCheck(property){ /* If this property has already been checked, return the cached value. */if(Velocity.State.prefixMatches[property]){return [Velocity.State.prefixMatches[property],true];}else {var vendors=["","Webkit","Moz","ms","O"];for(var i=0,vendorsLength=vendors.length;i < vendorsLength;i++) {var propertyPrefixed;if(i === 0){propertyPrefixed = property;}else { /* Capitalize the first letter of the property to conform to JavaScript vendor prefix notation (e.g. webkitFilter). */propertyPrefixed = vendors[i] + property.replace(/^\w/,function(match){return match.toUpperCase();});} /* Check if the browser supports this property as prefixed. */if(Type.isString(Velocity.State.prefixElement.style[propertyPrefixed])){ /* Cache the match. */Velocity.State.prefixMatches[property] = propertyPrefixed;return [propertyPrefixed,true];}} /* If the browser doesn't support this property in any form, include a false flag so that the caller can decide how to proceed. */return [property,false];}}}, /************************
-			 CSS Property Values
-			 ************************/Values:{ /* Hex to RGB conversion. Copyright Tim Down: http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb */hexToRgb:function hexToRgb(hex){var shortformRegex=/^#?([a-f\d])([a-f\d])([a-f\d])$/i,longformRegex=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i,rgbParts;hex = hex.replace(shortformRegex,function(m,r,g,b){return r + r + g + g + b + b;});rgbParts = longformRegex.exec(hex);return rgbParts?[parseInt(rgbParts[1],16),parseInt(rgbParts[2],16),parseInt(rgbParts[3],16)]:[0,0,0];},isCSSNullValue:function isCSSNullValue(value){ /* The browser defaults CSS values that have not been set to either 0 or one of several possible null-value strings.
-					 Thus, we check for both falsiness and these special strings. */ /* Null-value checking is performed to default the special strings to 0 (for the sake of tweening) or their hook
-					 templates as defined as CSS.Hooks (for the sake of hook injection/extraction). */ /* Note: Chrome returns "rgba(0, 0, 0, 0)" for an undefined color whereas IE returns "transparent". */return !value || /^(none|auto|transparent|(rgba\(0, ?0, ?0, ?0\)))$/i.test(value);}, /* Retrieve a property's default unit type. Used for assigning a unit type when one is not supplied by the user. */getUnitType:function getUnitType(property){if(/^(rotate|skew)/i.test(property)){return "deg";}else if(/(^(scale|scaleX|scaleY|scaleZ|alpha|flexGrow|flexHeight|zIndex|fontWeight)$)|((opacity|red|green|blue|alpha)$)/i.test(property)){ /* The above properties are unitless. */return "";}else { /* Default to px for all other properties. */return "px";}}, /* HTML elements default to an associated display type when they're not set to display:none. */ /* Note: This function is used for correctly setting the non-"none" display value in certain Velocity redirects, such as fadeIn/Out. */getDisplayType:function getDisplayType(element){var tagName=element && element.tagName.toString().toLowerCase();if(/^(b|big|i|small|tt|abbr|acronym|cite|code|dfn|em|kbd|strong|samp|var|a|bdo|br|img|map|object|q|script|span|sub|sup|button|input|label|select|textarea)$/i.test(tagName)){return "inline";}else if(/^(li)$/i.test(tagName)){return "list-item";}else if(/^(tr)$/i.test(tagName)){return "table-row";}else if(/^(table)$/i.test(tagName)){return "table";}else if(/^(tbody)$/i.test(tagName)){return "table-row-group"; /* Default to "block" when no match is found. */}else {return "block";}}, /* The class add/remove functions are used to temporarily apply a "velocity-animating" class to elements while they're animating. */addClass:function addClass(element,className){if(element){if(element.classList){element.classList.add(className);}else if(Type.isString(element.className)){ // Element.className is around 15% faster then set/getAttribute
-element.className += (element.className.length?" ":"") + className;}else { // Work around for IE strict mode animating SVG - and anything else that doesn't behave correctly - the same way jQuery does it
-var currentClass=element.getAttribute(IE <= 7?"className":"class") || "";element.setAttribute("class",currentClass + (currentClass?" ":"") + className);}}},removeClass:function removeClass(element,className){if(element){if(element.classList){element.classList.remove(className);}else if(Type.isString(element.className)){ // Element.className is around 15% faster then set/getAttribute
-// TODO: Need some jsperf tests on performance - can we get rid of the regex and maybe use split / array manipulation?
-element.className = element.className.toString().replace(new RegExp("(^|\\s)" + className.split(" ").join("|") + "(\\s|$)","gi")," ");}else { // Work around for IE strict mode animating SVG - and anything else that doesn't behave correctly - the same way jQuery does it
-var currentClass=element.getAttribute(IE <= 7?"className":"class") || "";element.setAttribute("class",currentClass.replace(new RegExp("(^|\s)" + className.split(" ").join("|") + "(\s|$)","gi")," "));}}}}, /****************************
-			 Style Getting & Setting
-			 ****************************/ /* The singular getPropertyValue, which routes the logic for all normalizations, hooks, and standard CSS properties. */getPropertyValue:function getPropertyValue(element,property,rootPropertyValue,forceStyleLookup){ /* Get an element's computed property value. */ /* Note: Retrieving the value of a CSS property cannot simply be performed by checking an element's
-				 style attribute (which only reflects user-defined values). Instead, the browser must be queried for a property's
-				 *computed* value. You can read more about getComputedStyle here: https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle */function computePropertyValue(element,property){ /* When box-sizing isn't set to border-box, height and width style values are incorrectly computed when an
-					 element's scrollbars are visible (which expands the element's dimensions). Thus, we defer to the more accurate
-					 offsetHeight/Width property, which includes the total dimensions for interior, border, padding, and scrollbar.
-					 We subtract border and padding to get the sum of interior + scrollbar. */var computedValue=0; /* IE<=8 doesn't support window.getComputedStyle, thus we defer to jQuery, which has an extensive array
-					 of hacks to accurately retrieve IE8 property values. Re-implementing that logic here is not worth bloating the
-					 codebase for a dying browser. The performance repercussions of using jQuery here are minimal since
-					 Velocity is optimized to rarely (and sometimes never) query the DOM. Further, the $.css() codepath isn't that slow. */if(IE <= 8){computedValue = $.css(element,property); /* GET */ /* All other browsers support getComputedStyle. The returned live object reference is cached onto its
-						 associated element so that it does not need to be refetched upon every GET. */}else { /* Browsers do not return height and width values for elements that are set to display:"none". Thus, we temporarily
-						 toggle display to the element type's default value. */var toggleDisplay=false;if(/^(width|height)$/.test(property) && CSS.getPropertyValue(element,"display") === 0){toggleDisplay = true;CSS.setPropertyValue(element,"display",CSS.Values.getDisplayType(element));}var revertDisplay=function revertDisplay(){if(toggleDisplay){CSS.setPropertyValue(element,"display","none");}};if(!forceStyleLookup){if(property === "height" && CSS.getPropertyValue(element,"boxSizing").toString().toLowerCase() !== "border-box"){var contentBoxHeight=element.offsetHeight - (parseFloat(CSS.getPropertyValue(element,"borderTopWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element,"borderBottomWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element,"paddingTop")) || 0) - (parseFloat(CSS.getPropertyValue(element,"paddingBottom")) || 0);revertDisplay();return contentBoxHeight;}else if(property === "width" && CSS.getPropertyValue(element,"boxSizing").toString().toLowerCase() !== "border-box"){var contentBoxWidth=element.offsetWidth - (parseFloat(CSS.getPropertyValue(element,"borderLeftWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element,"borderRightWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element,"paddingLeft")) || 0) - (parseFloat(CSS.getPropertyValue(element,"paddingRight")) || 0);revertDisplay();return contentBoxWidth;}}var computedStyle; /* For elements that Velocity hasn't been called on directly (e.g. when Velocity queries the DOM on behalf
-						 of a parent of an element its animating), perform a direct getComputedStyle lookup since the object isn't cached. */if(Data(element) === undefined){computedStyle = window.getComputedStyle(element,null); /* GET */ /* If the computedStyle object has yet to be cached, do so now. */}else if(!Data(element).computedStyle){computedStyle = Data(element).computedStyle = window.getComputedStyle(element,null); /* GET */ /* If computedStyle is cached, use it. */}else {computedStyle = Data(element).computedStyle;} /* IE and Firefox do not return a value for the generic borderColor -- they only return individual values for each border side's color.
-						 Also, in all browsers, when border colors aren't all the same, a compound value is returned that Velocity isn't setup to parse.
-						 So, as a polyfill for querying individual border side colors, we just return the top border's color and animate all borders from that value. */if(property === "borderColor"){property = "borderTopColor";} /* IE9 has a bug in which the "filter" property must be accessed from computedStyle using the getPropertyValue method
-						 instead of a direct property lookup. The getPropertyValue method is slower than a direct lookup, which is why we avoid it by default. */if(IE === 9 && property === "filter"){computedValue = computedStyle.getPropertyValue(property); /* GET */}else {computedValue = computedStyle[property];} /* Fall back to the property's style value (if defined) when computedValue returns nothing,
-						 which can happen when the element hasn't been painted. */if(computedValue === "" || computedValue === null){computedValue = element.style[property];}revertDisplay();} /* For top, right, bottom, and left (TRBL) values that are set to "auto" on elements of "fixed" or "absolute" position,
-					 defer to jQuery for converting "auto" to a numeric value. (For elements with a "static" or "relative" position, "auto" has the same
-					 effect as being set to 0, so no conversion is necessary.) */ /* An example of why numeric conversion is necessary: When an element with "position:absolute" has an untouched "left"
-					 property, which reverts to "auto", left's value is 0 relative to its parent element, but is often non-zero relative
-					 to its *containing* (not parent) element, which is the nearest "position:relative" ancestor or the viewport (and always the viewport in the case of "position:fixed"). */if(computedValue === "auto" && /^(top|right|bottom|left)$/i.test(property)){var position=computePropertyValue(element,"position"); /* GET */ /* For absolute positioning, jQuery's $.position() only returns values for top and left;
-						 right and bottom will have their "auto" value reverted to 0. */ /* Note: A jQuery object must be created here since jQuery doesn't have a low-level alias for $.position().
-						 Not a big deal since we're currently in a GET batch anyway. */if(position === "fixed" || position === "absolute" && /top|left/i.test(property)){ /* Note: jQuery strips the pixel unit from its returned values; we re-add it here to conform with computePropertyValue's behavior. */computedValue = $(element).position()[property] + "px"; /* GET */}}return computedValue;}var propertyValue; /* If this is a hooked property (e.g. "clipLeft" instead of the root property of "clip"),
-				 extract the hook's value from a normalized rootPropertyValue using CSS.Hooks.extractValue(). */if(CSS.Hooks.registered[property]){var hook=property,hookRoot=CSS.Hooks.getRoot(hook); /* If a cached rootPropertyValue wasn't passed in (which Velocity always attempts to do in order to avoid requerying the DOM),
-					 query the DOM for the root property's value. */if(rootPropertyValue === undefined){ /* Since the browser is now being directly queried, use the official post-prefixing property name for this lookup. */rootPropertyValue = CSS.getPropertyValue(element,CSS.Names.prefixCheck(hookRoot)[0]); /* GET */} /* If this root has a normalization registered, peform the associated normalization extraction. */if(CSS.Normalizations.registered[hookRoot]){rootPropertyValue = CSS.Normalizations.registered[hookRoot]("extract",element,rootPropertyValue);} /* Extract the hook's value. */propertyValue = CSS.Hooks.extractValue(hook,rootPropertyValue); /* If this is a normalized property (e.g. "opacity" becomes "filter" in <=IE8) or "translateX" becomes "transform"),
-					 normalize the property's name and value, and handle the special case of transforms. */ /* Note: Normalizing a property is mutually exclusive from hooking a property since hook-extracted values are strictly
-					 numerical and therefore do not require normalization extraction. */}else if(CSS.Normalizations.registered[property]){var normalizedPropertyName,normalizedPropertyValue;normalizedPropertyName = CSS.Normalizations.registered[property]("name",element); /* Transform values are calculated via normalization extraction (see below), which checks against the element's transformCache.
-					 At no point do transform GETs ever actually query the DOM; initial stylesheet values are never processed.
-					 This is because parsing 3D transform matrices is not always accurate and would bloat our codebase;
-					 thus, normalization extraction defaults initial transform values to their zero-values (e.g. 1 for scaleX and 0 for translateX). */if(normalizedPropertyName !== "transform"){normalizedPropertyValue = computePropertyValue(element,CSS.Names.prefixCheck(normalizedPropertyName)[0]); /* GET */ /* If the value is a CSS null-value and this property has a hook template, use that zero-value template so that hooks can be extracted from it. */if(CSS.Values.isCSSNullValue(normalizedPropertyValue) && CSS.Hooks.templates[property]){normalizedPropertyValue = CSS.Hooks.templates[property][1];}}propertyValue = CSS.Normalizations.registered[property]("extract",element,normalizedPropertyValue);} /* If a (numeric) value wasn't produced via hook extraction or normalization, query the DOM. */if(!/^[\d-]/.test(propertyValue)){ /* For SVG elements, dimensional properties (which SVGAttribute() detects) are tweened via
-					 their HTML attribute values instead of their CSS style values. */var data=Data(element);if(data && data.isSVG && CSS.Names.SVGAttribute(property)){ /* Since the height/width attribute values must be set manually, they don't reflect computed values.
-						 Thus, we use use getBBox() to ensure we always get values for elements with undefined height/width attributes. */if(/^(height|width)$/i.test(property)){ /* Firefox throws an error if .getBBox() is called on an SVG that isn't attached to the DOM. */try{propertyValue = element.getBBox()[property];}catch(error) {propertyValue = 0;} /* Otherwise, access the attribute value directly. */}else {propertyValue = element.getAttribute(property);}}else {propertyValue = computePropertyValue(element,CSS.Names.prefixCheck(property)[0]); /* GET */}} /* Since property lookups are for animation purposes (which entails computing the numeric delta between start and end values),
-				 convert CSS null-values to an integer of value 0. */if(CSS.Values.isCSSNullValue(propertyValue)){propertyValue = 0;}if(Velocity.debug >= 2){console.log("Get " + property + ": " + propertyValue);}return propertyValue;}, /* The singular setPropertyValue, which routes the logic for all normalizations, hooks, and standard CSS properties. */setPropertyValue:function setPropertyValue(element,property,propertyValue,rootPropertyValue,scrollData){var propertyName=property; /* In order to be subjected to call options and element queueing, scroll animation is routed through Velocity as if it were a standard CSS property. */if(property === "scroll"){ /* If a container option is present, scroll the container instead of the browser window. */if(scrollData.container){scrollData.container["scroll" + scrollData.direction] = propertyValue; /* Otherwise, Velocity defaults to scrolling the browser window. */}else {if(scrollData.direction === "Left"){window.scrollTo(propertyValue,scrollData.alternateValue);}else {window.scrollTo(scrollData.alternateValue,propertyValue);}}}else { /* Transforms (translateX, rotateZ, etc.) are applied to a per-element transformCache object, which is manually flushed via flushTransformCache().
-					 Thus, for now, we merely cache transforms being SET. */if(CSS.Normalizations.registered[property] && CSS.Normalizations.registered[property]("name",element) === "transform"){ /* Perform a normalization injection. */ /* Note: The normalization logic handles the transformCache updating. */CSS.Normalizations.registered[property]("inject",element,propertyValue);propertyName = "transform";propertyValue = Data(element).transformCache[property];}else { /* Inject hooks. */if(CSS.Hooks.registered[property]){var hookName=property,hookRoot=CSS.Hooks.getRoot(property); /* If a cached rootPropertyValue was not provided, query the DOM for the hookRoot's current value. */rootPropertyValue = rootPropertyValue || CSS.getPropertyValue(element,hookRoot); /* GET */propertyValue = CSS.Hooks.injectValue(hookName,propertyValue,rootPropertyValue);property = hookRoot;} /* Normalize names and values. */if(CSS.Normalizations.registered[property]){propertyValue = CSS.Normalizations.registered[property]("inject",element,propertyValue);property = CSS.Normalizations.registered[property]("name",element);} /* Assign the appropriate vendor prefix before performing an official style update. */propertyName = CSS.Names.prefixCheck(property)[0]; /* A try/catch is used for IE<=8, which throws an error when "invalid" CSS values are set, e.g. a negative width.
-						 Try/catch is avoided for other browsers since it incurs a performance overhead. */if(IE <= 8){try{element.style[propertyName] = propertyValue;}catch(error) {if(Velocity.debug){console.log("Browser does not support [" + propertyValue + "] for [" + propertyName + "]");}} /* SVG elements have their dimensional properties (width, height, x, y, cx, etc.) applied directly as attributes instead of as styles. */ /* Note: IE8 does not support SVG elements, so it's okay that we skip it for SVG animation. */}else {var data=Data(element);if(data && data.isSVG && CSS.Names.SVGAttribute(property)){ /* Note: For SVG attributes, vendor-prefixed property names are never used. */ /* Note: Not all CSS properties can be animated via attributes, but the browser won't throw an error for unsupported properties. */element.setAttribute(property,propertyValue);}else {element.style[propertyName] = propertyValue;}}if(Velocity.debug >= 2){console.log("Set " + property + " (" + propertyName + "): " + propertyValue);}}} /* Return the normalized property name and value in case the caller wants to know how these values were modified before being applied to the DOM. */return [propertyName,propertyValue];}, /* To increase performance by batching transform updates into a single SET, transforms are not directly applied to an element until flushTransformCache() is called. */ /* Note: Velocity applies transform properties in the same order that they are chronogically introduced to the element's CSS styles. */flushTransformCache:function flushTransformCache(element){var transformString="",data=Data(element); /* Certain browsers require that SVG transforms be applied as an attribute. However, the SVG transform attribute takes a modified version of CSS's transform string
-				 (units are dropped and, except for skewX/Y, subproperties are merged into their master property -- e.g. scaleX and scaleY are merged into scale(X Y). */if((IE || Velocity.State.isAndroid && !Velocity.State.isChrome) && data && data.isSVG){ /* Since transform values are stored in their parentheses-wrapped form, we use a helper function to strip out their numeric values.
-					 Further, SVG transform properties only take unitless (representing pixels) values, so it's okay that parseFloat() strips the unit suffixed to the float value. */var getTransformFloat=function getTransformFloat(transformProperty){return parseFloat(CSS.getPropertyValue(element,transformProperty));}; /* Create an object to organize all the transforms that we'll apply to the SVG element. To keep the logic simple,
-					 we process *all* transform properties -- even those that may not be explicitly applied (since they default to their zero-values anyway). */var SVGTransforms={translate:[getTransformFloat("translateX"),getTransformFloat("translateY")],skewX:[getTransformFloat("skewX")],skewY:[getTransformFloat("skewY")], /* If the scale property is set (non-1), use that value for the scaleX and scaleY values
-						 (this behavior mimics the result of animating all these properties at once on HTML elements). */scale:getTransformFloat("scale") !== 1?[getTransformFloat("scale"),getTransformFloat("scale")]:[getTransformFloat("scaleX"),getTransformFloat("scaleY")], /* Note: SVG's rotate transform takes three values: rotation degrees followed by the X and Y values
-						 defining the rotation's origin point. We ignore the origin values (default them to 0). */rotate:[getTransformFloat("rotateZ"),0,0]}; /* Iterate through the transform properties in the user-defined property map order.
-					 (This mimics the behavior of non-SVG transform animation.) */$.each(Data(element).transformCache,function(transformName){ /* Except for with skewX/Y, revert the axis-specific transform subproperties to their axis-free master
-						 properties so that they match up with SVG's accepted transform properties. */if(/^translate/i.test(transformName)){transformName = "translate";}else if(/^scale/i.test(transformName)){transformName = "scale";}else if(/^rotate/i.test(transformName)){transformName = "rotate";} /* Check that we haven't yet deleted the property from the SVGTransforms container. */if(SVGTransforms[transformName]){ /* Append the transform property in the SVG-supported transform format. As per the spec, surround the space-delimited values in parentheses. */transformString += transformName + "(" + SVGTransforms[transformName].join(" ") + ")" + " "; /* After processing an SVG transform property, delete it from the SVGTransforms container so we don't
-							 re-insert the same master property if we encounter another one of its axis-specific properties. */delete SVGTransforms[transformName];}});}else {var transformValue,perspective; /* Transform properties are stored as members of the transformCache object. Concatenate all the members into a string. */$.each(Data(element).transformCache,function(transformName){transformValue = Data(element).transformCache[transformName]; /* Transform's perspective subproperty must be set first in order to take effect. Store it temporarily. */if(transformName === "transformPerspective"){perspective = transformValue;return true;} /* IE9 only supports one rotation type, rotateZ, which it refers to as "rotate". */if(IE === 9 && transformName === "rotateZ"){transformName = "rotate";}transformString += transformName + transformValue + " ";}); /* If present, set the perspective subproperty first. */if(perspective){transformString = "perspective" + perspective + " " + transformString;}}CSS.setPropertyValue(element,"transform",transformString);}}; /* Register hooks and normalizations. */CSS.Hooks.register();CSS.Normalizations.register(); /* Allow hook setting in the same fashion as jQuery's $.css(). */Velocity.hook = function(elements,arg2,arg3){var value;elements = sanitizeElements(elements);$.each(elements,function(i,element){ /* Initialize Velocity's per-element data cache if this element hasn't previously been animated. */if(Data(element) === undefined){Velocity.init(element);} /* Get property value. If an element set was passed in, only return the value for the first element. */if(arg3 === undefined){if(value === undefined){value = CSS.getPropertyValue(element,arg2);} /* Set property value. */}else { /* sPV returns an array of the normalized propertyName/propertyValue pair used to update the DOM. */var adjustedSet=CSS.setPropertyValue(element,arg2,arg3); /* Transform properties don't automatically set. They have to be flushed to the DOM. */if(adjustedSet[0] === "transform"){Velocity.CSS.flushTransformCache(element);}value = adjustedSet;}});return value;}; /*****************
-		 Animation
-		 *****************/var animate=function animate(){var opts; /******************
-			 Call Chain
-			 ******************/ /* Logic for determining what to return to the call stack when exiting out of Velocity. */function getChain(){ /* If we are using the utility function, attempt to return this call's promise. If no promise library was detected,
-				 default to null instead of returning the targeted elements so that utility function's return value is standardized. */if(isUtility){return promiseData.promise || null; /* Otherwise, if we're using $.fn, return the jQuery-/Zepto-wrapped element set. */}else {return elementsWrapped;}} /*************************
-			 Arguments Assignment
-			 *************************/ /* To allow for expressive CoffeeScript code, Velocity supports an alternative syntax in which "elements" (or "e"), "properties" (or "p"), and "options" (or "o")
-			 objects are defined on a container object that's passed in as Velocity's sole argument. */ /* Note: Some browsers automatically populate arguments with a "properties" object. We detect it by checking for its default "names" property. */var syntacticSugar=arguments[0] && (arguments[0].p || $.isPlainObject(arguments[0].properties) && !arguments[0].properties.names || Type.isString(arguments[0].properties)), /* Whether Velocity was called via the utility function (as opposed to on a jQuery/Zepto object). */isUtility, /* When Velocity is called via the utility function ($.Velocity()/Velocity()), elements are explicitly
-					 passed in as the first parameter. Thus, argument positioning varies. We normalize them here. */elementsWrapped,argumentIndex;var elements,propertiesMap,options; /* Detect jQuery/Zepto elements being animated via the $.fn method. */if(Type.isWrapped(this)){isUtility = false;argumentIndex = 0;elements = this;elementsWrapped = this; /* Otherwise, raw elements are being animated via the utility function. */}else {isUtility = true;argumentIndex = 1;elements = syntacticSugar?arguments[0].elements || arguments[0].e:arguments[0];} /***************
-			 Promises
-			 ***************/var promiseData={promise:null,resolver:null,rejecter:null}; /* If this call was made via the utility function (which is the default method of invocation when jQuery/Zepto are not being used), and if
-			 promise support was detected, create a promise object for this call and store references to its resolver and rejecter methods. The resolve
-			 method is used when a call completes naturally or is prematurely stopped by the user. In both cases, completeCall() handles the associated
-			 call cleanup and promise resolving logic. The reject method is used when an invalid set of arguments is passed into a Velocity call. */ /* Note: Velocity employs a call-based queueing architecture, which means that stopping an animating element actually stops the full call that
-			 triggered it -- not that one element exclusively. Similarly, there is one promise per call, and all elements targeted by a Velocity call are
-			 grouped together for the purposes of resolving and rejecting a promise. */if(isUtility && Velocity.Promise){promiseData.promise = new Velocity.Promise(function(resolve,reject){promiseData.resolver = resolve;promiseData.rejecter = reject;});}if(syntacticSugar){propertiesMap = arguments[0].properties || arguments[0].p;options = arguments[0].options || arguments[0].o;}else {propertiesMap = arguments[argumentIndex];options = arguments[argumentIndex + 1];}elements = sanitizeElements(elements);if(!elements){if(promiseData.promise){if(!propertiesMap || !options || options.promiseRejectEmpty !== false){promiseData.rejecter();}else {promiseData.resolver();}}return;} /* The length of the element set (in the form of a nodeList or an array of elements) is defaulted to 1 in case a
-			 single raw DOM element is passed in (which doesn't contain a length property). */var elementsLength=elements.length,elementsIndex=0; /***************************
-			 Argument Overloading
-			 ***************************/ /* Support is included for jQuery's argument overloading: $.animate(propertyMap [, duration] [, easing] [, complete]).
-			 Overloading is detected by checking for the absence of an object being passed into options. */ /* Note: The stop/finish/pause/resume actions do not accept animation options, and are therefore excluded from this check. */if(!/^(stop|finish|finishAll|pause|resume)$/i.test(propertiesMap) && !$.isPlainObject(options)){ /* The utility function shifts all arguments one position to the right, so we adjust for that offset. */var startingArgumentPosition=argumentIndex + 1;options = {}; /* Iterate through all options arguments */for(var i=startingArgumentPosition;i < arguments.length;i++) { /* Treat a number as a duration. Parse it out. */ /* Note: The following RegEx will return true if passed an array with a number as its first item.
-					 Thus, arrays are skipped from this check. */if(!Type.isArray(arguments[i]) && (/^(fast|normal|slow)$/i.test(arguments[i]) || /^\d/.test(arguments[i]))){options.duration = arguments[i]; /* Treat strings and arrays as easings. */}else if(Type.isString(arguments[i]) || Type.isArray(arguments[i])){options.easing = arguments[i]; /* Treat a function as a complete callback. */}else if(Type.isFunction(arguments[i])){options.complete = arguments[i];}}} /*********************
-			 Action Detection
-			 *********************/ /* Velocity's behavior is categorized into "actions": Elements can either be specially scrolled into view,
-			 or they can be started, stopped, paused, resumed, or reversed . If a literal or referenced properties map is passed in as Velocity's
-			 first argument, the associated action is "start". Alternatively, "scroll", "reverse", "pause", "resume" or "stop" can be passed in 
-			 instead of a properties map. */var action;switch(propertiesMap){case "scroll":action = "scroll";break;case "reverse":action = "reverse";break;case "pause": /*******************
-					 Action: Pause
-					 *******************/var currentTime=new Date().getTime(); /* Handle delay timers */$.each(elements,function(i,element){pauseDelayOnElement(element,currentTime);}); /* Pause and Resume are call-wide (not on a per element basis). Thus, calling pause or resume on a 
-					 single element will cause any calls that containt tweens for that element to be paused/resumed
-					 as well. */ /* Iterate through all calls and pause any that contain any of our elements */$.each(Velocity.State.calls,function(i,activeCall){var found=false; /* Inactive calls are set to false by the logic inside completeCall(). Skip them. */if(activeCall){ /* Iterate through the active call's targeted elements. */$.each(activeCall[1],function(k,activeElement){var queueName=options === undefined?"":options;if(queueName !== true && activeCall[2].queue !== queueName && !(options === undefined && activeCall[2].queue === false)){return true;} /* Iterate through the calls targeted by the stop command. */$.each(elements,function(l,element){ /* Check that this call was applied to the target element. */if(element === activeElement){ /* Set call to paused */activeCall[5] = {resume:false}; /* Once we match an element, we can bounce out to the next call entirely */found = true;return false;}}); /* Proceed to check next call if we have already matched */if(found){return false;}});}}); /* Since pause creates no new tweens, exit out of Velocity. */return getChain();case "resume": /*******************
-					 Action: Resume
-					 *******************/ /* Handle delay timers */$.each(elements,function(i,element){resumeDelayOnElement(element,currentTime);}); /* Pause and Resume are call-wide (not on a per elemnt basis). Thus, calling pause or resume on a 
-					 single element will cause any calls that containt tweens for that element to be paused/resumed
-					 as well. */ /* Iterate through all calls and pause any that contain any of our elements */$.each(Velocity.State.calls,function(i,activeCall){var found=false; /* Inactive calls are set to false by the logic inside completeCall(). Skip them. */if(activeCall){ /* Iterate through the active call's targeted elements. */$.each(activeCall[1],function(k,activeElement){var queueName=options === undefined?"":options;if(queueName !== true && activeCall[2].queue !== queueName && !(options === undefined && activeCall[2].queue === false)){return true;} /* Skip any calls that have never been paused */if(!activeCall[5]){return true;} /* Iterate through the calls targeted by the stop command. */$.each(elements,function(l,element){ /* Check that this call was applied to the target element. */if(element === activeElement){ /* Flag a pause object to be resumed, which will occur during the next tick. In
-										 addition, the pause object will at that time be deleted */activeCall[5].resume = true; /* Once we match an element, we can bounce out to the next call entirely */found = true;return false;}}); /* Proceed to check next call if we have already matched */if(found){return false;}});}}); /* Since resume creates no new tweens, exit out of Velocity. */return getChain();case "finish":case "finishAll":case "stop": /*******************
-					 Action: Stop
-					 *******************/ /* Clear the currently-active delay on each targeted element. */$.each(elements,function(i,element){if(Data(element) && Data(element).delayTimer){ /* Stop the timer from triggering its cached next() function. */clearTimeout(Data(element).delayTimer.setTimeout); /* Manually call the next() function so that the subsequent queue items can progress. */if(Data(element).delayTimer.next){Data(element).delayTimer.next();}delete Data(element).delayTimer;} /* If we want to finish everything in the queue, we have to iterate through it
-						 and call each function. This will make them active calls below, which will
-						 cause them to be applied via the duration setting. */if(propertiesMap === "finishAll" && (options === true || Type.isString(options))){ /* Iterate through the items in the element's queue. */$.each($.queue(element,Type.isString(options)?options:""),function(_,item){ /* The queue array can contain an "inprogress" string, which we skip. */if(Type.isFunction(item)){item();}}); /* Clearing the $.queue() array is achieved by resetting it to []. */$.queue(element,Type.isString(options)?options:"",[]);}});var callsToStop=[]; /* When the stop action is triggered, the elements' currently active call is immediately stopped. The active call might have
-					 been applied to multiple elements, in which case all of the call's elements will be stopped. When an element
-					 is stopped, the next item in its animation queue is immediately triggered. */ /* An additional argument may be passed in to clear an element's remaining queued calls. Either true (which defaults to the "fx" queue)
-					 or a custom queue string can be passed in. */ /* Note: The stop command runs prior to Velocity's Queueing phase since its behavior is intended to take effect *immediately*,
-					 regardless of the element's current queue state. */ /* Iterate through every active call. */$.each(Velocity.State.calls,function(i,activeCall){ /* Inactive calls are set to false by the logic inside completeCall(). Skip them. */if(activeCall){ /* Iterate through the active call's targeted elements. */$.each(activeCall[1],function(k,activeElement){ /* If true was passed in as a secondary argument, clear absolutely all calls on this element. Otherwise, only
-								 clear calls associated with the relevant queue. */ /* Call stopping logic works as follows:
-								 - options === true --> stop current default queue calls (and queue:false calls), including remaining queued ones.
-								 - options === undefined --> stop current queue:"" call and all queue:false calls.
-								 - options === false --> stop only queue:false calls.
-								 - options === "custom" --> stop current queue:"custom" call, including remaining queued ones (there is no functionality to only clear the currently-running queue:"custom" call). */var queueName=options === undefined?"":options;if(queueName !== true && activeCall[2].queue !== queueName && !(options === undefined && activeCall[2].queue === false)){return true;} /* Iterate through the calls targeted by the stop command. */$.each(elements,function(l,element){ /* Check that this call was applied to the target element. */if(element === activeElement){ /* Optionally clear the remaining queued calls. If we're doing "finishAll" this won't find anything,
-										 due to the queue-clearing above. */if(options === true || Type.isString(options)){ /* Iterate through the items in the element's queue. */$.each($.queue(element,Type.isString(options)?options:""),function(_,item){ /* The queue array can contain an "inprogress" string, which we skip. */if(Type.isFunction(item)){ /* Pass the item's callback a flag indicating that we want to abort from the queue call.
-													 (Specifically, the queue will resolve the call's associated promise then abort.)  */item(null,true);}}); /* Clearing the $.queue() array is achieved by resetting it to []. */$.queue(element,Type.isString(options)?options:"",[]);}if(propertiesMap === "stop"){ /* Since "reverse" uses cached start values (the previous call's endValues), these values must be
-											 changed to reflect the final value that the elements were actually tweened to. */ /* Note: If only queue:false animations are currently running on an element, it won't have a tweensContainer
-											 object. Also, queue:false animations can't be reversed. */var data=Data(element);if(data && data.tweensContainer && queueName !== false){$.each(data.tweensContainer,function(m,activeTween){activeTween.endValue = activeTween.currentValue;});}callsToStop.push(i);}else if(propertiesMap === "finish" || propertiesMap === "finishAll"){ /* To get active tweens to finish immediately, we forcefully shorten their durations to 1ms so that
-											 they finish upon the next rAf tick then proceed with normal call completion logic. */activeCall[2].duration = 1;}}});});}}); /* Prematurely call completeCall() on each matched active call. Pass an additional flag for "stop" to indicate
-					 that the complete callback and display:none setting should be skipped since we're completing prematurely. */if(propertiesMap === "stop"){$.each(callsToStop,function(i,j){completeCall(j,true);});if(promiseData.promise){ /* Immediately resolve the promise associated with this stop call since stop runs synchronously. */promiseData.resolver(elements);}} /* Since we're stopping, and not proceeding with queueing, exit out of Velocity. */return getChain();default: /* Treat a non-empty plain object as a literal properties map. */if($.isPlainObject(propertiesMap) && !Type.isEmptyObject(propertiesMap)){action = "start"; /****************
-						 Redirects
-						 ****************/ /* Check if a string matches a registered redirect (see Redirects above). */}else if(Type.isString(propertiesMap) && Velocity.Redirects[propertiesMap]){opts = $.extend({},options);var durationOriginal=opts.duration,delayOriginal=opts.delay || 0; /* If the backwards option was passed in, reverse the element set so that elements animate from the last to the first. */if(opts.backwards === true){elements = $.extend(true,[],elements).reverse();} /* Individually trigger the redirect for each element in the set to prevent users from having to handle iteration logic in their redirect. */$.each(elements,function(elementIndex,element){ /* If the stagger option was passed in, successively delay each element by the stagger value (in ms). Retain the original delay value. */if(parseFloat(opts.stagger)){opts.delay = delayOriginal + parseFloat(opts.stagger) * elementIndex;}else if(Type.isFunction(opts.stagger)){opts.delay = delayOriginal + opts.stagger.call(element,elementIndex,elementsLength);} /* If the drag option was passed in, successively increase/decrease (depending on the presense of opts.backwards)
-							 the duration of each element's animation, using floors to prevent producing very short durations. */if(opts.drag){ /* Default the duration of UI pack effects (callouts and transitions) to 1000ms instead of the usual default duration of 400ms. */opts.duration = parseFloat(durationOriginal) || (/^(callout|transition)/.test(propertiesMap)?1000:DURATION_DEFAULT); /* For each element, take the greater duration of: A) animation completion percentage relative to the original duration,
-								 B) 75% of the original duration, or C) a 200ms fallback (in case duration is already set to a low value).
-								 The end result is a baseline of 75% of the redirect's duration that increases/decreases as the end of the element set is approached. */opts.duration = Math.max(opts.duration * (opts.backwards?1 - elementIndex / elementsLength:(elementIndex + 1) / elementsLength),opts.duration * 0.75,200);} /* Pass in the call's opts object so that the redirect can optionally extend it. It defaults to an empty object instead of null to
-							 reduce the opts checking logic required inside the redirect. */Velocity.Redirects[propertiesMap].call(element,element,opts || {},elementIndex,elementsLength,elements,promiseData.promise?promiseData:undefined);}); /* Since the animation logic resides within the redirect's own code, abort the remainder of this call.
-						 (The performance overhead up to this point is virtually non-existant.) */ /* Note: The jQuery call chain is kept intact by returning the complete element set. */return getChain();}else {var abortError="Velocity: First argument (" + propertiesMap + ") was not a property map, a known action, or a registered redirect. Aborting.";if(promiseData.promise){promiseData.rejecter(new Error(abortError));}else if(window.console){console.log(abortError);}return getChain();}} /**************************
-			 Call-Wide Variables
-			 **************************/ /* A container for CSS unit conversion ratios (e.g. %, rem, and em ==> px) that is used to cache ratios across all elements
-			 being animated in a single Velocity call. Calculating unit ratios necessitates DOM querying and updating, and is therefore
-			 avoided (via caching) wherever possible. This container is call-wide instead of page-wide to avoid the risk of using stale
-			 conversion metrics across Velocity animations that are not immediately consecutively chained. */var callUnitConversionData={lastParent:null,lastPosition:null,lastFontSize:null,lastPercentToPxWidth:null,lastPercentToPxHeight:null,lastEmToPx:null,remToPx:null,vwToPx:null,vhToPx:null}; /* A container for all the ensuing tween data and metadata associated with this call. This container gets pushed to the page-wide
-			 Velocity.State.calls array that is processed during animation ticking. */var call=[]; /************************
-			 Element Processing
-			 ************************/ /* Element processing consists of three parts -- data processing that cannot go stale and data processing that *can* go stale (i.e. third-party style modifications):
-			 1) Pre-Queueing: Element-wide variables, including the element's data storage, are instantiated. Call options are prepared. If triggered, the Stop action is executed.
-			 2) Queueing: The logic that runs once this call has reached its point of execution in the element's $.queue() stack. Most logic is placed here to avoid risking it becoming stale.
-			 3) Pushing: Consolidation of the tween data followed by its push onto the global in-progress calls container.
-			 `elementArrayIndex` allows passing index of the element in the original array to value functions.
-			 If `elementsIndex` were used instead the index would be determined by the elements' per-element queue.
-			 */function processElement(element,elementArrayIndex){ /*************************
-				 Part I: Pre-Queueing
-				 *************************/ /***************************
-				 Element-Wide Variables
-				 ***************************/var  /* The runtime opts object is the extension of the current call's options and Velocity's page-wide option defaults. */opts=$.extend({},Velocity.defaults,options), /* A container for the processed data associated with each property in the propertyMap.
-						 (Each property in the map produces its own "tween".) */tweensContainer={},elementUnitConversionData; /******************
-				 Element Init
-				 ******************/if(Data(element) === undefined){Velocity.init(element);} /******************
-				 Option: Delay
-				 ******************/ /* Since queue:false doesn't respect the item's existing queue, we avoid injecting its delay here (it's set later on). */ /* Note: Velocity rolls its own delay function since jQuery doesn't have a utility alias for $.fn.delay()
-				 (and thus requires jQuery element creation, which we avoid since its overhead includes DOM querying). */if(parseFloat(opts.delay) && opts.queue !== false){$.queue(element,opts.queue,function(next){ /* This is a flag used to indicate to the upcoming completeCall() function that this queue entry was initiated by Velocity. See completeCall() for further details. */Velocity.velocityQueueEntryFlag = true; /* The ensuing queue item (which is assigned to the "next" argument that $.queue() automatically passes in) will be triggered after a setTimeout delay.
-						 The setTimeout is stored so that it can be subjected to clearTimeout() if this animation is prematurely stopped via Velocity's "stop" command, and
-						 delayBegin/delayTime is used to ensure we can "pause" and "resume" a tween that is still mid-delay. */ /* Temporarily store delayed elements to facilite access for global pause/resume */var callIndex=Velocity.State.delayedElements.count++;Velocity.State.delayedElements[callIndex] = element;var delayComplete=(function(index){return function(){ /* Clear the temporary element */Velocity.State.delayedElements[index] = false; /* Finally, issue the call */next();};})(callIndex);Data(element).delayBegin = new Date().getTime();Data(element).delay = parseFloat(opts.delay);Data(element).delayTimer = {setTimeout:setTimeout(next,parseFloat(opts.delay)),next:delayComplete};});} /*********************
-				 Option: Duration
-				 *********************/ /* Support for jQuery's named durations. */switch(opts.duration.toString().toLowerCase()){case "fast":opts.duration = 200;break;case "normal":opts.duration = DURATION_DEFAULT;break;case "slow":opts.duration = 600;break;default: /* Remove the potential "ms" suffix and default to 1 if the user is attempting to set a duration of 0 (in order to produce an immediate style change). */opts.duration = parseFloat(opts.duration) || 1;} /************************
-				 Global Option: Mock
-				 ************************/if(Velocity.mock !== false){ /* In mock mode, all animations are forced to 1ms so that they occur immediately upon the next rAF tick.
-					 Alternatively, a multiplier can be passed in to time remap all delays and durations. */if(Velocity.mock === true){opts.duration = opts.delay = 1;}else {opts.duration *= parseFloat(Velocity.mock) || 1;opts.delay *= parseFloat(Velocity.mock) || 1;}} /*******************
-				 Option: Easing
-				 *******************/opts.easing = getEasing(opts.easing,opts.duration); /**********************
-				 Option: Callbacks
-				 **********************/ /* Callbacks must functions. Otherwise, default to null. */if(opts.begin && !Type.isFunction(opts.begin)){opts.begin = null;}if(opts.progress && !Type.isFunction(opts.progress)){opts.progress = null;}if(opts.complete && !Type.isFunction(opts.complete)){opts.complete = null;} /*********************************
-				 Option: Display & Visibility
-				 *********************************/ /* Refer to Velocity's documentation (VelocityJS.org/#displayAndVisibility) for a description of the display and visibility options' behavior. */ /* Note: We strictly check for undefined instead of falsiness because display accepts an empty string value. */if(opts.display !== undefined && opts.display !== null){opts.display = opts.display.toString().toLowerCase(); /* Users can pass in a special "auto" value to instruct Velocity to set the element to its default display value. */if(opts.display === "auto"){opts.display = Velocity.CSS.Values.getDisplayType(element);}}if(opts.visibility !== undefined && opts.visibility !== null){opts.visibility = opts.visibility.toString().toLowerCase();} /**********************
-				 Option: mobileHA
-				 **********************/ /* When set to true, and if this is a mobile device, mobileHA automatically enables hardware acceleration (via a null transform hack)
-				 on animating elements. HA is removed from the element at the completion of its animation. */ /* Note: Android Gingerbread doesn't support HA. If a null transform hack (mobileHA) is in fact set, it will prevent other tranform subproperties from taking effect. */ /* Note: You can read more about the use of mobileHA in Velocity's documentation: VelocityJS.org/#mobileHA. */opts.mobileHA = opts.mobileHA && Velocity.State.isMobile && !Velocity.State.isGingerbread; /***********************
-				 Part II: Queueing
-				 ***********************/ /* When a set of elements is targeted by a Velocity call, the set is broken up and each element has the current Velocity call individually queued onto it.
-				 In this way, each element's existing queue is respected; some elements may already be animating and accordingly should not have this current Velocity call triggered immediately. */ /* In each queue, tween data is processed for each animating property then pushed onto the call-wide calls array. When the last element in the set has had its tweens processed,
-				 the call array is pushed to Velocity.State.calls for live processing by the requestAnimationFrame tick. */function buildQueue(next){var data,lastTweensContainer; /*******************
-					 Option: Begin
-					 *******************/ /* The begin callback is fired once per call -- not once per elemenet -- and is passed the full raw DOM element set as both its context and its first argument. */if(opts.begin && elementsIndex === 0){ /* We throw callbacks in a setTimeout so that thrown errors don't halt the execution of Velocity itself. */try{opts.begin.call(elements,elements);}catch(error) {setTimeout(function(){throw error;},1);}} /*****************************************
-					 Tween Data Construction (for Scroll)
-					 *****************************************/ /* Note: In order to be subjected to chaining and animation options, scroll's tweening is routed through Velocity as if it were a standard CSS property animation. */if(action === "scroll"){ /* The scroll action uniquely takes an optional "offset" option -- specified in pixels -- that offsets the targeted scroll position. */var scrollDirection=/^x$/i.test(opts.axis)?"Left":"Top",scrollOffset=parseFloat(opts.offset) || 0,scrollPositionCurrent,scrollPositionCurrentAlternate,scrollPositionEnd; /* Scroll also uniquely takes an optional "container" option, which indicates the parent element that should be scrolled --
-						 as opposed to the browser window itself. This is useful for scrolling toward an element that's inside an overflowing parent element. */if(opts.container){ /* Ensure that either a jQuery object or a raw DOM element was passed in. */if(Type.isWrapped(opts.container) || Type.isNode(opts.container)){ /* Extract the raw DOM element from the jQuery wrapper. */opts.container = opts.container[0] || opts.container; /* Note: Unlike other properties in Velocity, the browser's scroll position is never cached since it so frequently changes
-								 (due to the user's natural interaction with the page). */scrollPositionCurrent = opts.container["scroll" + scrollDirection]; /* GET */ /* $.position() values are relative to the container's currently viewable area (without taking into account the container's true dimensions
-								 -- say, for example, if the container was not overflowing). Thus, the scroll end value is the sum of the child element's position *and*
-								 the scroll container's current scroll position. */scrollPositionEnd = scrollPositionCurrent + $(element).position()[scrollDirection.toLowerCase()] + scrollOffset; /* GET */ /* If a value other than a jQuery object or a raw DOM element was passed in, default to null so that this option is ignored. */}else {opts.container = null;}}else { /* If the window itself is being scrolled -- not a containing element -- perform a live scroll position lookup using
-							 the appropriate cached property names (which differ based on browser type). */scrollPositionCurrent = Velocity.State.scrollAnchor[Velocity.State["scrollProperty" + scrollDirection]]; /* GET */ /* When scrolling the browser window, cache the alternate axis's current value since window.scrollTo() doesn't let us change only one value at a time. */scrollPositionCurrentAlternate = Velocity.State.scrollAnchor[Velocity.State["scrollProperty" + (scrollDirection === "Left"?"Top":"Left")]]; /* GET */ /* Unlike $.position(), $.offset() values are relative to the browser window's true dimensions -- not merely its currently viewable area --
-							 and therefore end values do not need to be compounded onto current values. */scrollPositionEnd = $(element).offset()[scrollDirection.toLowerCase()] + scrollOffset; /* GET */} /* Since there's only one format that scroll's associated tweensContainer can take, we create it manually. */tweensContainer = {scroll:{rootPropertyValue:false,startValue:scrollPositionCurrent,currentValue:scrollPositionCurrent,endValue:scrollPositionEnd,unitType:"",easing:opts.easing,scrollData:{container:opts.container,direction:scrollDirection,alternateValue:scrollPositionCurrentAlternate}},element:element};if(Velocity.debug){console.log("tweensContainer (scroll): ",tweensContainer.scroll,element);} /******************************************
-						 Tween Data Construction (for Reverse)
-						 ******************************************/ /* Reverse acts like a "start" action in that a property map is animated toward. The only difference is
-						 that the property map used for reverse is the inverse of the map used in the previous call. Thus, we manipulate
-						 the previous call to construct our new map: use the previous map's end values as our new map's start values. Copy over all other data. */ /* Note: Reverse can be directly called via the "reverse" parameter, or it can be indirectly triggered via the loop option. (Loops are composed of multiple reverses.) */ /* Note: Reverse calls do not need to be consecutively chained onto a currently-animating element in order to operate on cached values;
-						 there is no harm to reverse being called on a potentially stale data cache since reverse's behavior is simply defined
-						 as reverting to the element's values as they were prior to the previous *Velocity* call. */}else if(action === "reverse"){data = Data(element); /* Abort if there is no prior animation data to reverse to. */if(!data){return;}if(!data.tweensContainer){ /* Dequeue the element so that this queue entry releases itself immediately, allowing subsequent queue entries to run. */$.dequeue(element,opts.queue);return;}else { /*********************
-							 Options Parsing
-							 *********************/ /* If the element was hidden via the display option in the previous call,
-							 revert display to "auto" prior to reversal so that the element is visible again. */if(data.opts.display === "none"){data.opts.display = "auto";}if(data.opts.visibility === "hidden"){data.opts.visibility = "visible";} /* If the loop option was set in the previous call, disable it so that "reverse" calls aren't recursively generated.
-							 Further, remove the previous call's callback options; typically, users do not want these to be refired. */data.opts.loop = false;data.opts.begin = null;data.opts.complete = null; /* Since we're extending an opts object that has already been extended with the defaults options object,
-							 we remove non-explicitly-defined properties that are auto-assigned values. */if(!options.easing){delete opts.easing;}if(!options.duration){delete opts.duration;} /* The opts object used for reversal is an extension of the options object optionally passed into this
-							 reverse call plus the options used in the previous Velocity call. */opts = $.extend({},data.opts,opts); /*************************************
-							 Tweens Container Reconstruction
-							 *************************************/ /* Create a deepy copy (indicated via the true flag) of the previous call's tweensContainer. */lastTweensContainer = $.extend(true,{},data?data.tweensContainer:null); /* Manipulate the previous tweensContainer by replacing its end values and currentValues with its start values. */for(var lastTween in lastTweensContainer) { /* In addition to tween data, tweensContainers contain an element property that we ignore here. */if(lastTweensContainer.hasOwnProperty(lastTween) && lastTween !== "element"){var lastStartValue=lastTweensContainer[lastTween].startValue;lastTweensContainer[lastTween].startValue = lastTweensContainer[lastTween].currentValue = lastTweensContainer[lastTween].endValue;lastTweensContainer[lastTween].endValue = lastStartValue; /* Easing is the only option that embeds into the individual tween data (since it can be defined on a per-property basis).
-									 Accordingly, every property's easing value must be updated when an options object is passed in with a reverse call.
-									 The side effect of this extensibility is that all per-property easing values are forcefully reset to the new value. */if(!Type.isEmptyObject(options)){lastTweensContainer[lastTween].easing = opts.easing;}if(Velocity.debug){console.log("reverse tweensContainer (" + lastTween + "): " + JSON.stringify(lastTweensContainer[lastTween]),element);}}}tweensContainer = lastTweensContainer;} /*****************************************
-						 Tween Data Construction (for Start)
-						 *****************************************/}else if(action === "start"){ /*************************
-						 Value Transferring
-						 *************************/ /* If this queue entry follows a previous Velocity-initiated queue entry *and* if this entry was created
-						 while the element was in the process of being animated by Velocity, then this current call is safe to use
-						 the end values from the prior call as its start values. Velocity attempts to perform this value transfer
-						 process whenever possible in order to avoid requerying the DOM. */ /* If values aren't transferred from a prior call and start values were not forcefed by the user (more on this below),
-						 then the DOM is queried for the element's current values as a last resort. */ /* Note: Conversely, animation reversal (and looping) *always* perform inter-call value transfers; they never requery the DOM. */data = Data(element); /* The per-element isAnimating flag is used to indicate whether it's safe (i.e. the data isn't stale)
-						 to transfer over end values to use as start values. If it's set to true and there is a previous
-						 Velocity call to pull values from, do so. */if(data && data.tweensContainer && data.isAnimating === true){lastTweensContainer = data.tweensContainer;} /***************************
-						 Tween Data Calculation
-						 ***************************/ /* This function parses property data and defaults endValue, easing, and startValue as appropriate. */ /* Property map values can either take the form of 1) a single value representing the end value,
-						 or 2) an array in the form of [ endValue, [, easing] [, startValue] ].
-						 The optional third parameter is a forcefed startValue to be used instead of querying the DOM for
-						 the element's current value. Read Velocity's docmentation to learn more about forcefeeding: VelocityJS.org/#forcefeeding */var parsePropertyValue=function parsePropertyValue(valueData,skipResolvingEasing){var endValue,easing,startValue; /* If we have a function as the main argument then resolve it first, in case it returns an array that needs to be split */if(Type.isFunction(valueData)){valueData = valueData.call(element,elementArrayIndex,elementsLength);} /* Handle the array format, which can be structured as one of three potential overloads:
-							 A) [ endValue, easing, startValue ], B) [ endValue, easing ], or C) [ endValue, startValue ] */if(Type.isArray(valueData)){ /* endValue is always the first item in the array. Don't bother validating endValue's value now
-								 since the ensuing property cycling logic does that. */endValue = valueData[0]; /* Two-item array format: If the second item is a number, function, or hex string, treat it as a
-								 start value since easings can only be non-hex strings or arrays. */if(!Type.isArray(valueData[1]) && /^[\d-]/.test(valueData[1]) || Type.isFunction(valueData[1]) || CSS.RegEx.isHex.test(valueData[1])){startValue = valueData[1]; /* Two or three-item array: If the second item is a non-hex string easing name or an array, treat it as an easing. */}else if(Type.isString(valueData[1]) && !CSS.RegEx.isHex.test(valueData[1]) && Velocity.Easings[valueData[1]] || Type.isArray(valueData[1])){easing = skipResolvingEasing?valueData[1]:getEasing(valueData[1],opts.duration); /* Don't bother validating startValue's value now since the ensuing property cycling logic inherently does that. */startValue = valueData[2];}else {startValue = valueData[1] || valueData[2];} /* Handle the single-value format. */}else {endValue = valueData;} /* Default to the call's easing if a per-property easing type was not defined. */if(!skipResolvingEasing){easing = easing || opts.easing;} /* If functions were passed in as values, pass the function the current element as its context,
-							 plus the element's index and the element set's size as arguments. Then, assign the returned value. */if(Type.isFunction(endValue)){endValue = endValue.call(element,elementArrayIndex,elementsLength);}if(Type.isFunction(startValue)){startValue = startValue.call(element,elementArrayIndex,elementsLength);} /* Allow startValue to be left as undefined to indicate to the ensuing code that its value was not forcefed. */return [endValue || 0,easing,startValue];};var fixPropertyValue=function fixPropertyValue(property,valueData){ /* In case this property is a hook, there are circumstances where we will intend to work on the hook's root property and not the hooked subproperty. */var rootProperty=CSS.Hooks.getRoot(property),rootPropertyValue=false, /* Parse out endValue, easing, and startValue from the property's data. */endValue=valueData[0],easing=valueData[1],startValue=valueData[2],pattern; /**************************
-							 Start Value Sourcing
-							 **************************/ /* Other than for the dummy tween property, properties that are not supported by the browser (and do not have an associated normalization) will
-							 inherently produce no style changes when set, so they are skipped in order to decrease animation tick overhead.
-							 Property support is determined via prefixCheck(), which returns a false flag when no supported is detected. */ /* Note: Since SVG elements have some of their properties directly applied as HTML attributes,
-							 there is no way to check for their explicit browser support, and so we skip skip this check for them. */if((!data || !data.isSVG) && rootProperty !== "tween" && CSS.Names.prefixCheck(rootProperty)[1] === false && CSS.Normalizations.registered[rootProperty] === undefined){if(Velocity.debug){console.log("Skipping [" + rootProperty + "] due to a lack of browser support.");}return;} /* If the display option is being set to a non-"none" (e.g. "block") and opacity (filter on IE<=8) is being
-							 animated to an endValue of non-zero, the user's intention is to fade in from invisible, thus we forcefeed opacity
-							 a startValue of 0 if its startValue hasn't already been sourced by value transferring or prior forcefeeding. */if((opts.display !== undefined && opts.display !== null && opts.display !== "none" || opts.visibility !== undefined && opts.visibility !== "hidden") && /opacity|filter/.test(property) && !startValue && endValue !== 0){startValue = 0;} /* If values have been transferred from the previous Velocity call, extract the endValue and rootPropertyValue
-							 for all of the current call's properties that were *also* animated in the previous call. */ /* Note: Value transferring can optionally be disabled by the user via the _cacheValues option. */if(opts._cacheValues && lastTweensContainer && lastTweensContainer[property]){if(startValue === undefined){startValue = lastTweensContainer[property].endValue + lastTweensContainer[property].unitType;} /* The previous call's rootPropertyValue is extracted from the element's data cache since that's the
-								 instance of rootPropertyValue that gets freshly updated by the tweening process, whereas the rootPropertyValue
-								 attached to the incoming lastTweensContainer is equal to the root property's value prior to any tweening. */rootPropertyValue = data.rootPropertyValueCache[rootProperty]; /* If values were not transferred from a previous Velocity call, query the DOM as needed. */}else { /* Handle hooked properties. */if(CSS.Hooks.registered[property]){if(startValue === undefined){rootPropertyValue = CSS.getPropertyValue(element,rootProperty); /* GET */ /* Note: The following getPropertyValue() call does not actually trigger a DOM query;
-										 getPropertyValue() will extract the hook from rootPropertyValue. */startValue = CSS.getPropertyValue(element,property,rootPropertyValue); /* If startValue is already defined via forcefeeding, do not query the DOM for the root property's value;
-										 just grab rootProperty's zero-value template from CSS.Hooks. This overwrites the element's actual
-										 root property value (if one is set), but this is acceptable since the primary reason users forcefeed is
-										 to avoid DOM queries, and thus we likewise avoid querying the DOM for the root property's value. */}else { /* Grab this hook's zero-value template, e.g. "0px 0px 0px black". */rootPropertyValue = CSS.Hooks.templates[rootProperty][1];} /* Handle non-hooked properties that haven't already been defined via forcefeeding. */}else if(startValue === undefined){startValue = CSS.getPropertyValue(element,property); /* GET */}} /**************************
-							 Value Data Extraction
-							 **************************/var separatedValue,endValueUnitType,startValueUnitType,operator=false; /* Separates a property value into its numeric value and its unit type. */var separateValue=function separateValue(property,value){var unitType,numericValue;numericValue = (value || "0").toString().toLowerCase() /* Match the unit type at the end of the value. */.replace(/[%A-z]+$/,function(match){ /* Grab the unit type. */unitType = match; /* Strip the unit type off of value. */return "";}); /* If no unit type was supplied, assign one that is appropriate for this property (e.g. "deg" for rotateZ or "px" for width). */if(!unitType){unitType = CSS.Values.getUnitType(property);}return [numericValue,unitType];};if(startValue !== endValue && Type.isString(startValue) && Type.isString(endValue)){pattern = "";var iStart=0, // index in startValue
-iEnd=0, // index in endValue
-aStart=[], // array of startValue numbers
-aEnd=[], // array of endValue numbers
-inCalc=0, // Keep track of being inside a "calc()" so we don't duplicate it
-inRGB=0, // Keep track of being inside an RGB as we can't use fractional values
-inRGBA=0; // Keep track of being inside an RGBA as we must pass fractional for the alpha channel
-startValue = CSS.Hooks.fixColors(startValue);endValue = CSS.Hooks.fixColors(endValue);while(iStart < startValue.length && iEnd < endValue.length) {var cStart=startValue[iStart],cEnd=endValue[iEnd];if(/[\d\.-]/.test(cStart) && /[\d\.-]/.test(cEnd)){var tStart=cStart, // temporary character buffer
-tEnd=cEnd, // temporary character buffer
-dotStart=".", // Make sure we can only ever match a single dot in a decimal
-dotEnd="."; // Make sure we can only ever match a single dot in a decimal
-while(++iStart < startValue.length) {cStart = startValue[iStart];if(cStart === dotStart){dotStart = ".."; // Can never match two characters
-}else if(!/\d/.test(cStart)){break;}tStart += cStart;}while(++iEnd < endValue.length) {cEnd = endValue[iEnd];if(cEnd === dotEnd){dotEnd = ".."; // Can never match two characters
-}else if(!/\d/.test(cEnd)){break;}tEnd += cEnd;}var uStart=CSS.Hooks.getUnit(startValue,iStart), // temporary unit type
-uEnd=CSS.Hooks.getUnit(endValue,iEnd); // temporary unit type
-iStart += uStart.length;iEnd += uEnd.length;if(uStart === uEnd){ // Same units
-if(tStart === tEnd){ // Same numbers, so just copy over
-pattern += tStart + uStart;}else { // Different numbers, so store them
-pattern += "{" + aStart.length + (inRGB?"!":"") + "}" + uStart;aStart.push(parseFloat(tStart));aEnd.push(parseFloat(tEnd));}}else { // Different units, so put into a "calc(from + to)" and animate each side to/from zero
-var nStart=parseFloat(tStart),nEnd=parseFloat(tEnd);pattern += (inCalc < 5?"calc":"") + "(" + (nStart?"{" + aStart.length + (inRGB?"!":"") + "}":"0") + uStart + " + " + (nEnd?"{" + (aStart.length + (nStart?1:0)) + (inRGB?"!":"") + "}":"0") + uEnd + ")";if(nStart){aStart.push(nStart);aEnd.push(0);}if(nEnd){aStart.push(0);aEnd.push(nEnd);}}}else if(cStart === cEnd){pattern += cStart;iStart++;iEnd++; // Keep track of being inside a calc()
-if(inCalc === 0 && cStart === "c" || inCalc === 1 && cStart === "a" || inCalc === 2 && cStart === "l" || inCalc === 3 && cStart === "c" || inCalc >= 4 && cStart === "("){inCalc++;}else if(inCalc && inCalc < 5 || inCalc >= 4 && cStart === ")" && --inCalc < 5){inCalc = 0;} // Keep track of being inside an rgb() / rgba()
-if(inRGB === 0 && cStart === "r" || inRGB === 1 && cStart === "g" || inRGB === 2 && cStart === "b" || inRGB === 3 && cStart === "a" || inRGB >= 3 && cStart === "("){if(inRGB === 3 && cStart === "a"){inRGBA = 1;}inRGB++;}else if(inRGBA && cStart === ","){if(++inRGBA > 3){inRGB = inRGBA = 0;}}else if(inRGBA && inRGB < (inRGBA?5:4) || inRGB >= (inRGBA?4:3) && cStart === ")" && --inRGB < (inRGBA?5:4)){inRGB = inRGBA = 0;}}else {inCalc = 0; // TODO: changing units, fixing colours
-break;}}if(iStart !== startValue.length || iEnd !== endValue.length){if(Velocity.debug){console.error("Trying to pattern match mis-matched strings [\"" + endValue + "\", \"" + startValue + "\"]");}pattern = undefined;}if(pattern){if(aStart.length){if(Velocity.debug){console.log("Pattern found \"" + pattern + "\" -> ",aStart,aEnd,"[" + startValue + "," + endValue + "]");}startValue = aStart;endValue = aEnd;endValueUnitType = startValueUnitType = "";}else {pattern = undefined;}}}if(!pattern){ /* Separate startValue. */separatedValue = separateValue(property,startValue);startValue = separatedValue[0];startValueUnitType = separatedValue[1]; /* Separate endValue, and extract a value operator (e.g. "+=", "-=") if one exists. */separatedValue = separateValue(property,endValue);endValue = separatedValue[0].replace(/^([+-\/*])=/,function(match,subMatch){operator = subMatch; /* Strip the operator off of the value. */return "";});endValueUnitType = separatedValue[1]; /* Parse float values from endValue and startValue. Default to 0 if NaN is returned. */startValue = parseFloat(startValue) || 0;endValue = parseFloat(endValue) || 0; /***************************************
-								 Property-Specific Value Conversion
-								 ***************************************/ /* Custom support for properties that don't actually accept the % unit type, but where pollyfilling is trivial and relatively foolproof. */if(endValueUnitType === "%"){ /* A %-value fontSize/lineHeight is relative to the parent's fontSize (as opposed to the parent's dimensions),
-									 which is identical to the em unit's behavior, so we piggyback off of that. */if(/^(fontSize|lineHeight)$/.test(property)){ /* Convert % into an em decimal value. */endValue = endValue / 100;endValueUnitType = "em"; /* For scaleX and scaleY, convert the value into its decimal format and strip off the unit type. */}else if(/^scale/.test(property)){endValue = endValue / 100;endValueUnitType = ""; /* For RGB components, take the defined percentage of 255 and strip off the unit type. */}else if(/(Red|Green|Blue)$/i.test(property)){endValue = endValue / 100 * 255;endValueUnitType = "";}}} /***************************
-							 Unit Ratio Calculation
-							 ***************************/ /* When queried, the browser returns (most) CSS property values in pixels. Therefore, if an endValue with a unit type of
-							 %, em, or rem is animated toward, startValue must be converted from pixels into the same unit type as endValue in order
-							 for value manipulation logic (increment/decrement) to proceed. Further, if the startValue was forcefed or transferred
-							 from a previous call, startValue may also not be in pixels. Unit conversion logic therefore consists of two steps:
-							 1) Calculating the ratio of %/em/rem/vh/vw relative to pixels
-							 2) Converting startValue into the same unit of measurement as endValue based on these ratios. */ /* Unit conversion ratios are calculated by inserting a sibling node next to the target node, copying over its position property,
-							 setting values with the target unit type then comparing the returned pixel value. */ /* Note: Even if only one of these unit types is being animated, all unit ratios are calculated at once since the overhead
-							 of batching the SETs and GETs together upfront outweights the potential overhead
-							 of layout thrashing caused by re-querying for uncalculated ratios for subsequently-processed properties. */ /* Todo: Shift this logic into the calls' first tick instance so that it's synced with RAF. */var calculateUnitRatios=function calculateUnitRatios(){ /************************
-								 Same Ratio Checks
-								 ************************/ /* The properties below are used to determine whether the element differs sufficiently from this call's
-								 previously iterated element to also differ in its unit conversion ratios. If the properties match up with those
-								 of the prior element, the prior element's conversion ratios are used. Like most optimizations in Velocity,
-								 this is done to minimize DOM querying. */var sameRatioIndicators={myParent:element.parentNode || document.body, /* GET */position:CSS.getPropertyValue(element,"position"), /* GET */fontSize:CSS.getPropertyValue(element,"fontSize") /* GET */}, /* Determine if the same % ratio can be used. % is based on the element's position value and its parent's width and height dimensions. */samePercentRatio=sameRatioIndicators.position === callUnitConversionData.lastPosition && sameRatioIndicators.myParent === callUnitConversionData.lastParent, /* Determine if the same em ratio can be used. em is relative to the element's fontSize. */sameEmRatio=sameRatioIndicators.fontSize === callUnitConversionData.lastFontSize; /* Store these ratio indicators call-wide for the next element to compare against. */callUnitConversionData.lastParent = sameRatioIndicators.myParent;callUnitConversionData.lastPosition = sameRatioIndicators.position;callUnitConversionData.lastFontSize = sameRatioIndicators.fontSize; /***************************
-								 Element-Specific Units
-								 ***************************/ /* Note: IE8 rounds to the nearest pixel when returning CSS values, thus we perform conversions using a measurement
-								 of 100 (instead of 1) to give our ratios a precision of at least 2 decimal values. */var measurement=100,unitRatios={};if(!sameEmRatio || !samePercentRatio){var dummy=data && data.isSVG?document.createElementNS("http://www.w3.org/2000/svg","rect"):document.createElement("div");Velocity.init(dummy);sameRatioIndicators.myParent.appendChild(dummy); /* To accurately and consistently calculate conversion ratios, the element's cascaded overflow and box-sizing are stripped.
-									 Similarly, since width/height can be artificially constrained by their min-/max- equivalents, these are controlled for as well. */ /* Note: Overflow must be also be controlled for per-axis since the overflow property overwrites its per-axis values. */$.each(["overflow","overflowX","overflowY"],function(i,property){Velocity.CSS.setPropertyValue(dummy,property,"hidden");});Velocity.CSS.setPropertyValue(dummy,"position",sameRatioIndicators.position);Velocity.CSS.setPropertyValue(dummy,"fontSize",sameRatioIndicators.fontSize);Velocity.CSS.setPropertyValue(dummy,"boxSizing","content-box"); /* width and height act as our proxy properties for measuring the horizontal and vertical % ratios. */$.each(["minWidth","maxWidth","width","minHeight","maxHeight","height"],function(i,property){Velocity.CSS.setPropertyValue(dummy,property,measurement + "%");}); /* paddingLeft arbitrarily acts as our proxy property for the em ratio. */Velocity.CSS.setPropertyValue(dummy,"paddingLeft",measurement + "em"); /* Divide the returned value by the measurement to get the ratio between 1% and 1px. Default to 1 since working with 0 can produce Infinite. */unitRatios.percentToPxWidth = callUnitConversionData.lastPercentToPxWidth = (parseFloat(CSS.getPropertyValue(dummy,"width",null,true)) || 1) / measurement; /* GET */unitRatios.percentToPxHeight = callUnitConversionData.lastPercentToPxHeight = (parseFloat(CSS.getPropertyValue(dummy,"height",null,true)) || 1) / measurement; /* GET */unitRatios.emToPx = callUnitConversionData.lastEmToPx = (parseFloat(CSS.getPropertyValue(dummy,"paddingLeft")) || 1) / measurement; /* GET */sameRatioIndicators.myParent.removeChild(dummy);}else {unitRatios.emToPx = callUnitConversionData.lastEmToPx;unitRatios.percentToPxWidth = callUnitConversionData.lastPercentToPxWidth;unitRatios.percentToPxHeight = callUnitConversionData.lastPercentToPxHeight;} /***************************
-								 Element-Agnostic Units
-								 ***************************/ /* Whereas % and em ratios are determined on a per-element basis, the rem unit only needs to be checked
-								 once per call since it's exclusively dependant upon document.body's fontSize. If this is the first time
-								 that calculateUnitRatios() is being run during this call, remToPx will still be set to its default value of null,
-								 so we calculate it now. */if(callUnitConversionData.remToPx === null){ /* Default to browsers' default fontSize of 16px in the case of 0. */callUnitConversionData.remToPx = parseFloat(CSS.getPropertyValue(document.body,"fontSize")) || 16; /* GET */} /* Similarly, viewport units are %-relative to the window's inner dimensions. */if(callUnitConversionData.vwToPx === null){callUnitConversionData.vwToPx = parseFloat(window.innerWidth) / 100; /* GET */callUnitConversionData.vhToPx = parseFloat(window.innerHeight) / 100; /* GET */}unitRatios.remToPx = callUnitConversionData.remToPx;unitRatios.vwToPx = callUnitConversionData.vwToPx;unitRatios.vhToPx = callUnitConversionData.vhToPx;if(Velocity.debug >= 1){console.log("Unit ratios: " + JSON.stringify(unitRatios),element);}return unitRatios;}; /********************
-							 Unit Conversion
-							 ********************/ /* The * and / operators, which are not passed in with an associated unit, inherently use startValue's unit. Skip value and unit conversion. */if(/[\/*]/.test(operator)){endValueUnitType = startValueUnitType; /* If startValue and endValue differ in unit type, convert startValue into the same unit type as endValue so that if endValueUnitType
-								 is a relative unit (%, em, rem), the values set during tweening will continue to be accurately relative even if the metrics they depend
-								 on are dynamically changing during the course of the animation. Conversely, if we always normalized into px and used px for setting values, the px ratio
-								 would become stale if the original unit being animated toward was relative and the underlying metrics change during the animation. */ /* Since 0 is 0 in any unit type, no conversion is necessary when startValue is 0 -- we just start at 0 with endValueUnitType. */}else if(startValueUnitType !== endValueUnitType && startValue !== 0){ /* Unit conversion is also skipped when endValue is 0, but *startValueUnitType* must be used for tween values to remain accurate. */ /* Note: Skipping unit conversion here means that if endValueUnitType was originally a relative unit, the animation won't relatively
-								 match the underlying metrics if they change, but this is acceptable since we're animating toward invisibility instead of toward visibility,
-								 which remains past the point of the animation's completion. */if(endValue === 0){endValueUnitType = startValueUnitType;}else { /* By this point, we cannot avoid unit conversion (it's undesirable since it causes layout thrashing).
-									 If we haven't already, we trigger calculateUnitRatios(), which runs once per element per call. */elementUnitConversionData = elementUnitConversionData || calculateUnitRatios(); /* The following RegEx matches CSS properties that have their % values measured relative to the x-axis. */ /* Note: W3C spec mandates that all of margin and padding's properties (even top and bottom) are %-relative to the *width* of the parent element. */var axis=/margin|padding|left|right|width|text|word|letter/i.test(property) || /X$/.test(property) || property === "x"?"x":"y"; /* In order to avoid generating n^2 bespoke conversion functions, unit conversion is a two-step process:
-									 1) Convert startValue into pixels. 2) Convert this new pixel value into endValue's unit type. */switch(startValueUnitType){case "%": /* Note: translateX and translateY are the only properties that are %-relative to an element's own dimensions -- not its parent's dimensions.
-											 Velocity does not include a special conversion process to account for this behavior. Therefore, animating translateX/Y from a % value
-											 to a non-% value will produce an incorrect start value. Fortunately, this sort of cross-unit conversion is rarely done by users in practice. */startValue *= axis === "x"?elementUnitConversionData.percentToPxWidth:elementUnitConversionData.percentToPxHeight;break;case "px": /* px acts as our midpoint in the unit conversion process; do nothing. */break;default:startValue *= elementUnitConversionData[startValueUnitType + "ToPx"];} /* Invert the px ratios to convert into to the target unit. */switch(endValueUnitType){case "%":startValue *= 1 / (axis === "x"?elementUnitConversionData.percentToPxWidth:elementUnitConversionData.percentToPxHeight);break;case "px": /* startValue is already in px, do nothing; we're done. */break;default:startValue *= 1 / elementUnitConversionData[endValueUnitType + "ToPx"];}}} /*********************
-							 Relative Values
-							 *********************/ /* Operator logic must be performed last since it requires unit-normalized start and end values. */ /* Note: Relative *percent values* do not behave how most people think; while one would expect "+=50%"
-							 to increase the property 1.5x its current value, it in fact increases the percent units in absolute terms:
-							 50 points is added on top of the current % value. */switch(operator){case "+":endValue = startValue + endValue;break;case "-":endValue = startValue - endValue;break;case "*":endValue = startValue * endValue;break;case "/":endValue = startValue / endValue;break;} /**************************
-							 tweensContainer Push
-							 **************************/ /* Construct the per-property tween object, and push it to the element's tweensContainer. */tweensContainer[property] = {rootPropertyValue:rootPropertyValue,startValue:startValue,currentValue:startValue,endValue:endValue,unitType:endValueUnitType,easing:easing};if(pattern){tweensContainer[property].pattern = pattern;}if(Velocity.debug){console.log("tweensContainer (" + property + "): " + JSON.stringify(tweensContainer[property]),element);}}; /* Create a tween out of each property, and append its associated data to tweensContainer. */for(var property in propertiesMap) {if(!propertiesMap.hasOwnProperty(property)){continue;} /* The original property name's format must be used for the parsePropertyValue() lookup,
-							 but we then use its camelCase styling to normalize it for manipulation. */var propertyName=CSS.Names.camelCase(property),valueData=parsePropertyValue(propertiesMap[property]); /* Find shorthand color properties that have been passed a hex string. */ /* Would be quicker to use CSS.Lists.colors.includes() if possible */if(_inArray(CSS.Lists.colors,propertyName)){ /* Parse the value data for each shorthand. */var endValue=valueData[0],easing=valueData[1],startValue=valueData[2];if(CSS.RegEx.isHex.test(endValue)){ /* Convert the hex strings into their RGB component arrays. */var colorComponents=["Red","Green","Blue"],endValueRGB=CSS.Values.hexToRgb(endValue),startValueRGB=startValue?CSS.Values.hexToRgb(startValue):undefined; /* Inject the RGB component tweens into propertiesMap. */for(var i=0;i < colorComponents.length;i++) {var dataArray=[endValueRGB[i]];if(easing){dataArray.push(easing);}if(startValueRGB !== undefined){dataArray.push(startValueRGB[i]);}fixPropertyValue(propertyName + colorComponents[i],dataArray);} /* If we have replaced a shortcut color value then don't update the standard property name */continue;}}fixPropertyValue(propertyName,valueData);} /* Along with its property data, store a reference to the element itself onto tweensContainer. */tweensContainer.element = element;} /*****************
-					 Call Push
-					 *****************/ /* Note: tweensContainer can be empty if all of the properties in this call's property map were skipped due to not
-					 being supported by the browser. The element property is used for checking that the tweensContainer has been appended to. */if(tweensContainer.element){ /* Apply the "velocity-animating" indicator class. */CSS.Values.addClass(element,"velocity-animating"); /* The call array houses the tweensContainers for each element being animated in the current call. */call.push(tweensContainer);data = Data(element);if(data){ /* Store the tweensContainer and options if we're working on the default effects queue, so that they can be used by the reverse command. */if(opts.queue === ""){data.tweensContainer = tweensContainer;data.opts = opts;} /* Switch on the element's animating flag. */data.isAnimating = true;} /* Once the final element in this call's element set has been processed, push the call array onto
-						 Velocity.State.calls for the animation tick to immediately begin processing. */if(elementsIndex === elementsLength - 1){ /* Add the current call plus its associated metadata (the element set and the call's options) onto the global call container.
-							 Anything on this call container is subjected to tick() processing. */Velocity.State.calls.push([call,elements,opts,null,promiseData.resolver,null,0]); /* If the animation tick isn't running, start it. (Velocity shuts it off when there are no active calls to process.) */if(Velocity.State.isTicking === false){Velocity.State.isTicking = true; /* Start the tick loop. */tick();}}else {elementsIndex++;}}} /* When the queue option is set to false, the call skips the element's queue and fires immediately. */if(opts.queue === false){ /* Since this buildQueue call doesn't respect the element's existing queue (which is where a delay option would have been appended),
-					 we manually inject the delay property here with an explicit setTimeout. */if(opts.delay){ /* Temporarily store delayed elements to facilitate access for global pause/resume */var callIndex=Velocity.State.delayedElements.count++;Velocity.State.delayedElements[callIndex] = element;var delayComplete=(function(index){return function(){ /* Clear the temporary element */Velocity.State.delayedElements[index] = false; /* Finally, issue the call */buildQueue();};})(callIndex);Data(element).delayBegin = new Date().getTime();Data(element).delay = parseFloat(opts.delay);Data(element).delayTimer = {setTimeout:setTimeout(buildQueue,parseFloat(opts.delay)),next:delayComplete};}else {buildQueue();} /* Otherwise, the call undergoes element queueing as normal. */ /* Note: To interoperate with jQuery, Velocity uses jQuery's own $.queue() stack for queuing logic. */}else {$.queue(element,opts.queue,function(next,clearQueue){ /* If the clearQueue flag was passed in by the stop command, resolve this call's promise. (Promises can only be resolved once,
-						 so it's fine if this is repeatedly triggered for each element in the associated call.) */if(clearQueue === true){if(promiseData.promise){promiseData.resolver(elements);} /* Do not continue with animation queueing. */return true;} /* This flag indicates to the upcoming completeCall() function that this queue entry was initiated by Velocity.
-						 See completeCall() for further details. */Velocity.velocityQueueEntryFlag = true;buildQueue(next);});} /*********************
-				 Auto-Dequeuing
-				 *********************/ /* As per jQuery's $.queue() behavior, to fire the first non-custom-queue entry on an element, the element
-				 must be dequeued if its queue stack consists *solely* of the current call. (This can be determined by checking
-				 for the "inprogress" item that jQuery prepends to active queue stack arrays.) Regardless, whenever the element's
-				 queue is further appended with additional items -- including $.delay()'s or even $.animate() calls, the queue's
-				 first entry is automatically fired. This behavior contrasts that of custom queues, which never auto-fire. */ /* Note: When an element set is being subjected to a non-parallel Velocity call, the animation will not begin until
-				 each one of the elements in the set has reached the end of its individually pre-existing queue chain. */ /* Note: Unfortunately, most people don't fully grasp jQuery's powerful, yet quirky, $.queue() function.
-				 Lean more here: http://stackoverflow.com/questions/1058158/can-somebody-explain-jquery-queue-to-me */if((opts.queue === "" || opts.queue === "fx") && $.queue(element)[0] !== "inprogress"){$.dequeue(element);}} /**************************
-			 Element Set Iteration
-			 **************************/ /* If the "nodeType" property exists on the elements variable, we're animating a single element.
-			 Place it in an array so that $.each() can iterate over it. */$.each(elements,function(i,element){ /* Ensure each element in a set has a nodeType (is a real element) to avoid throwing errors. */if(Type.isNode(element)){processElement(element,i);}}); /******************
-			 Option: Loop
-			 ******************/ /* The loop option accepts an integer indicating how many times the element should loop between the values in the
-			 current call's properties map and the element's property values prior to this call. */ /* Note: The loop option's logic is performed here -- after element processing -- because the current call needs
-			 to undergo its queue insertion prior to the loop option generating its series of constituent "reverse" calls,
-			 which chain after the current call. Two reverse calls (two "alternations") constitute one loop. */opts = $.extend({},Velocity.defaults,options);opts.loop = parseInt(opts.loop,10);var reverseCallsCount=opts.loop * 2 - 1;if(opts.loop){ /* Double the loop count to convert it into its appropriate number of "reverse" calls.
-				 Subtract 1 from the resulting value since the current call is included in the total alternation count. */for(var x=0;x < reverseCallsCount;x++) { /* Since the logic for the reverse action occurs inside Queueing and therefore this call's options object
-					 isn't parsed until then as well, the current call's delay option must be explicitly passed into the reverse
-					 call so that the delay logic that occurs inside *Pre-Queueing* can process it. */var reverseOptions={delay:opts.delay,progress:opts.progress}; /* If a complete callback was passed into this call, transfer it to the loop redirect's final "reverse" call
-					 so that it's triggered when the entire redirect is complete (and not when the very first animation is complete). */if(x === reverseCallsCount - 1){reverseOptions.display = opts.display;reverseOptions.visibility = opts.visibility;reverseOptions.complete = opts.complete;}animate(elements,"reverse",reverseOptions);}} /***************
-			 Chaining
-			 ***************/ /* Return the elements back to the call chain, with wrapped elements taking precedence in case Velocity was called via the $.fn. extension. */return getChain();}; /* Turn Velocity into the animation function, extended with the pre-existing Velocity object. */Velocity = $.extend(animate,Velocity); /* For legacy support, also expose the literal animate method. */Velocity.animate = animate; /**************
-		 Timing
-		 **************/ /* Ticker function. */var ticker=window.requestAnimationFrame || rAFShim; /* Inactive browser tabs pause rAF, which results in all active animations immediately sprinting to their completion states when the tab refocuses.
-		 To get around this, we dynamically switch rAF to setTimeout (which the browser *doesn't* pause) when the tab loses focus. We skip this for mobile
-		 devices to avoid wasting battery power on inactive tabs. */ /* Note: Tab focus detection doesn't work on older versions of IE, but that's okay since they don't support rAF to begin with. */if(!Velocity.State.isMobile && document.hidden !== undefined){var updateTicker=function updateTicker(){ /* Reassign the rAF function (which the global tick() function uses) based on the tab's focus state. */if(document.hidden){ticker = function(callback){ /* The tick function needs a truthy first argument in order to pass its internal timestamp check. */return setTimeout(function(){callback(true);},16);}; /* The rAF loop has been paused by the browser, so we manually restart the tick. */tick();}else {ticker = window.requestAnimationFrame || rAFShim;}}; /* Page could be sitting in the background at this time (i.e. opened as new tab) so making sure we use correct ticker from the start */updateTicker(); /* And then run check again every time visibility changes */document.addEventListener("visibilitychange",updateTicker);} /************
-		 Tick
-		 ************/ /* Note: All calls to Velocity are pushed to the Velocity.State.calls array, which is fully iterated through upon each tick. */function tick(timestamp){ /* An empty timestamp argument indicates that this is the first tick occurence since ticking was turned on.
-			 We leverage this metadata to fully ignore the first tick pass since RAF's initial pass is fired whenever
-			 the browser's next tick sync time occurs, which results in the first elements subjected to Velocity
-			 calls being animated out of sync with any elements animated immediately thereafter. In short, we ignore
-			 the first RAF tick pass so that elements being immediately consecutively animated -- instead of simultaneously animated
-			 by the same Velocity call -- are properly batched into the same initial RAF tick and consequently remain in sync thereafter. */if(timestamp){ /* We normally use RAF's high resolution timestamp but as it can be significantly offset when the browser is
-				 under high stress we give the option for choppiness over allowing the browser to drop huge chunks of frames.
-				 We use performance.now() and shim it if it doesn't exist for when the tab is hidden. */var timeCurrent=Velocity.timestamp && timestamp !== true?timestamp:performance.now(); /********************
-				 Call Iteration
-				 ********************/var callsLength=Velocity.State.calls.length; /* To speed up iterating over this array, it is compacted (falsey items -- calls that have completed -- are removed)
-				 when its length has ballooned to a point that can impact tick performance. This only becomes necessary when animation
-				 has been continuous with many elements over a long period of time; whenever all active calls are completed, completeCall() clears Velocity.State.calls. */if(callsLength > 10000){Velocity.State.calls = compactSparseArray(Velocity.State.calls);callsLength = Velocity.State.calls.length;} /* Iterate through each active call. */for(var i=0;i < callsLength;i++) { /* When a Velocity call is completed, its Velocity.State.calls entry is set to false. Continue on to the next call. */if(!Velocity.State.calls[i]){continue;} /************************
-					 Call-Wide Variables
-					 ************************/var callContainer=Velocity.State.calls[i],call=callContainer[0],opts=callContainer[2],timeStart=callContainer[3],firstTick=!!timeStart,tweenDummyValue=null,pauseObject=callContainer[5],millisecondsEllapsed=callContainer[6]; /* If timeStart is undefined, then this is the first time that this call has been processed by tick().
-					 We assign timeStart now so that its value is as close to the real animation start time as possible.
-					 (Conversely, had timeStart been defined when this call was added to Velocity.State.calls, the delay
-					 between that time and now would cause the first few frames of the tween to be skipped since
-					 percentComplete is calculated relative to timeStart.) */ /* Further, subtract 16ms (the approximate resolution of RAF) from the current time value so that the
-					 first tick iteration isn't wasted by animating at 0% tween completion, which would produce the
-					 same style value as the element's current value. */if(!timeStart){timeStart = Velocity.State.calls[i][3] = timeCurrent - 16;} /* If a pause object is present, skip processing unless it has been set to resume */if(pauseObject){if(pauseObject.resume === true){ /* Update the time start to accomodate the paused completion amount */timeStart = callContainer[3] = Math.round(timeCurrent - millisecondsEllapsed - 16); /* Remove pause object after processing */callContainer[5] = null;}else {continue;}}millisecondsEllapsed = callContainer[6] = timeCurrent - timeStart; /* The tween's completion percentage is relative to the tween's start time, not the tween's start value
-					 (which would result in unpredictable tween durations since JavaScript's timers are not particularly accurate).
-					 Accordingly, we ensure that percentComplete does not exceed 1. */var percentComplete=Math.min(millisecondsEllapsed / opts.duration,1); /**********************
-					 Element Iteration
-					 **********************/ /* For every call, iterate through each of the elements in its set. */for(var j=0,callLength=call.length;j < callLength;j++) {var tweensContainer=call[j],element=tweensContainer.element; /* Check to see if this element has been deleted midway through the animation by checking for the
-						 continued existence of its data cache. If it's gone, or the element is currently paused, skip animating this element. */if(!Data(element)){continue;}var transformPropertyExists=false; /**********************************
-						 Display & Visibility Toggling
-						 **********************************/ /* If the display option is set to non-"none", set it upfront so that the element can become visible before tweening begins.
-						 (Otherwise, display's "none" value is set in completeCall() once the animation has completed.) */if(opts.display !== undefined && opts.display !== null && opts.display !== "none"){if(opts.display === "flex"){var flexValues=["-webkit-box","-moz-box","-ms-flexbox","-webkit-flex"];$.each(flexValues,function(i,flexValue){CSS.setPropertyValue(element,"display",flexValue);});}CSS.setPropertyValue(element,"display",opts.display);} /* Same goes with the visibility option, but its "none" equivalent is "hidden". */if(opts.visibility !== undefined && opts.visibility !== "hidden"){CSS.setPropertyValue(element,"visibility",opts.visibility);} /************************
-						 Property Iteration
-						 ************************/ /* For every element, iterate through each property. */for(var property in tweensContainer) { /* Note: In addition to property tween data, tweensContainer contains a reference to its associated element. */if(tweensContainer.hasOwnProperty(property) && property !== "element"){var tween=tweensContainer[property],currentValue, /* Easing can either be a pre-genereated function or a string that references a pre-registered easing
-										 on the Velocity.Easings object. In either case, return the appropriate easing *function*. */easing=Type.isString(tween.easing)?Velocity.Easings[tween.easing]:tween.easing; /******************************
-								 Current Value Calculation
-								 ******************************/if(Type.isString(tween.pattern)){var patternReplace=percentComplete === 1?function($0,index,round){var result=tween.endValue[index];return round?Math.round(result):result;}:function($0,index,round){var startValue=tween.startValue[index],tweenDelta=tween.endValue[index] - startValue,result=startValue + tweenDelta * easing(percentComplete,opts,tweenDelta);return round?Math.round(result):result;};currentValue = tween.pattern.replace(/{(\d+)(!)?}/g,patternReplace);}else if(percentComplete === 1){ /* If this is the last tick pass (if we've reached 100% completion for this tween),
-									 ensure that currentValue is explicitly set to its target endValue so that it's not subjected to any rounding. */currentValue = tween.endValue;}else { /* Otherwise, calculate currentValue based on the current delta from startValue. */var tweenDelta=tween.endValue - tween.startValue;currentValue = tween.startValue + tweenDelta * easing(percentComplete,opts,tweenDelta); /* If no value change is occurring, don't proceed with DOM updating. */}if(!firstTick && currentValue === tween.currentValue){continue;}tween.currentValue = currentValue; /* If we're tweening a fake 'tween' property in order to log transition values, update the one-per-call variable so that
-								 it can be passed into the progress callback. */if(property === "tween"){tweenDummyValue = currentValue;}else { /******************
-									 Hooks: Part I
-									 ******************/var hookRoot; /* For hooked properties, the newly-updated rootPropertyValueCache is cached onto the element so that it can be used
-									 for subsequent hooks in this call that are associated with the same root property. If we didn't cache the updated
-									 rootPropertyValue, each subsequent update to the root property in this tick pass would reset the previous hook's
-									 updates to rootPropertyValue prior to injection. A nice performance byproduct of rootPropertyValue caching is that
-									 subsequently chained animations using the same hookRoot but a different hook can use this cached rootPropertyValue. */if(CSS.Hooks.registered[property]){hookRoot = CSS.Hooks.getRoot(property);var rootPropertyValueCache=Data(element).rootPropertyValueCache[hookRoot];if(rootPropertyValueCache){tween.rootPropertyValue = rootPropertyValueCache;}} /*****************
-									 DOM Update
-									 *****************/ /* setPropertyValue() returns an array of the property name and property value post any normalization that may have been performed. */ /* Note: To solve an IE<=8 positioning bug, the unit type is dropped when setting a property value of 0. */var adjustedSetData=CSS.setPropertyValue(element, /* SET */property,tween.currentValue + (IE < 9 && parseFloat(currentValue) === 0?"":tween.unitType),tween.rootPropertyValue,tween.scrollData); /*******************
-									 Hooks: Part II
-									 *******************/ /* Now that we have the hook's updated rootPropertyValue (the post-processed value provided by adjustedSetData), cache it onto the element. */if(CSS.Hooks.registered[property]){ /* Since adjustedSetData contains normalized data ready for DOM updating, the rootPropertyValue needs to be re-extracted from its normalized form. ?? */if(CSS.Normalizations.registered[hookRoot]){Data(element).rootPropertyValueCache[hookRoot] = CSS.Normalizations.registered[hookRoot]("extract",null,adjustedSetData[1]);}else {Data(element).rootPropertyValueCache[hookRoot] = adjustedSetData[1];}} /***************
-									 Transforms
-									 ***************/ /* Flag whether a transform property is being animated so that flushTransformCache() can be triggered once this tick pass is complete. */if(adjustedSetData[0] === "transform"){transformPropertyExists = true;}}}} /****************
-						 mobileHA
-						 ****************/ /* If mobileHA is enabled, set the translate3d transform to null to force hardware acceleration.
-						 It's safe to override this property since Velocity doesn't actually support its animation (hooks are used in its place). */if(opts.mobileHA){ /* Don't set the null transform hack if we've already done so. */if(Data(element).transformCache.translate3d === undefined){ /* All entries on the transformCache object are later concatenated into a single transform string via flushTransformCache(). */Data(element).transformCache.translate3d = "(0px, 0px, 0px)";transformPropertyExists = true;}}if(transformPropertyExists){CSS.flushTransformCache(element);}} /* The non-"none" display value is only applied to an element once -- when its associated call is first ticked through.
-					 Accordingly, it's set to false so that it isn't re-processed by this call in the next tick. */if(opts.display !== undefined && opts.display !== "none"){Velocity.State.calls[i][2].display = false;}if(opts.visibility !== undefined && opts.visibility !== "hidden"){Velocity.State.calls[i][2].visibility = false;} /* Pass the elements and the timing data (percentComplete, msRemaining, timeStart, tweenDummyValue) into the progress callback. */if(opts.progress){opts.progress.call(callContainer[1],callContainer[1],percentComplete,Math.max(0,timeStart + opts.duration - timeCurrent),timeStart,tweenDummyValue);} /* If this call has finished tweening, pass its index to completeCall() to handle call cleanup. */if(percentComplete === 1){completeCall(i);}}} /* Note: completeCall() sets the isTicking flag to false when the last call on Velocity.State.calls has completed. */if(Velocity.State.isTicking){ticker(tick);}} /**********************
-		 Call Completion
-		 **********************/ /* Note: Unlike tick(), which processes all active calls at once, call completion is handled on a per-call basis. */function completeCall(callIndex,isStopped){ /* Ensure the call exists. */if(!Velocity.State.calls[callIndex]){return false;} /* Pull the metadata from the call. */var call=Velocity.State.calls[callIndex][0],elements=Velocity.State.calls[callIndex][1],opts=Velocity.State.calls[callIndex][2],resolver=Velocity.State.calls[callIndex][4];var remainingCallsExist=false; /*************************
-			 Element Finalization
-			 *************************/for(var i=0,callLength=call.length;i < callLength;i++) {var element=call[i].element; /* If the user set display to "none" (intending to hide the element), set it now that the animation has completed. */ /* Note: display:none isn't set when calls are manually stopped (via Velocity("stop"). */ /* Note: Display gets ignored with "reverse" calls and infinite loops, since this behavior would be undesirable. */if(!isStopped && !opts.loop){if(opts.display === "none"){CSS.setPropertyValue(element,"display",opts.display);}if(opts.visibility === "hidden"){CSS.setPropertyValue(element,"visibility",opts.visibility);}} /* If the element's queue is empty (if only the "inprogress" item is left at position 0) or if its queue is about to run
-				 a non-Velocity-initiated entry, turn off the isAnimating flag. A non-Velocity-initiatied queue entry's logic might alter
-				 an element's CSS values and thereby cause Velocity's cached value data to go stale. To detect if a queue entry was initiated by Velocity,
-				 we check for the existence of our special Velocity.queueEntryFlag declaration, which minifiers won't rename since the flag
-				 is assigned to jQuery's global $ object and thus exists out of Velocity's own scope. */var data=Data(element);if(opts.loop !== true && ($.queue(element)[1] === undefined || !/\.velocityQueueEntryFlag/i.test($.queue(element)[1]))){ /* The element may have been deleted. Ensure that its data cache still exists before acting on it. */if(data){data.isAnimating = false; /* Clear the element's rootPropertyValueCache, which will become stale. */data.rootPropertyValueCache = {};var transformHAPropertyExists=false; /* If any 3D transform subproperty is at its default value (regardless of unit type), remove it. */$.each(CSS.Lists.transforms3D,function(i,transformName){var defaultValue=/^scale/.test(transformName)?1:0,currentValue=data.transformCache[transformName];if(data.transformCache[transformName] !== undefined && new RegExp("^\\(" + defaultValue + "[^.]").test(currentValue)){transformHAPropertyExists = true;delete data.transformCache[transformName];}}); /* Mobile devices have hardware acceleration removed at the end of the animation in order to avoid hogging the GPU's memory. */if(opts.mobileHA){transformHAPropertyExists = true;delete data.transformCache.translate3d;} /* Flush the subproperty removals to the DOM. */if(transformHAPropertyExists){CSS.flushTransformCache(element);} /* Remove the "velocity-animating" indicator class. */CSS.Values.removeClass(element,"velocity-animating");}} /*********************
-				 Option: Complete
-				 *********************/ /* Complete is fired once per call (not once per element) and is passed the full raw DOM element set as both its context and its first argument. */ /* Note: Callbacks aren't fired when calls are manually stopped (via Velocity("stop"). */if(!isStopped && opts.complete && !opts.loop && i === callLength - 1){ /* We throw callbacks in a setTimeout so that thrown errors don't halt the execution of Velocity itself. */try{opts.complete.call(elements,elements);}catch(error) {setTimeout(function(){throw error;},1);}} /**********************
-				 Promise Resolving
-				 **********************/ /* Note: Infinite loops don't return promises. */if(resolver && opts.loop !== true){resolver(elements);} /****************************
-				 Option: Loop (Infinite)
-				 ****************************/if(data && opts.loop === true && !isStopped){ /* If a rotateX/Y/Z property is being animated by 360 deg with loop:true, swap tween start/end values to enable
-					 continuous iterative rotation looping. (Otherise, the element would just rotate back and forth.) */$.each(data.tweensContainer,function(propertyName,tweenContainer){if(/^rotate/.test(propertyName) && (parseFloat(tweenContainer.startValue) - parseFloat(tweenContainer.endValue)) % 360 === 0){var oldStartValue=tweenContainer.startValue;tweenContainer.startValue = tweenContainer.endValue;tweenContainer.endValue = oldStartValue;}if(/^backgroundPosition/.test(propertyName) && parseFloat(tweenContainer.endValue) === 100 && tweenContainer.unitType === "%"){tweenContainer.endValue = 0;tweenContainer.startValue = 100;}});Velocity(element,"reverse",{loop:true,delay:opts.delay});} /***************
-				 Dequeueing
-				 ***************/ /* Fire the next call in the queue so long as this call's queue wasn't set to false (to trigger a parallel animation),
-				 which would have already caused the next call to fire. Note: Even if the end of the animation queue has been reached,
-				 $.dequeue() must still be called in order to completely clear jQuery's animation queue. */if(opts.queue !== false){$.dequeue(element,opts.queue);}} /************************
-			 Calls Array Cleanup
-			 ************************/ /* Since this call is complete, set it to false so that the rAF tick skips it. This array is later compacted via compactSparseArray().
-			 (For performance reasons, the call is set to false instead of being deleted from the array: http://www.html5rocks.com/en/tutorials/speed/v8/) */Velocity.State.calls[callIndex] = false; /* Iterate through the calls array to determine if this was the final in-progress animation.
-			 If so, set a flag to end ticking and clear the calls array. */for(var j=0,callsLength=Velocity.State.calls.length;j < callsLength;j++) {if(Velocity.State.calls[j] !== false){remainingCallsExist = true;break;}}if(remainingCallsExist === false){ /* tick() will detect this flag upon its next iteration and subsequently turn itself off. */Velocity.State.isTicking = false; /* Clear the calls array so that its length is reset. */delete Velocity.State.calls;Velocity.State.calls = [];}} /******************
-		 Frameworks
-		 ******************/ /* Both jQuery and Zepto allow their $.fn object to be extended to allow wrapped elements to be subjected to plugin calls.
-		 If either framework is loaded, register a "velocity" extension pointing to Velocity's core animate() method.  Velocity
-		 also registers itself onto a global container (window.jQuery || window.Zepto || window) so that certain features are
-		 accessible beyond just a per-element scope. This master object contains an .animate() method, which is later assigned to $.fn
-		 (if jQuery or Zepto are present). Accordingly, Velocity can both act on wrapped DOM elements and stand alone for targeting raw DOM elements. */global.Velocity = Velocity;if(global !== window){ /* Assign the element function to Velocity's core animate() method. */global.fn.velocity = animate; /* Assign the object function's defaults to Velocity's global defaults object. */global.fn.velocity.defaults = Velocity.defaults;} /***********************
-		 Packaged Redirects
-		 ***********************/ /* slideUp, slideDown */$.each(["Down","Up"],function(i,direction){Velocity.Redirects["slide" + direction] = function(element,options,elementsIndex,elementsSize,elements,promiseData){var opts=$.extend({},options),begin=opts.begin,complete=opts.complete,inlineValues={},computedValues={height:"",marginTop:"",marginBottom:"",paddingTop:"",paddingBottom:""};if(opts.display === undefined){ /* Show the element before slideDown begins and hide the element after slideUp completes. */ /* Note: Inline elements cannot have dimensions animated, so they're reverted to inline-block. */opts.display = direction === "Down"?Velocity.CSS.Values.getDisplayType(element) === "inline"?"inline-block":"block":"none";}opts.begin = function(){ /* If the user passed in a begin callback, fire it now. */if(elementsIndex === 0 && begin){begin.call(elements,elements);} /* Cache the elements' original vertical dimensional property values so that we can animate back to them. */for(var property in computedValues) {if(!computedValues.hasOwnProperty(property)){continue;}inlineValues[property] = element.style[property]; /* For slideDown, use forcefeeding to animate all vertical properties from 0. For slideUp,
-						 use forcefeeding to start from computed values and animate down to 0. */var propertyValue=CSS.getPropertyValue(element,property);computedValues[property] = direction === "Down"?[propertyValue,0]:[0,propertyValue];} /* Force vertical overflow content to clip so that sliding works as expected. */inlineValues.overflow = element.style.overflow;element.style.overflow = "hidden";};opts.complete = function(){ /* Reset element to its pre-slide inline values once its slide animation is complete. */for(var property in inlineValues) {if(inlineValues.hasOwnProperty(property)){element.style[property] = inlineValues[property];}} /* If the user passed in a complete callback, fire it now. */if(elementsIndex === elementsSize - 1){if(complete){complete.call(elements,elements);}if(promiseData){promiseData.resolver(elements);}}};Velocity(element,computedValues,opts);};}); /* fadeIn, fadeOut */$.each(["In","Out"],function(i,direction){Velocity.Redirects["fade" + direction] = function(element,options,elementsIndex,elementsSize,elements,promiseData){var opts=$.extend({},options),complete=opts.complete,propertiesMap={opacity:direction === "In"?1:0}; /* Since redirects are triggered individually for each element in the animated set, avoid repeatedly triggering
-				 callbacks by firing them only when the final element has been reached. */if(elementsIndex !== 0){opts.begin = null;}if(elementsIndex !== elementsSize - 1){opts.complete = null;}else {opts.complete = function(){if(complete){complete.call(elements,elements);}if(promiseData){promiseData.resolver(elements);}};} /* If a display was passed in, use it. Otherwise, default to "none" for fadeOut or the element-specific default for fadeIn. */ /* Note: We allow users to pass in "null" to skip display setting altogether. */if(opts.display === undefined){opts.display = direction === "In"?"auto":"none";}Velocity(this,propertiesMap,opts);};});return Velocity;})(window.jQuery || window.Zepto || window,window,window?window.document:undefined);}); /******************
- Known Issues
- ******************/ /* The CSS spec mandates that the translateX/Y/Z transforms are %-relative to the element itself -- not its parent.
- Velocity, however, doesn't make this distinction. Thus, converting to or from the % unit with these subproperties
- will produce an inaccurate conversion value. The same issue exists with the cx/cy attributes of SVG circles and ellipses. */ /* Browser support: Using this shim instead of jQuery proper removes support for IE8. */ // and will not fail on other DOM objects (as do DOM elements in IE < 9)
+/**
+ * Swiper 4.4.2
+ * Most modern mobile touch slider and framework with hardware accelerated transitions
+ * http://www.idangero.us/swiper/
+ *
+ * Copyright 2014-2018 Vladimir Kharlampidi
+ *
+ * Released under the MIT License
+ *
+ * Released on: November 1, 2018
+ */
+
+
+!(function (e, t) {
+   true ? module.exports = t() : "function" == typeof define && define.amd ? define(t) : e.Swiper = t();
+})(undefined, function () {
+  "use strict";var f = "undefined" == typeof document ? { body: {}, addEventListener: function addEventListener() {}, removeEventListener: function removeEventListener() {}, activeElement: { blur: function blur() {}, nodeName: "" }, querySelector: function querySelector() {
+      return null;
+    }, querySelectorAll: function querySelectorAll() {
+      return [];
+    }, getElementById: function getElementById() {
+      return null;
+    }, createEvent: function createEvent() {
+      return { initEvent: function initEvent() {} };
+    }, createElement: function createElement() {
+      return { children: [], childNodes: [], style: {}, setAttribute: function setAttribute() {}, getElementsByTagName: function getElementsByTagName() {
+          return [];
+        } };
+    }, location: { hash: "" } } : document,
+      Y = "undefined" == typeof window ? { document: f, navigator: { userAgent: "" }, location: {}, history: {}, CustomEvent: function CustomEvent() {
+      return this;
+    }, addEventListener: function addEventListener() {}, removeEventListener: function removeEventListener() {}, getComputedStyle: function getComputedStyle() {
+      return { getPropertyValue: function getPropertyValue() {
+          return "";
+        } };
+    }, Image: function Image() {}, Date: function Date() {}, screen: {}, setTimeout: function setTimeout() {}, clearTimeout: function clearTimeout() {} } : window,
+      l = function l(e) {
+    for (var t = 0; t < e.length; t += 1) this[t] = e[t];return this.length = e.length, this;
+  };function L(e, t) {
+    var a = [],
+        i = 0;if (e && !t && e instanceof l) return e;if (e) if ("string" == typeof e) {
+      var s,
+          r,
+          n = e.trim();if (0 <= n.indexOf("<") && 0 <= n.indexOf(">")) {
+        var o = "div";for (0 === n.indexOf("<li") && (o = "ul"), 0 === n.indexOf("<tr") && (o = "tbody"), 0 !== n.indexOf("<td") && 0 !== n.indexOf("<th") || (o = "tr"), 0 === n.indexOf("<tbody") && (o = "table"), 0 === n.indexOf("<option") && (o = "select"), (r = f.createElement(o)).innerHTML = n, i = 0; i < r.childNodes.length; i += 1) a.push(r.childNodes[i]);
+      } else for (s = t || "#" !== e[0] || e.match(/[ .<>:~]/) ? (t || f).querySelectorAll(e.trim()) : [f.getElementById(e.trim().split("#")[1])], i = 0; i < s.length; i += 1) s[i] && a.push(s[i]);
+    } else if (e.nodeType || e === Y || e === f) a.push(e);else if (0 < e.length && e[0].nodeType) for (i = 0; i < e.length; i += 1) a.push(e[i]);return new l(a);
+  }function r(e) {
+    for (var t = [], a = 0; a < e.length; a += 1) -1 === t.indexOf(e[a]) && t.push(e[a]);return t;
+  }L.fn = l.prototype, L.Class = l, L.Dom7 = l;var t = { addClass: function addClass(e) {
+      if (void 0 === e) return this;for (var t = e.split(" "), a = 0; a < t.length; a += 1) for (var i = 0; i < this.length; i += 1) void 0 !== this[i] && void 0 !== this[i].classList && this[i].classList.add(t[a]);return this;
+    }, removeClass: function removeClass(e) {
+      for (var t = e.split(" "), a = 0; a < t.length; a += 1) for (var i = 0; i < this.length; i += 1) void 0 !== this[i] && void 0 !== this[i].classList && this[i].classList.remove(t[a]);return this;
+    }, hasClass: function hasClass(e) {
+      return !!this[0] && this[0].classList.contains(e);
+    }, toggleClass: function toggleClass(e) {
+      for (var t = e.split(" "), a = 0; a < t.length; a += 1) for (var i = 0; i < this.length; i += 1) void 0 !== this[i] && void 0 !== this[i].classList && this[i].classList.toggle(t[a]);return this;
+    }, attr: function attr(e, t) {
+      var a = arguments;if (1 === arguments.length && "string" == typeof e) return this[0] ? this[0].getAttribute(e) : void 0;for (var i = 0; i < this.length; i += 1) if (2 === a.length) this[i].setAttribute(e, t);else for (var s in e) this[i][s] = e[s], this[i].setAttribute(s, e[s]);return this;
+    }, removeAttr: function removeAttr(e) {
+      for (var t = 0; t < this.length; t += 1) this[t].removeAttribute(e);return this;
+    }, data: function data(e, t) {
+      var a;if (void 0 !== t) {
+        for (var i = 0; i < this.length; i += 1) (a = this[i]).dom7ElementDataStorage || (a.dom7ElementDataStorage = {}), a.dom7ElementDataStorage[e] = t;return this;
+      }if (a = this[0]) {
+        if (a.dom7ElementDataStorage && e in a.dom7ElementDataStorage) return a.dom7ElementDataStorage[e];var s = a.getAttribute("data-" + e);return s || void 0;
+      }
+    }, transform: function transform(e) {
+      for (var t = 0; t < this.length; t += 1) {
+        var a = this[t].style;a.webkitTransform = e, a.transform = e;
+      }return this;
+    }, transition: function transition(e) {
+      "string" != typeof e && (e += "ms");for (var t = 0; t < this.length; t += 1) {
+        var a = this[t].style;a.webkitTransitionDuration = e, a.transitionDuration = e;
+      }return this;
+    }, on: function on() {
+      for (var e, t = [], a = arguments.length; a--;) t[a] = arguments[a];var i = t[0],
+          r = t[1],
+          n = t[2],
+          s = t[3];function o(e) {
+        var t = e.target;if (t) {
+          var a = e.target.dom7EventData || [];if ((a.indexOf(e) < 0 && a.unshift(e), L(t).is(r))) n.apply(t, a);else for (var i = L(t).parents(), s = 0; s < i.length; s += 1) L(i[s]).is(r) && n.apply(i[s], a);
+        }
+      }function l(e) {
+        var t = e && e.target && e.target.dom7EventData || [];t.indexOf(e) < 0 && t.unshift(e), n.apply(this, t);
+      }"function" == typeof t[1] && (i = (e = t)[0], n = e[1], s = e[2], r = void 0), s || (s = !1);for (var d, p = i.split(" "), c = 0; c < this.length; c += 1) {
+        var u = this[c];if (r) for (d = 0; d < p.length; d += 1) {
+          var h = p[d];u.dom7LiveListeners || (u.dom7LiveListeners = {}), u.dom7LiveListeners[h] || (u.dom7LiveListeners[h] = []), u.dom7LiveListeners[h].push({ listener: n, proxyListener: o }), u.addEventListener(h, o, s);
+        } else for (d = 0; d < p.length; d += 1) {
+          var v = p[d];u.dom7Listeners || (u.dom7Listeners = {}), u.dom7Listeners[v] || (u.dom7Listeners[v] = []), u.dom7Listeners[v].push({ listener: n, proxyListener: l }), u.addEventListener(v, l, s);
+        }
+      }return this;
+    }, off: function off() {
+      for (var e, t = [], a = arguments.length; a--;) t[a] = arguments[a];var i = t[0],
+          s = t[1],
+          r = t[2],
+          n = t[3];"function" == typeof t[1] && (i = (e = t)[0], r = e[1], n = e[2], s = void 0), n || (n = !1);for (var o = i.split(" "), l = 0; l < o.length; l += 1) for (var d = o[l], p = 0; p < this.length; p += 1) {
+        var c = this[p],
+            u = void 0;if ((!s && c.dom7Listeners ? u = c.dom7Listeners[d] : s && c.dom7LiveListeners && (u = c.dom7LiveListeners[d]), u && u.length)) for (var h = u.length - 1; 0 <= h; h -= 1) {
+          var v = u[h];r && v.listener === r ? (c.removeEventListener(d, v.proxyListener, n), u.splice(h, 1)) : r || (c.removeEventListener(d, v.proxyListener, n), u.splice(h, 1));
+        }
+      }return this;
+    }, trigger: function trigger() {
+      for (var e = [], t = arguments.length; t--;) e[t] = arguments[t];for (var a = e[0].split(" "), i = e[1], s = 0; s < a.length; s += 1) for (var r = a[s], n = 0; n < this.length; n += 1) {
+        var o = this[n],
+            l = void 0;try {
+          l = new Y.CustomEvent(r, { detail: i, bubbles: !0, cancelable: !0 });
+        } catch (e) {
+          (l = f.createEvent("Event")).initEvent(r, !0, !0), l.detail = i;
+        }o.dom7EventData = e.filter(function (e, t) {
+          return 0 < t;
+        }), o.dispatchEvent(l), o.dom7EventData = [], delete o.dom7EventData;
+      }return this;
+    }, transitionEnd: function transitionEnd(t) {
+      var a,
+          i = ["webkitTransitionEnd", "transitionend"],
+          s = this;function r(e) {
+        if (e.target === this) for (t.call(this, e), a = 0; a < i.length; a += 1) s.off(i[a], r);
+      }if (t) for (a = 0; a < i.length; a += 1) s.on(i[a], r);return this;
+    }, outerWidth: function outerWidth(e) {
+      if (0 < this.length) {
+        if (e) {
+          var t = this.styles();return this[0].offsetWidth + parseFloat(t.getPropertyValue("margin-right")) + parseFloat(t.getPropertyValue("margin-left"));
+        }return this[0].offsetWidth;
+      }return null;
+    }, outerHeight: function outerHeight(e) {
+      if (0 < this.length) {
+        if (e) {
+          var t = this.styles();return this[0].offsetHeight + parseFloat(t.getPropertyValue("margin-top")) + parseFloat(t.getPropertyValue("margin-bottom"));
+        }return this[0].offsetHeight;
+      }return null;
+    }, offset: function offset() {
+      if (0 < this.length) {
+        var e = this[0],
+            t = e.getBoundingClientRect(),
+            a = f.body,
+            i = e.clientTop || a.clientTop || 0,
+            s = e.clientLeft || a.clientLeft || 0,
+            r = e === Y ? Y.scrollY : e.scrollTop,
+            n = e === Y ? Y.scrollX : e.scrollLeft;return { top: t.top + r - i, left: t.left + n - s };
+      }return null;
+    }, css: function css(e, t) {
+      var a;if (1 === arguments.length) {
+        if ("string" != typeof e) {
+          for (a = 0; a < this.length; a += 1) for (var i in e) this[a].style[i] = e[i];return this;
+        }if (this[0]) return Y.getComputedStyle(this[0], null).getPropertyValue(e);
+      }if (2 === arguments.length && "string" == typeof e) {
+        for (a = 0; a < this.length; a += 1) this[a].style[e] = t;return this;
+      }return this;
+    }, each: function each(e) {
+      if (!e) return this;for (var t = 0; t < this.length; t += 1) if (!1 === e.call(this[t], t, this[t])) return this;return this;
+    }, html: function html(e) {
+      if (void 0 === e) return this[0] ? this[0].innerHTML : void 0;for (var t = 0; t < this.length; t += 1) this[t].innerHTML = e;return this;
+    }, text: function text(e) {
+      if (void 0 === e) return this[0] ? this[0].textContent.trim() : null;for (var t = 0; t < this.length; t += 1) this[t].textContent = e;return this;
+    }, is: function is(e) {
+      var t,
+          a,
+          i = this[0];if (!i || void 0 === e) return !1;if ("string" == typeof e) {
+        if (i.matches) return i.matches(e);if (i.webkitMatchesSelector) return i.webkitMatchesSelector(e);if (i.msMatchesSelector) return i.msMatchesSelector(e);for (t = L(e), a = 0; a < t.length; a += 1) if (t[a] === i) return !0;return !1;
+      }if (e === f) return i === f;if (e === Y) return i === Y;if (e.nodeType || e instanceof l) {
+        for (t = e.nodeType ? [e] : e, a = 0; a < t.length; a += 1) if (t[a] === i) return !0;return !1;
+      }return !1;
+    }, index: function index() {
+      var e,
+          t = this[0];if (t) {
+        for (e = 0; null !== (t = t.previousSibling);) 1 === t.nodeType && (e += 1);return e;
+      }
+    }, eq: function eq(e) {
+      if (void 0 === e) return this;var t,
+          a = this.length;return new l(a - 1 < e ? [] : e < 0 ? (t = a + e) < 0 ? [] : [this[t]] : [this[e]]);
+    }, append: function append() {
+      for (var e, t = [], a = arguments.length; a--;) t[a] = arguments[a];for (var i = 0; i < t.length; i += 1) {
+        e = t[i];for (var s = 0; s < this.length; s += 1) if ("string" == typeof e) {
+          var r = f.createElement("div");for (r.innerHTML = e; r.firstChild;) this[s].appendChild(r.firstChild);
+        } else if (e instanceof l) for (var n = 0; n < e.length; n += 1) this[s].appendChild(e[n]);else this[s].appendChild(e);
+      }return this;
+    }, prepend: function prepend(e) {
+      var t, a;for (t = 0; t < this.length; t += 1) if ("string" == typeof e) {
+        var i = f.createElement("div");for (i.innerHTML = e, a = i.childNodes.length - 1; 0 <= a; a -= 1) this[t].insertBefore(i.childNodes[a], this[t].childNodes[0]);
+      } else if (e instanceof l) for (a = 0; a < e.length; a += 1) this[t].insertBefore(e[a], this[t].childNodes[0]);else this[t].insertBefore(e, this[t].childNodes[0]);return this;
+    }, next: function next(e) {
+      return 0 < this.length ? e ? this[0].nextElementSibling && L(this[0].nextElementSibling).is(e) ? new l([this[0].nextElementSibling]) : new l([]) : this[0].nextElementSibling ? new l([this[0].nextElementSibling]) : new l([]) : new l([]);
+    }, nextAll: function nextAll(e) {
+      var t = [],
+          a = this[0];if (!a) return new l([]);for (; a.nextElementSibling;) {
+        var i = a.nextElementSibling;e ? L(i).is(e) && t.push(i) : t.push(i), a = i;
+      }return new l(t);
+    }, prev: function prev(e) {
+      if (0 < this.length) {
+        var t = this[0];return e ? t.previousElementSibling && L(t.previousElementSibling).is(e) ? new l([t.previousElementSibling]) : new l([]) : t.previousElementSibling ? new l([t.previousElementSibling]) : new l([]);
+      }return new l([]);
+    }, prevAll: function prevAll(e) {
+      var t = [],
+          a = this[0];if (!a) return new l([]);for (; a.previousElementSibling;) {
+        var i = a.previousElementSibling;e ? L(i).is(e) && t.push(i) : t.push(i), a = i;
+      }return new l(t);
+    }, parent: function parent(e) {
+      for (var t = [], a = 0; a < this.length; a += 1) null !== this[a].parentNode && (e ? L(this[a].parentNode).is(e) && t.push(this[a].parentNode) : t.push(this[a].parentNode));return L(r(t));
+    }, parents: function parents(e) {
+      for (var t = [], a = 0; a < this.length; a += 1) for (var i = this[a].parentNode; i;) e ? L(i).is(e) && t.push(i) : t.push(i), i = i.parentNode;return L(r(t));
+    }, closest: function closest(e) {
+      var t = this;return void 0 === e ? new l([]) : (t.is(e) || (t = t.parents(e).eq(0)), t);
+    }, find: function find(e) {
+      for (var t = [], a = 0; a < this.length; a += 1) for (var i = this[a].querySelectorAll(e), s = 0; s < i.length; s += 1) t.push(i[s]);return new l(t);
+    }, children: function children(e) {
+      for (var t = [], a = 0; a < this.length; a += 1) for (var i = this[a].childNodes, s = 0; s < i.length; s += 1) e ? 1 === i[s].nodeType && L(i[s]).is(e) && t.push(i[s]) : 1 === i[s].nodeType && t.push(i[s]);return new l(r(t));
+    }, remove: function remove() {
+      for (var e = 0; e < this.length; e += 1) this[e].parentNode && this[e].parentNode.removeChild(this[e]);return this;
+    }, add: function add() {
+      for (var e = [], t = arguments.length; t--;) e[t] = arguments[t];var a, i;for (a = 0; a < e.length; a += 1) {
+        var s = L(e[a]);for (i = 0; i < s.length; i += 1) this[this.length] = s[i], this.length += 1;
+      }return this;
+    }, styles: function styles() {
+      return this[0] ? Y.getComputedStyle(this[0], null) : {};
+    } };Object.keys(t).forEach(function (e) {
+    L.fn[e] = t[e];
+  });var e,
+      a,
+      i,
+      V = { deleteProps: function deleteProps(e) {
+      var t = e;Object.keys(t).forEach(function (e) {
+        try {
+          t[e] = null;
+        } catch (e) {}try {
+          delete t[e];
+        } catch (e) {}
+      });
+    }, nextTick: function nextTick(e, t) {
+      return void 0 === t && (t = 0), setTimeout(e, t);
+    }, now: function now() {
+      return Date.now();
+    }, getTranslate: function getTranslate(e, t) {
+      var a, i, s;void 0 === t && (t = "x");var r = Y.getComputedStyle(e, null);return Y.WebKitCSSMatrix ? (6 < (i = r.transform || r.webkitTransform).split(",").length && (i = i.split(", ").map(function (e) {
+        return e.replace(",", ".");
+      }).join(", ")), s = new Y.WebKitCSSMatrix("none" === i ? "" : i)) : a = (s = r.MozTransform || r.OTransform || r.MsTransform || r.msTransform || r.transform || r.getPropertyValue("transform").replace("translate(", "matrix(1, 0, 0, 1,")).toString().split(","), "x" === t && (i = Y.WebKitCSSMatrix ? s.m41 : 16 === a.length ? parseFloat(a[12]) : parseFloat(a[4])), "y" === t && (i = Y.WebKitCSSMatrix ? s.m42 : 16 === a.length ? parseFloat(a[13]) : parseFloat(a[5])), i || 0;
+    }, parseUrlQuery: function parseUrlQuery(e) {
+      var t,
+          a,
+          i,
+          s,
+          r = {},
+          n = e || Y.location.href;if ("string" == typeof n && n.length) for (s = (a = (n = -1 < n.indexOf("?") ? n.replace(/\S*\?/, "") : "").split("&").filter(function (e) {
+        return "" !== e;
+      })).length, t = 0; t < s; t += 1) i = a[t].replace(/#\S+/g, "").split("="), r[decodeURIComponent(i[0])] = void 0 === i[1] ? void 0 : decodeURIComponent(i[1]) || "";return r;
+    }, isObject: function isObject(e) {
+      return "object" == typeof e && null !== e && e.constructor && e.constructor === Object;
+    }, extend: function extend() {
+      for (var e = [], t = arguments.length; t--;) e[t] = arguments[t];for (var a = Object(e[0]), i = 1; i < e.length; i += 1) {
+        var s = e[i];if (null != s) for (var r = Object.keys(Object(s)), n = 0, o = r.length; n < o; n += 1) {
+          var l = r[n],
+              d = Object.getOwnPropertyDescriptor(s, l);void 0 !== d && d.enumerable && (V.isObject(a[l]) && V.isObject(s[l]) ? V.extend(a[l], s[l]) : !V.isObject(a[l]) && V.isObject(s[l]) ? (a[l] = {}, V.extend(a[l], s[l])) : a[l] = s[l]);
+        }
+      }return a;
+    } },
+      F = (i = f.createElement("div"), { touch: Y.Modernizr && !0 === Y.Modernizr.touch || !!("ontouchstart" in Y || Y.DocumentTouch && f instanceof Y.DocumentTouch), pointerEvents: !!(Y.navigator.pointerEnabled || Y.PointerEvent || "maxTouchPoints" in Y.navigator), prefixedPointerEvents: !!Y.navigator.msPointerEnabled, transition: (a = i.style, "transition" in a || "webkitTransition" in a || "MozTransition" in a), transforms3d: Y.Modernizr && !0 === Y.Modernizr.csstransforms3d || (e = i.style, "webkitPerspective" in e || "MozPerspective" in e || "OPerspective" in e || "MsPerspective" in e || "perspective" in e), flexbox: (function () {
+      for (var e = i.style, t = "alignItems webkitAlignItems webkitBoxAlign msFlexAlign mozBoxAlign webkitFlexDirection msFlexDirection mozBoxDirection mozBoxOrient webkitBoxDirection webkitBoxOrient".split(" "), a = 0; a < t.length; a += 1) if (t[a] in e) return !0;return !1;
+    })(), observer: "MutationObserver" in Y || "WebkitMutationObserver" in Y, passiveListener: (function () {
+      var e = !1;try {
+        var t = Object.defineProperty({}, "passive", { get: function get() {
+            e = !0;
+          } });Y.addEventListener("testPassiveListener", null, t);
+      } catch (e) {}return e;
+    })(), gestures: "ongesturestart" in Y }),
+      s = function s(e) {
+    void 0 === e && (e = {});var t = this;t.params = e, t.eventsListeners = {}, t.params && t.params.on && Object.keys(t.params.on).forEach(function (e) {
+      t.on(e, t.params.on[e]);
+    });
+  },
+      n = { components: { configurable: !0 } };s.prototype.on = function (e, t, a) {
+    var i = this;if ("function" != typeof t) return i;var s = a ? "unshift" : "push";return e.split(" ").forEach(function (e) {
+      i.eventsListeners[e] || (i.eventsListeners[e] = []), i.eventsListeners[e][s](t);
+    }), i;
+  }, s.prototype.once = function (i, s, e) {
+    var r = this;if ("function" != typeof s) return r;return r.on(i, function e() {
+      for (var t = [], a = arguments.length; a--;) t[a] = arguments[a];s.apply(r, t), r.off(i, e);
+    }, e);
+  }, s.prototype.off = function (e, i) {
+    var s = this;return s.eventsListeners && e.split(" ").forEach(function (a) {
+      void 0 === i ? s.eventsListeners[a] = [] : s.eventsListeners[a] && s.eventsListeners[a].length && s.eventsListeners[a].forEach(function (e, t) {
+        e === i && s.eventsListeners[a].splice(t, 1);
+      });
+    }), s;
+  }, s.prototype.emit = function () {
+    for (var e = [], t = arguments.length; t--;) e[t] = arguments[t];var a,
+        i,
+        s,
+        r = this;return r.eventsListeners && ("string" == typeof e[0] || Array.isArray(e[0]) ? (a = e[0], i = e.slice(1, e.length), s = r) : (a = e[0].events, i = e[0].data, s = e[0].context || r), (Array.isArray(a) ? a : a.split(" ")).forEach(function (e) {
+      if (r.eventsListeners && r.eventsListeners[e]) {
+        var t = [];r.eventsListeners[e].forEach(function (e) {
+          t.push(e);
+        }), t.forEach(function (e) {
+          e.apply(s, i);
+        });
+      }
+    })), r;
+  }, s.prototype.useModulesParams = function (a) {
+    var i = this;i.modules && Object.keys(i.modules).forEach(function (e) {
+      var t = i.modules[e];t.params && V.extend(a, t.params);
+    });
+  }, s.prototype.useModules = function (i) {
+    void 0 === i && (i = {});var s = this;s.modules && Object.keys(s.modules).forEach(function (e) {
+      var a = s.modules[e],
+          t = i[e] || {};a.instance && Object.keys(a.instance).forEach(function (e) {
+        var t = a.instance[e];s[e] = "function" == typeof t ? t.bind(s) : t;
+      }), a.on && s.on && Object.keys(a.on).forEach(function (e) {
+        s.on(e, a.on[e]);
+      }), a.create && a.create.bind(s)(t);
+    });
+  }, n.components.set = function (e) {
+    this.use && this.use(e);
+  }, s.installModule = function (t) {
+    for (var e = [], a = arguments.length - 1; 0 < a--;) e[a] = arguments[a + 1];var i = this;i.prototype.modules || (i.prototype.modules = {});var s = t.name || Object.keys(i.prototype.modules).length + "_" + V.now();return (i.prototype.modules[s] = t).proto && Object.keys(t.proto).forEach(function (e) {
+      i.prototype[e] = t.proto[e];
+    }), t["static"] && Object.keys(t["static"]).forEach(function (e) {
+      i[e] = t["static"][e];
+    }), t.install && t.install.apply(i, e), i;
+  }, s.use = function (e) {
+    for (var t = [], a = arguments.length - 1; 0 < a--;) t[a] = arguments[a + 1];var i = this;return Array.isArray(e) ? (e.forEach(function (e) {
+      return i.installModule(e);
+    }), i) : i.installModule.apply(i, [e].concat(t));
+  }, Object.defineProperties(s, n);var o = { updateSize: function updateSize() {
+      var e,
+          t,
+          a = this,
+          i = a.$el;e = void 0 !== a.params.width ? a.params.width : i[0].clientWidth, t = void 0 !== a.params.height ? a.params.height : i[0].clientHeight, 0 === e && a.isHorizontal() || 0 === t && a.isVertical() || (e = e - parseInt(i.css("padding-left"), 10) - parseInt(i.css("padding-right"), 10), t = t - parseInt(i.css("padding-top"), 10) - parseInt(i.css("padding-bottom"), 10), V.extend(a, { width: e, height: t, size: a.isHorizontal() ? e : t }));
+    }, updateSlides: function updateSlides() {
+      var e = this,
+          t = e.params,
+          a = e.$wrapperEl,
+          i = e.size,
+          s = e.rtlTranslate,
+          r = e.wrongRTL,
+          n = e.virtual && t.virtual.enabled,
+          o = n ? e.virtual.slides.length : e.slides.length,
+          l = a.children("." + e.params.slideClass),
+          d = n ? e.virtual.slides.length : l.length,
+          p = [],
+          c = [],
+          u = [],
+          h = t.slidesOffsetBefore;"function" == typeof h && (h = t.slidesOffsetBefore.call(e));var v = t.slidesOffsetAfter;"function" == typeof v && (v = t.slidesOffsetAfter.call(e));var f = e.snapGrid.length,
+          m = e.snapGrid.length,
+          g = t.spaceBetween,
+          b = -h,
+          w = 0,
+          y = 0;if (void 0 !== i) {
+        var x, T;"string" == typeof g && 0 <= g.indexOf("%") && (g = parseFloat(g.replace("%", "")) / 100 * i), e.virtualSize = -g, s ? l.css({ marginLeft: "", marginTop: "" }) : l.css({ marginRight: "", marginBottom: "" }), 1 < t.slidesPerColumn && (x = Math.floor(d / t.slidesPerColumn) === d / e.params.slidesPerColumn ? d : Math.ceil(d / t.slidesPerColumn) * t.slidesPerColumn, "auto" !== t.slidesPerView && "row" === t.slidesPerColumnFill && (x = Math.max(x, t.slidesPerView * t.slidesPerColumn)));for (var E, S = t.slidesPerColumn, C = x / S, M = C - (t.slidesPerColumn * C - d), k = 0; k < d; k += 1) {
+          T = 0;var P = l.eq(k);if (1 < t.slidesPerColumn) {
+            var z = void 0,
+                $ = void 0,
+                L = void 0;"column" === t.slidesPerColumnFill ? (L = k - ($ = Math.floor(k / S)) * S, (M < $ || $ === M && L === S - 1) && S <= (L += 1) && (L = 0, $ += 1), z = $ + L * x / S, P.css({ "-webkit-box-ordinal-group": z, "-moz-box-ordinal-group": z, "-ms-flex-order": z, "-webkit-order": z, order: z })) : $ = k - (L = Math.floor(k / C)) * C, P.css("margin-" + (e.isHorizontal() ? "top" : "left"), 0 !== L && t.spaceBetween && t.spaceBetween + "px").attr("data-swiper-column", $).attr("data-swiper-row", L);
+          }if ("none" !== P.css("display")) {
+            if ("auto" === t.slidesPerView) {
+              var I = Y.getComputedStyle(P[0], null),
+                  D = P[0].style.transform,
+                  O = P[0].style.webkitTransform;D && (P[0].style.transform = "none"), O && (P[0].style.webkitTransform = "none"), T = t.roundLengths ? e.isHorizontal() ? P.outerWidth(!0) : P.outerHeight(!0) : e.isHorizontal() ? parseFloat(I.getPropertyValue("width")) + parseFloat(I.getPropertyValue("margin-left")) + parseFloat(I.getPropertyValue("margin-right")) : parseFloat(I.getPropertyValue("height")) + parseFloat(I.getPropertyValue("margin-top")) + parseFloat(I.getPropertyValue("margin-bottom")), D && (P[0].style.transform = D), O && (P[0].style.webkitTransform = O), t.roundLengths && (T = Math.floor(T));
+            } else T = (i - (t.slidesPerView - 1) * g) / t.slidesPerView, t.roundLengths && (T = Math.floor(T)), l[k] && (e.isHorizontal() ? l[k].style.width = T + "px" : l[k].style.height = T + "px");l[k] && (l[k].swiperSlideSize = T), u.push(T), t.centeredSlides ? (b = b + T / 2 + w / 2 + g, 0 === w && 0 !== k && (b = b - i / 2 - g), 0 === k && (b = b - i / 2 - g), Math.abs(b) < .001 && (b = 0), t.roundLengths && (b = Math.floor(b)), y % t.slidesPerGroup == 0 && p.push(b), c.push(b)) : (t.roundLengths && (b = Math.floor(b)), y % t.slidesPerGroup == 0 && p.push(b), c.push(b), b = b + T + g), e.virtualSize += T + g, w = T, y += 1;
+          }
+        }if ((e.virtualSize = Math.max(e.virtualSize, i) + v, s && r && ("slide" === t.effect || "coverflow" === t.effect) && a.css({ width: e.virtualSize + t.spaceBetween + "px" }), F.flexbox && !t.setWrapperSize || (e.isHorizontal() ? a.css({ width: e.virtualSize + t.spaceBetween + "px" }) : a.css({ height: e.virtualSize + t.spaceBetween + "px" })), 1 < t.slidesPerColumn && (e.virtualSize = (T + t.spaceBetween) * x, e.virtualSize = Math.ceil(e.virtualSize / t.slidesPerColumn) - t.spaceBetween, e.isHorizontal() ? a.css({ width: e.virtualSize + t.spaceBetween + "px" }) : a.css({ height: e.virtualSize + t.spaceBetween + "px" }), t.centeredSlides))) {
+          E = [];for (var A = 0; A < p.length; A += 1) {
+            var N = p[A];t.roundLengths && (N = Math.floor(N)), p[A] < e.virtualSize + p[0] && E.push(N);
+          }p = E;
+        }if (!t.centeredSlides) {
+          E = [];for (var H = 0; H < p.length; H += 1) {
+            var G = p[H];t.roundLengths && (G = Math.floor(G)), p[H] <= e.virtualSize - i && E.push(G);
+          }p = E, 1 < Math.floor(e.virtualSize - i) - Math.floor(p[p.length - 1]) && p.push(e.virtualSize - i);
+        }if ((0 === p.length && (p = [0]), 0 !== t.spaceBetween && (e.isHorizontal() ? s ? l.css({ marginLeft: g + "px" }) : l.css({ marginRight: g + "px" }) : l.css({ marginBottom: g + "px" })), t.centerInsufficientSlides)) {
+          var B = 0;if ((u.forEach(function (e) {
+            B += e + (t.spaceBetween ? t.spaceBetween : 0);
+          }), (B -= t.spaceBetween) < i)) {
+            var X = (i - B) / 2;p.forEach(function (e, t) {
+              p[t] = e - X;
+            }), c.forEach(function (e, t) {
+              c[t] = e + X;
+            });
+          }
+        }V.extend(e, { slides: l, snapGrid: p, slidesGrid: c, slidesSizesGrid: u }), d !== o && e.emit("slidesLengthChange"), p.length !== f && (e.params.watchOverflow && e.checkOverflow(), e.emit("snapGridLengthChange")), c.length !== m && e.emit("slidesGridLengthChange"), (t.watchSlidesProgress || t.watchSlidesVisibility) && e.updateSlidesOffset();
+      }
+    }, updateAutoHeight: function updateAutoHeight(e) {
+      var t,
+          a = this,
+          i = [],
+          s = 0;if (("number" == typeof e ? a.setTransition(e) : !0 === e && a.setTransition(a.params.speed), "auto" !== a.params.slidesPerView && 1 < a.params.slidesPerView)) for (t = 0; t < Math.ceil(a.params.slidesPerView); t += 1) {
+        var r = a.activeIndex + t;if (r > a.slides.length) break;i.push(a.slides.eq(r)[0]);
+      } else i.push(a.slides.eq(a.activeIndex)[0]);for (t = 0; t < i.length; t += 1) if (void 0 !== i[t]) {
+        var n = i[t].offsetHeight;s = s < n ? n : s;
+      }s && a.$wrapperEl.css("height", s + "px");
+    }, updateSlidesOffset: function updateSlidesOffset() {
+      for (var e = this.slides, t = 0; t < e.length; t += 1) e[t].swiperSlideOffset = this.isHorizontal() ? e[t].offsetLeft : e[t].offsetTop;
+    }, updateSlidesProgress: function updateSlidesProgress(e) {
+      void 0 === e && (e = this && this.translate || 0);var t = this,
+          a = t.params,
+          i = t.slides,
+          s = t.rtlTranslate;if (0 !== i.length) {
+        void 0 === i[0].swiperSlideOffset && t.updateSlidesOffset();var r = -e;s && (r = e), i.removeClass(a.slideVisibleClass), t.visibleSlidesIndexes = [], t.visibleSlides = [];for (var n = 0; n < i.length; n += 1) {
+          var o = i[n],
+              l = (r + (a.centeredSlides ? t.minTranslate() : 0) - o.swiperSlideOffset) / (o.swiperSlideSize + a.spaceBetween);if (a.watchSlidesVisibility) {
+            var d = -(r - o.swiperSlideOffset),
+                p = d + t.slidesSizesGrid[n];(0 <= d && d < t.size || 0 < p && p <= t.size || d <= 0 && p >= t.size) && (t.visibleSlides.push(o), t.visibleSlidesIndexes.push(n), i.eq(n).addClass(a.slideVisibleClass));
+          }o.progress = s ? -l : l;
+        }t.visibleSlides = L(t.visibleSlides);
+      }
+    }, updateProgress: function updateProgress(e) {
+      void 0 === e && (e = this && this.translate || 0);var t = this,
+          a = t.params,
+          i = t.maxTranslate() - t.minTranslate(),
+          s = t.progress,
+          r = t.isBeginning,
+          n = t.isEnd,
+          o = r,
+          l = n;0 === i ? n = r = !(s = 0) : (r = (s = (e - t.minTranslate()) / i) <= 0, n = 1 <= s), V.extend(t, { progress: s, isBeginning: r, isEnd: n }), (a.watchSlidesProgress || a.watchSlidesVisibility) && t.updateSlidesProgress(e), r && !o && t.emit("reachBeginning toEdge"), n && !l && t.emit("reachEnd toEdge"), (o && !r || l && !n) && t.emit("fromEdge"), t.emit("progress", s);
+    }, updateSlidesClasses: function updateSlidesClasses() {
+      var e,
+          t = this,
+          a = t.slides,
+          i = t.params,
+          s = t.$wrapperEl,
+          r = t.activeIndex,
+          n = t.realIndex,
+          o = t.virtual && i.virtual.enabled;a.removeClass(i.slideActiveClass + " " + i.slideNextClass + " " + i.slidePrevClass + " " + i.slideDuplicateActiveClass + " " + i.slideDuplicateNextClass + " " + i.slideDuplicatePrevClass), (e = o ? t.$wrapperEl.find("." + i.slideClass + '[data-swiper-slide-index="' + r + '"]') : a.eq(r)).addClass(i.slideActiveClass), i.loop && (e.hasClass(i.slideDuplicateClass) ? s.children("." + i.slideClass + ":not(." + i.slideDuplicateClass + ')[data-swiper-slide-index="' + n + '"]').addClass(i.slideDuplicateActiveClass) : s.children("." + i.slideClass + "." + i.slideDuplicateClass + '[data-swiper-slide-index="' + n + '"]').addClass(i.slideDuplicateActiveClass));var l = e.nextAll("." + i.slideClass).eq(0).addClass(i.slideNextClass);i.loop && 0 === l.length && (l = a.eq(0)).addClass(i.slideNextClass);var d = e.prevAll("." + i.slideClass).eq(0).addClass(i.slidePrevClass);i.loop && 0 === d.length && (d = a.eq(-1)).addClass(i.slidePrevClass), i.loop && (l.hasClass(i.slideDuplicateClass) ? s.children("." + i.slideClass + ":not(." + i.slideDuplicateClass + ')[data-swiper-slide-index="' + l.attr("data-swiper-slide-index") + '"]').addClass(i.slideDuplicateNextClass) : s.children("." + i.slideClass + "." + i.slideDuplicateClass + '[data-swiper-slide-index="' + l.attr("data-swiper-slide-index") + '"]').addClass(i.slideDuplicateNextClass), d.hasClass(i.slideDuplicateClass) ? s.children("." + i.slideClass + ":not(." + i.slideDuplicateClass + ')[data-swiper-slide-index="' + d.attr("data-swiper-slide-index") + '"]').addClass(i.slideDuplicatePrevClass) : s.children("." + i.slideClass + "." + i.slideDuplicateClass + '[data-swiper-slide-index="' + d.attr("data-swiper-slide-index") + '"]').addClass(i.slideDuplicatePrevClass));
+    }, updateActiveIndex: function updateActiveIndex(e) {
+      var t,
+          a = this,
+          i = a.rtlTranslate ? a.translate : -a.translate,
+          s = a.slidesGrid,
+          r = a.snapGrid,
+          n = a.params,
+          o = a.activeIndex,
+          l = a.realIndex,
+          d = a.snapIndex,
+          p = e;if (void 0 === p) {
+        for (var c = 0; c < s.length; c += 1) void 0 !== s[c + 1] ? i >= s[c] && i < s[c + 1] - (s[c + 1] - s[c]) / 2 ? p = c : i >= s[c] && i < s[c + 1] && (p = c + 1) : i >= s[c] && (p = c);n.normalizeSlideIndex && (p < 0 || void 0 === p) && (p = 0);
+      }if (((t = 0 <= r.indexOf(i) ? r.indexOf(i) : Math.floor(p / n.slidesPerGroup)) >= r.length && (t = r.length - 1), p !== o)) {
+        var u = parseInt(a.slides.eq(p).attr("data-swiper-slide-index") || p, 10);V.extend(a, { snapIndex: t, realIndex: u, previousIndex: o, activeIndex: p }), a.emit("activeIndexChange"), a.emit("snapIndexChange"), l !== u && a.emit("realIndexChange"), a.emit("slideChange");
+      } else t !== d && (a.snapIndex = t, a.emit("snapIndexChange"));
+    }, updateClickedSlide: function updateClickedSlide(e) {
+      var t = this,
+          a = t.params,
+          i = L(e.target).closest("." + a.slideClass)[0],
+          s = !1;if (i) for (var r = 0; r < t.slides.length; r += 1) t.slides[r] === i && (s = !0);if (!i || !s) return t.clickedSlide = void 0, void (t.clickedIndex = void 0);t.clickedSlide = i, t.virtual && t.params.virtual.enabled ? t.clickedIndex = parseInt(L(i).attr("data-swiper-slide-index"), 10) : t.clickedIndex = L(i).index(), a.slideToClickedSlide && void 0 !== t.clickedIndex && t.clickedIndex !== t.activeIndex && t.slideToClickedSlide();
+    } };var d = { getTranslate: function getTranslate(e) {
+      void 0 === e && (e = this.isHorizontal() ? "x" : "y");var t = this.params,
+          a = this.rtlTranslate,
+          i = this.translate,
+          s = this.$wrapperEl;if (t.virtualTranslate) return a ? -i : i;var r = V.getTranslate(s[0], e);return a && (r = -r), r || 0;
+    }, setTranslate: function setTranslate(e, t) {
+      var a = this,
+          i = a.rtlTranslate,
+          s = a.params,
+          r = a.$wrapperEl,
+          n = a.progress,
+          o = 0,
+          l = 0;a.isHorizontal() ? o = i ? -e : e : l = e, s.roundLengths && (o = Math.floor(o), l = Math.floor(l)), s.virtualTranslate || (F.transforms3d ? r.transform("translate3d(" + o + "px, " + l + "px, 0px)") : r.transform("translate(" + o + "px, " + l + "px)")), a.previousTranslate = a.translate, a.translate = a.isHorizontal() ? o : l;var d = a.maxTranslate() - a.minTranslate();(0 === d ? 0 : (e - a.minTranslate()) / d) !== n && a.updateProgress(e), a.emit("setTranslate", a.translate, t);
+    }, minTranslate: function minTranslate() {
+      return -this.snapGrid[0];
+    }, maxTranslate: function maxTranslate() {
+      return -this.snapGrid[this.snapGrid.length - 1];
+    } };var p = { setTransition: function setTransition(e, t) {
+      this.$wrapperEl.transition(e), this.emit("setTransition", e, t);
+    }, transitionStart: function transitionStart(e, t) {
+      void 0 === e && (e = !0);var a = this,
+          i = a.activeIndex,
+          s = a.params,
+          r = a.previousIndex;s.autoHeight && a.updateAutoHeight();var n = t;if ((n || (n = r < i ? "next" : i < r ? "prev" : "reset"), a.emit("transitionStart"), e && i !== r)) {
+        if ("reset" === n) return void a.emit("slideResetTransitionStart");a.emit("slideChangeTransitionStart"), "next" === n ? a.emit("slideNextTransitionStart") : a.emit("slidePrevTransitionStart");
+      }
+    }, transitionEnd: function transitionEnd(e, t) {
+      void 0 === e && (e = !0);var a = this,
+          i = a.activeIndex,
+          s = a.previousIndex;a.animating = !1, a.setTransition(0);var r = t;if ((r || (r = s < i ? "next" : i < s ? "prev" : "reset"), a.emit("transitionEnd"), e && i !== s)) {
+        if ("reset" === r) return void a.emit("slideResetTransitionEnd");a.emit("slideChangeTransitionEnd"), "next" === r ? a.emit("slideNextTransitionEnd") : a.emit("slidePrevTransitionEnd");
+      }
+    } };var c = { slideTo: function slideTo(e, t, a, i) {
+      void 0 === e && (e = 0), void 0 === t && (t = this.params.speed), void 0 === a && (a = !0);var s = this,
+          r = e;r < 0 && (r = 0);var n = s.params,
+          o = s.snapGrid,
+          l = s.slidesGrid,
+          d = s.previousIndex,
+          p = s.activeIndex,
+          c = s.rtlTranslate;if (s.animating && n.preventInteractionOnTransition) return !1;var u = Math.floor(r / n.slidesPerGroup);u >= o.length && (u = o.length - 1), (p || n.initialSlide || 0) === (d || 0) && a && s.emit("beforeSlideChangeStart");var h,
+          v = -o[u];if ((s.updateProgress(v), n.normalizeSlideIndex)) for (var f = 0; f < l.length; f += 1) -Math.floor(100 * v) >= Math.floor(100 * l[f]) && (r = f);if (s.initialized && r !== p) {
+        if (!s.allowSlideNext && v < s.translate && v < s.minTranslate()) return !1;if (!s.allowSlidePrev && v > s.translate && v > s.maxTranslate() && (p || 0) !== r) return !1;
+      }return h = p < r ? "next" : r < p ? "prev" : "reset", c && -v === s.translate || !c && v === s.translate ? (s.updateActiveIndex(r), n.autoHeight && s.updateAutoHeight(), s.updateSlidesClasses(), "slide" !== n.effect && s.setTranslate(v), "reset" !== h && (s.transitionStart(a, h), s.transitionEnd(a, h)), !1) : (0 !== t && F.transition ? (s.setTransition(t), s.setTranslate(v), s.updateActiveIndex(r), s.updateSlidesClasses(), s.emit("beforeTransitionStart", t, i), s.transitionStart(a, h), s.animating || (s.animating = !0, s.onSlideToWrapperTransitionEnd || (s.onSlideToWrapperTransitionEnd = function (e) {
+        s && !s.destroyed && e.target === this && (s.$wrapperEl[0].removeEventListener("transitionend", s.onSlideToWrapperTransitionEnd), s.$wrapperEl[0].removeEventListener("webkitTransitionEnd", s.onSlideToWrapperTransitionEnd), s.onSlideToWrapperTransitionEnd = null, delete s.onSlideToWrapperTransitionEnd, s.transitionEnd(a, h));
+      }), s.$wrapperEl[0].addEventListener("transitionend", s.onSlideToWrapperTransitionEnd), s.$wrapperEl[0].addEventListener("webkitTransitionEnd", s.onSlideToWrapperTransitionEnd))) : (s.setTransition(0), s.setTranslate(v), s.updateActiveIndex(r), s.updateSlidesClasses(), s.emit("beforeTransitionStart", t, i), s.transitionStart(a, h), s.transitionEnd(a, h)), !0);
+    }, slideToLoop: function slideToLoop(e, t, a, i) {
+      void 0 === e && (e = 0), void 0 === t && (t = this.params.speed), void 0 === a && (a = !0);var s = e;return this.params.loop && (s += this.loopedSlides), this.slideTo(s, t, a, i);
+    }, slideNext: function slideNext(e, t, a) {
+      void 0 === e && (e = this.params.speed), void 0 === t && (t = !0);var i = this,
+          s = i.params,
+          r = i.animating;return s.loop ? !r && (i.loopFix(), i._clientLeft = i.$wrapperEl[0].clientLeft, i.slideTo(i.activeIndex + s.slidesPerGroup, e, t, a)) : i.slideTo(i.activeIndex + s.slidesPerGroup, e, t, a);
+    }, slidePrev: function slidePrev(e, t, a) {
+      void 0 === e && (e = this.params.speed), void 0 === t && (t = !0);var i = this,
+          s = i.params,
+          r = i.animating,
+          n = i.snapGrid,
+          o = i.slidesGrid,
+          l = i.rtlTranslate;if (s.loop) {
+        if (r) return !1;i.loopFix(), i._clientLeft = i.$wrapperEl[0].clientLeft;
+      }function d(e) {
+        return e < 0 ? -Math.floor(Math.abs(e)) : Math.floor(e);
+      }var p,
+          c = d(l ? i.translate : -i.translate),
+          u = n.map(function (e) {
+        return d(e);
+      }),
+          h = (o.map(function (e) {
+        return d(e);
+      }), n[u.indexOf(c)], n[u.indexOf(c) - 1]);return void 0 !== h && (p = o.indexOf(h)) < 0 && (p = i.activeIndex - 1), i.slideTo(p, e, t, a);
+    }, slideReset: function slideReset(e, t, a) {
+      return void 0 === e && (e = this.params.speed), void 0 === t && (t = !0), this.slideTo(this.activeIndex, e, t, a);
+    }, slideToClosest: function slideToClosest(e, t, a) {
+      void 0 === e && (e = this.params.speed), void 0 === t && (t = !0);var i = this,
+          s = i.activeIndex,
+          r = Math.floor(s / i.params.slidesPerGroup);if (r < i.snapGrid.length - 1) {
+        var n = i.rtlTranslate ? i.translate : -i.translate,
+            o = i.snapGrid[r];(i.snapGrid[r + 1] - o) / 2 < n - o && (s = i.params.slidesPerGroup);
+      }return i.slideTo(s, e, t, a);
+    }, slideToClickedSlide: function slideToClickedSlide() {
+      var e,
+          t = this,
+          a = t.params,
+          i = t.$wrapperEl,
+          s = "auto" === a.slidesPerView ? t.slidesPerViewDynamic() : a.slidesPerView,
+          r = t.clickedIndex;if (a.loop) {
+        if (t.animating) return;e = parseInt(L(t.clickedSlide).attr("data-swiper-slide-index"), 10), a.centeredSlides ? r < t.loopedSlides - s / 2 || r > t.slides.length - t.loopedSlides + s / 2 ? (t.loopFix(), r = i.children("." + a.slideClass + '[data-swiper-slide-index="' + e + '"]:not(.' + a.slideDuplicateClass + ")").eq(0).index(), V.nextTick(function () {
+          t.slideTo(r);
+        })) : t.slideTo(r) : r > t.slides.length - s ? (t.loopFix(), r = i.children("." + a.slideClass + '[data-swiper-slide-index="' + e + '"]:not(.' + a.slideDuplicateClass + ")").eq(0).index(), V.nextTick(function () {
+          t.slideTo(r);
+        })) : t.slideTo(r);
+      } else t.slideTo(r);
+    } };var u = { loopCreate: function loopCreate() {
+      var i = this,
+          e = i.params,
+          t = i.$wrapperEl;t.children("." + e.slideClass + "." + e.slideDuplicateClass).remove();var s = t.children("." + e.slideClass);if (e.loopFillGroupWithBlank) {
+        var a = e.slidesPerGroup - s.length % e.slidesPerGroup;if (a !== e.slidesPerGroup) {
+          for (var r = 0; r < a; r += 1) {
+            var n = L(f.createElement("div")).addClass(e.slideClass + " " + e.slideBlankClass);t.append(n);
+          }s = t.children("." + e.slideClass);
+        }
+      }"auto" !== e.slidesPerView || e.loopedSlides || (e.loopedSlides = s.length), i.loopedSlides = parseInt(e.loopedSlides || e.slidesPerView, 10), i.loopedSlides += e.loopAdditionalSlides, i.loopedSlides > s.length && (i.loopedSlides = s.length);var o = [],
+          l = [];s.each(function (e, t) {
+        var a = L(t);e < i.loopedSlides && l.push(t), e < s.length && e >= s.length - i.loopedSlides && o.push(t), a.attr("data-swiper-slide-index", e);
+      });for (var d = 0; d < l.length; d += 1) t.append(L(l[d].cloneNode(!0)).addClass(e.slideDuplicateClass));for (var p = o.length - 1; 0 <= p; p -= 1) t.prepend(L(o[p].cloneNode(!0)).addClass(e.slideDuplicateClass));
+    }, loopFix: function loopFix() {
+      var e,
+          t = this,
+          a = t.params,
+          i = t.activeIndex,
+          s = t.slides,
+          r = t.loopedSlides,
+          n = t.allowSlidePrev,
+          o = t.allowSlideNext,
+          l = t.snapGrid,
+          d = t.rtlTranslate;t.allowSlidePrev = !0, t.allowSlideNext = !0;var p = -l[i] - t.getTranslate();i < r ? (e = s.length - 3 * r + i, e += r, t.slideTo(e, 0, !1, !0) && 0 !== p && t.setTranslate((d ? -t.translate : t.translate) - p)) : ("auto" === a.slidesPerView && 2 * r <= i || i >= s.length - r) && (e = -s.length + i + r, e += r, t.slideTo(e, 0, !1, !0) && 0 !== p && t.setTranslate((d ? -t.translate : t.translate) - p));t.allowSlidePrev = n, t.allowSlideNext = o;
+    }, loopDestroy: function loopDestroy() {
+      var e = this.$wrapperEl,
+          t = this.params,
+          a = this.slides;e.children("." + t.slideClass + "." + t.slideDuplicateClass).remove(), a.removeAttr("data-swiper-slide-index");
+    } };var h = { setGrabCursor: function setGrabCursor(e) {
+      if (!(F.touch || !this.params.simulateTouch || this.params.watchOverflow && this.isLocked)) {
+        var t = this.el;t.style.cursor = "move", t.style.cursor = e ? "-webkit-grabbing" : "-webkit-grab", t.style.cursor = e ? "-moz-grabbin" : "-moz-grab", t.style.cursor = e ? "grabbing" : "grab";
+      }
+    }, unsetGrabCursor: function unsetGrabCursor() {
+      F.touch || this.params.watchOverflow && this.isLocked || (this.el.style.cursor = "");
+    } };var v = { appendSlide: function appendSlide(e) {
+      var t = this,
+          a = t.$wrapperEl,
+          i = t.params;if ((i.loop && t.loopDestroy(), "object" == typeof e && "length" in e)) for (var s = 0; s < e.length; s += 1) e[s] && a.append(e[s]);else a.append(e);i.loop && t.loopCreate(), i.observer && F.observer || t.update();
+    }, prependSlide: function prependSlide(e) {
+      var t = this,
+          a = t.params,
+          i = t.$wrapperEl,
+          s = t.activeIndex;a.loop && t.loopDestroy();var r = s + 1;if ("object" == typeof e && "length" in e) {
+        for (var n = 0; n < e.length; n += 1) e[n] && i.prepend(e[n]);r = s + e.length;
+      } else i.prepend(e);a.loop && t.loopCreate(), a.observer && F.observer || t.update(), t.slideTo(r, 0, !1);
+    }, addSlide: function addSlide(e, t) {
+      var a = this,
+          i = a.$wrapperEl,
+          s = a.params,
+          r = a.activeIndex;s.loop && (r -= a.loopedSlides, a.loopDestroy(), a.slides = i.children("." + s.slideClass));var n = a.slides.length;if (e <= 0) a.prependSlide(t);else if (n <= e) a.appendSlide(t);else {
+        for (var o = e < r ? r + 1 : r, l = [], d = n - 1; e <= d; d -= 1) {
+          var p = a.slides.eq(d);p.remove(), l.unshift(p);
+        }if ("object" == typeof t && "length" in t) {
+          for (var c = 0; c < t.length; c += 1) t[c] && i.append(t[c]);o = e < r ? r + t.length : r;
+        } else i.append(t);for (var u = 0; u < l.length; u += 1) i.append(l[u]);s.loop && a.loopCreate(), s.observer && F.observer || a.update(), s.loop ? a.slideTo(o + a.loopedSlides, 0, !1) : a.slideTo(o, 0, !1);
+      }
+    }, removeSlide: function removeSlide(e) {
+      var t = this,
+          a = t.params,
+          i = t.$wrapperEl,
+          s = t.activeIndex;a.loop && (s -= t.loopedSlides, t.loopDestroy(), t.slides = i.children("." + a.slideClass));var r,
+          n = s;if ("object" == typeof e && "length" in e) {
+        for (var o = 0; o < e.length; o += 1) r = e[o], t.slides[r] && t.slides.eq(r).remove(), r < n && (n -= 1);n = Math.max(n, 0);
+      } else r = e, t.slides[r] && t.slides.eq(r).remove(), r < n && (n -= 1), n = Math.max(n, 0);a.loop && t.loopCreate(), a.observer && F.observer || t.update(), a.loop ? t.slideTo(n + t.loopedSlides, 0, !1) : t.slideTo(n, 0, !1);
+    }, removeAllSlides: function removeAllSlides() {
+      for (var e = [], t = 0; t < this.slides.length; t += 1) e.push(t);this.removeSlide(e);
+    } },
+      m = (function () {
+    var e = Y.navigator.userAgent,
+        t = { ios: !1, android: !1, androidChrome: !1, desktop: !1, windows: !1, iphone: !1, ipod: !1, ipad: !1, cordova: Y.cordova || Y.phonegap, phonegap: Y.cordova || Y.phonegap },
+        a = e.match(/(Windows Phone);?[\s\/]+([\d.]+)?/),
+        i = e.match(/(Android);?[\s\/]+([\d.]+)?/),
+        s = e.match(/(iPad).*OS\s([\d_]+)/),
+        r = e.match(/(iPod)(.*OS\s([\d_]+))?/),
+        n = !s && e.match(/(iPhone\sOS|iOS)\s([\d_]+)/);if ((a && (t.os = "windows", t.osVersion = a[2], t.windows = !0), i && !a && (t.os = "android", t.osVersion = i[2], t.android = !0, t.androidChrome = 0 <= e.toLowerCase().indexOf("chrome")), (s || n || r) && (t.os = "ios", t.ios = !0), n && !r && (t.osVersion = n[2].replace(/_/g, "."), t.iphone = !0), s && (t.osVersion = s[2].replace(/_/g, "."), t.ipad = !0), r && (t.osVersion = r[3] ? r[3].replace(/_/g, ".") : null, t.iphone = !0), t.ios && t.osVersion && 0 <= e.indexOf("Version/") && "10" === t.osVersion.split(".")[0] && (t.osVersion = e.toLowerCase().split("version/")[1].split(" ")[0]), t.desktop = !(t.os || t.android || t.webView), t.webView = (n || s || r) && e.match(/.*AppleWebKit(?!.*Safari)/i), t.os && "ios" === t.os)) {
+      var o = t.osVersion.split("."),
+          l = f.querySelector('meta[name="viewport"]');t.minimalUi = !t.webView && (r || n) && (1 * o[0] == 7 ? 1 <= 1 * o[1] : 7 < 1 * o[0]) && l && 0 <= l.getAttribute("content").indexOf("minimal-ui");
+    }return t.pixelRatio = Y.devicePixelRatio || 1, t;
+  })();function g() {
+    var e = this,
+        t = e.params,
+        a = e.el;if (!a || 0 !== a.offsetWidth) {
+      t.breakpoints && e.setBreakpoint();var i = e.allowSlideNext,
+          s = e.allowSlidePrev,
+          r = e.snapGrid;if ((e.allowSlideNext = !0, e.allowSlidePrev = !0, e.updateSize(), e.updateSlides(), t.freeMode)) {
+        var n = Math.min(Math.max(e.translate, e.maxTranslate()), e.minTranslate());e.setTranslate(n), e.updateActiveIndex(), e.updateSlidesClasses(), t.autoHeight && e.updateAutoHeight();
+      } else e.updateSlidesClasses(), ("auto" === t.slidesPerView || 1 < t.slidesPerView) && e.isEnd && !e.params.centeredSlides ? e.slideTo(e.slides.length - 1, 0, !1, !0) : e.slideTo(e.activeIndex, 0, !1, !0);e.allowSlidePrev = s, e.allowSlideNext = i, e.params.watchOverflow && r !== e.snapGrid && e.checkOverflow();
+    }
+  }var b = { attachEvents: function attachEvents() {
+      var e = this,
+          t = e.params,
+          a = e.touchEvents,
+          i = e.el,
+          s = e.wrapperEl;e.onTouchStart = (function (e) {
+        var t = this,
+            a = t.touchEventsData,
+            i = t.params,
+            s = t.touches;if (!t.animating || !i.preventInteractionOnTransition) {
+          var r = e;if ((r.originalEvent && (r = r.originalEvent), a.isTouchEvent = "touchstart" === r.type, (a.isTouchEvent || !("which" in r) || 3 !== r.which) && !(!a.isTouchEvent && "button" in r && 0 < r.button || a.isTouched && a.isMoved))) if (i.noSwiping && L(r.target).closest(i.noSwipingSelector ? i.noSwipingSelector : "." + i.noSwipingClass)[0]) t.allowClick = !0;else if (!i.swipeHandler || L(r).closest(i.swipeHandler)[0]) {
+            s.currentX = "touchstart" === r.type ? r.targetTouches[0].pageX : r.pageX, s.currentY = "touchstart" === r.type ? r.targetTouches[0].pageY : r.pageY;var n = s.currentX,
+                o = s.currentY,
+                l = i.edgeSwipeDetection || i.iOSEdgeSwipeDetection,
+                d = i.edgeSwipeThreshold || i.iOSEdgeSwipeThreshold;if (!l || !(n <= d || n >= Y.screen.width - d)) {
+              if ((V.extend(a, { isTouched: !0, isMoved: !1, allowTouchCallbacks: !0, isScrolling: void 0, startMoving: void 0 }), s.startX = n, s.startY = o, a.touchStartTime = V.now(), t.allowClick = !0, t.updateSize(), t.swipeDirection = void 0, 0 < i.threshold && (a.allowThresholdMove = !1), "touchstart" !== r.type)) {
+                var p = !0;L(r.target).is(a.formElements) && (p = !1), f.activeElement && L(f.activeElement).is(a.formElements) && f.activeElement !== r.target && f.activeElement.blur();var c = p && t.allowTouchMove && i.touchStartPreventDefault;(i.touchStartForcePreventDefault || c) && r.preventDefault();
+              }t.emit("touchStart", r);
+            }
+          }
+        }
+      }).bind(e), e.onTouchMove = (function (e) {
+        var t = this,
+            a = t.touchEventsData,
+            i = t.params,
+            s = t.touches,
+            r = t.rtlTranslate,
+            n = e;if ((n.originalEvent && (n = n.originalEvent), a.isTouched)) {
+          if (!a.isTouchEvent || "mousemove" !== n.type) {
+            var o = "touchmove" === n.type ? n.targetTouches[0].pageX : n.pageX,
+                l = "touchmove" === n.type ? n.targetTouches[0].pageY : n.pageY;if (n.preventedByNestedSwiper) return s.startX = o, void (s.startY = l);if (!t.allowTouchMove) return t.allowClick = !1, void (a.isTouched && (V.extend(s, { startX: o, startY: l, currentX: o, currentY: l }), a.touchStartTime = V.now()));if (a.isTouchEvent && i.touchReleaseOnEdges && !i.loop) if (t.isVertical()) {
+              if (l < s.startY && t.translate <= t.maxTranslate() || l > s.startY && t.translate >= t.minTranslate()) return a.isTouched = !1, void (a.isMoved = !1);
+            } else if (o < s.startX && t.translate <= t.maxTranslate() || o > s.startX && t.translate >= t.minTranslate()) return;if (a.isTouchEvent && f.activeElement && n.target === f.activeElement && L(n.target).is(a.formElements)) return a.isMoved = !0, void (t.allowClick = !1);if ((a.allowTouchCallbacks && t.emit("touchMove", n), !(n.targetTouches && 1 < n.targetTouches.length))) {
+              s.currentX = o, s.currentY = l;var d,
+                  p = s.currentX - s.startX,
+                  c = s.currentY - s.startY;if (!(t.params.threshold && Math.sqrt(Math.pow(p, 2) + Math.pow(c, 2)) < t.params.threshold)) if ((void 0 === a.isScrolling && (t.isHorizontal() && s.currentY === s.startY || t.isVertical() && s.currentX === s.startX ? a.isScrolling = !1 : 25 <= p * p + c * c && (d = 180 * Math.atan2(Math.abs(c), Math.abs(p)) / Math.PI, a.isScrolling = t.isHorizontal() ? d > i.touchAngle : 90 - d > i.touchAngle)), a.isScrolling && t.emit("touchMoveOpposite", n), void 0 === a.startMoving && (s.currentX === s.startX && s.currentY === s.startY || (a.startMoving = !0)), a.isScrolling)) a.isTouched = !1;else if (a.startMoving) {
+                t.allowClick = !1, n.preventDefault(), i.touchMoveStopPropagation && !i.nested && n.stopPropagation(), a.isMoved || (i.loop && t.loopFix(), a.startTranslate = t.getTranslate(), t.setTransition(0), t.animating && t.$wrapperEl.trigger("webkitTransitionEnd transitionend"), a.allowMomentumBounce = !1, !i.grabCursor || !0 !== t.allowSlideNext && !0 !== t.allowSlidePrev || t.setGrabCursor(!0), t.emit("sliderFirstMove", n)), t.emit("sliderMove", n), a.isMoved = !0;var u = t.isHorizontal() ? p : c;s.diff = u, u *= i.touchRatio, r && (u = -u), t.swipeDirection = 0 < u ? "prev" : "next", a.currentTranslate = u + a.startTranslate;var h = !0,
+                    v = i.resistanceRatio;if ((i.touchReleaseOnEdges && (v = 0), 0 < u && a.currentTranslate > t.minTranslate() ? (h = !1, i.resistance && (a.currentTranslate = t.minTranslate() - 1 + Math.pow(-t.minTranslate() + a.startTranslate + u, v))) : u < 0 && a.currentTranslate < t.maxTranslate() && (h = !1, i.resistance && (a.currentTranslate = t.maxTranslate() + 1 - Math.pow(t.maxTranslate() - a.startTranslate - u, v))), h && (n.preventedByNestedSwiper = !0), !t.allowSlideNext && "next" === t.swipeDirection && a.currentTranslate < a.startTranslate && (a.currentTranslate = a.startTranslate), !t.allowSlidePrev && "prev" === t.swipeDirection && a.currentTranslate > a.startTranslate && (a.currentTranslate = a.startTranslate), 0 < i.threshold)) {
+                  if (!(Math.abs(u) > i.threshold || a.allowThresholdMove)) return void (a.currentTranslate = a.startTranslate);if (!a.allowThresholdMove) return a.allowThresholdMove = !0, s.startX = s.currentX, s.startY = s.currentY, a.currentTranslate = a.startTranslate, void (s.diff = t.isHorizontal() ? s.currentX - s.startX : s.currentY - s.startY);
+                }i.followFinger && ((i.freeMode || i.watchSlidesProgress || i.watchSlidesVisibility) && (t.updateActiveIndex(), t.updateSlidesClasses()), i.freeMode && (0 === a.velocities.length && a.velocities.push({ position: s[t.isHorizontal() ? "startX" : "startY"], time: a.touchStartTime }), a.velocities.push({ position: s[t.isHorizontal() ? "currentX" : "currentY"], time: V.now() })), t.updateProgress(a.currentTranslate), t.setTranslate(a.currentTranslate));
+              }
+            }
+          }
+        } else a.startMoving && a.isScrolling && t.emit("touchMoveOpposite", n);
+      }).bind(e), e.onTouchEnd = (function (e) {
+        var t = this,
+            a = t.touchEventsData,
+            i = t.params,
+            s = t.touches,
+            r = t.rtlTranslate,
+            n = t.$wrapperEl,
+            o = t.slidesGrid,
+            l = t.snapGrid,
+            d = e;if ((d.originalEvent && (d = d.originalEvent), a.allowTouchCallbacks && t.emit("touchEnd", d), a.allowTouchCallbacks = !1, !a.isTouched)) return a.isMoved && i.grabCursor && t.setGrabCursor(!1), a.isMoved = !1, void (a.startMoving = !1);i.grabCursor && a.isMoved && a.isTouched && (!0 === t.allowSlideNext || !0 === t.allowSlidePrev) && t.setGrabCursor(!1);var p,
+            c = V.now(),
+            u = c - a.touchStartTime;if ((t.allowClick && (t.updateClickedSlide(d), t.emit("tap", d), u < 300 && 300 < c - a.lastClickTime && (a.clickTimeout && clearTimeout(a.clickTimeout), a.clickTimeout = V.nextTick(function () {
+          t && !t.destroyed && t.emit("click", d);
+        }, 300)), u < 300 && c - a.lastClickTime < 300 && (a.clickTimeout && clearTimeout(a.clickTimeout), t.emit("doubleTap", d))), a.lastClickTime = V.now(), V.nextTick(function () {
+          t.destroyed || (t.allowClick = !0);
+        }), !a.isTouched || !a.isMoved || !t.swipeDirection || 0 === s.diff || a.currentTranslate === a.startTranslate)) return a.isTouched = !1, a.isMoved = !1, void (a.startMoving = !1);if ((a.isTouched = !1, a.isMoved = !1, a.startMoving = !1, p = i.followFinger ? r ? t.translate : -t.translate : -a.currentTranslate, i.freeMode)) {
+          if (p < -t.minTranslate()) return void t.slideTo(t.activeIndex);if (p > -t.maxTranslate()) return void (t.slides.length < l.length ? t.slideTo(l.length - 1) : t.slideTo(t.slides.length - 1));if (i.freeModeMomentum) {
+            if (1 < a.velocities.length) {
+              var h = a.velocities.pop(),
+                  v = a.velocities.pop(),
+                  f = h.position - v.position,
+                  m = h.time - v.time;t.velocity = f / m, t.velocity /= 2, Math.abs(t.velocity) < i.freeModeMinimumVelocity && (t.velocity = 0), (150 < m || 300 < V.now() - h.time) && (t.velocity = 0);
+            } else t.velocity = 0;t.velocity *= i.freeModeMomentumVelocityRatio, a.velocities.length = 0;var g = 1e3 * i.freeModeMomentumRatio,
+                b = t.velocity * g,
+                w = t.translate + b;r && (w = -w);var y,
+                x,
+                T = !1,
+                E = 20 * Math.abs(t.velocity) * i.freeModeMomentumBounceRatio;if (w < t.maxTranslate()) i.freeModeMomentumBounce ? (w + t.maxTranslate() < -E && (w = t.maxTranslate() - E), y = t.maxTranslate(), T = !0, a.allowMomentumBounce = !0) : w = t.maxTranslate(), i.loop && i.centeredSlides && (x = !0);else if (w > t.minTranslate()) i.freeModeMomentumBounce ? (w - t.minTranslate() > E && (w = t.minTranslate() + E), y = t.minTranslate(), T = !0, a.allowMomentumBounce = !0) : w = t.minTranslate(), i.loop && i.centeredSlides && (x = !0);else if (i.freeModeSticky) {
+              for (var S, C = 0; C < l.length; C += 1) if (l[C] > -w) {
+                S = C;break;
+              }w = -(w = Math.abs(l[S] - w) < Math.abs(l[S - 1] - w) || "next" === t.swipeDirection ? l[S] : l[S - 1]);
+            }if ((x && t.once("transitionEnd", function () {
+              t.loopFix();
+            }), 0 !== t.velocity)) g = r ? Math.abs((-w - t.translate) / t.velocity) : Math.abs((w - t.translate) / t.velocity);else if (i.freeModeSticky) return void t.slideToClosest();i.freeModeMomentumBounce && T ? (t.updateProgress(y), t.setTransition(g), t.setTranslate(w), t.transitionStart(!0, t.swipeDirection), t.animating = !0, n.transitionEnd(function () {
+              t && !t.destroyed && a.allowMomentumBounce && (t.emit("momentumBounce"), t.setTransition(i.speed), t.setTranslate(y), n.transitionEnd(function () {
+                t && !t.destroyed && t.transitionEnd();
+              }));
+            })) : t.velocity ? (t.updateProgress(w), t.setTransition(g), t.setTranslate(w), t.transitionStart(!0, t.swipeDirection), t.animating || (t.animating = !0, n.transitionEnd(function () {
+              t && !t.destroyed && t.transitionEnd();
+            }))) : t.updateProgress(w), t.updateActiveIndex(), t.updateSlidesClasses();
+          } else if (i.freeModeSticky) return void t.slideToClosest();(!i.freeModeMomentum || u >= i.longSwipesMs) && (t.updateProgress(), t.updateActiveIndex(), t.updateSlidesClasses());
+        } else {
+          for (var M = 0, k = t.slidesSizesGrid[0], P = 0; P < o.length; P += i.slidesPerGroup) void 0 !== o[P + i.slidesPerGroup] ? p >= o[P] && p < o[P + i.slidesPerGroup] && (k = o[(M = P) + i.slidesPerGroup] - o[P]) : p >= o[P] && (M = P, k = o[o.length - 1] - o[o.length - 2]);var z = (p - o[M]) / k;if (u > i.longSwipesMs) {
+            if (!i.longSwipes) return void t.slideTo(t.activeIndex);"next" === t.swipeDirection && (z >= i.longSwipesRatio ? t.slideTo(M + i.slidesPerGroup) : t.slideTo(M)), "prev" === t.swipeDirection && (z > 1 - i.longSwipesRatio ? t.slideTo(M + i.slidesPerGroup) : t.slideTo(M));
+          } else {
+            if (!i.shortSwipes) return void t.slideTo(t.activeIndex);"next" === t.swipeDirection && t.slideTo(M + i.slidesPerGroup), "prev" === t.swipeDirection && t.slideTo(M);
+          }
+        }
+      }).bind(e), e.onClick = (function (e) {
+        this.allowClick || (this.params.preventClicks && e.preventDefault(), this.params.preventClicksPropagation && this.animating && (e.stopPropagation(), e.stopImmediatePropagation()));
+      }).bind(e);var r = "container" === t.touchEventsTarget ? i : s,
+          n = !!t.nested;if (F.touch || !F.pointerEvents && !F.prefixedPointerEvents) {
+        if (F.touch) {
+          var o = !("touchstart" !== a.start || !F.passiveListener || !t.passiveListeners) && { passive: !0, capture: !1 };r.addEventListener(a.start, e.onTouchStart, o), r.addEventListener(a.move, e.onTouchMove, F.passiveListener ? { passive: !1, capture: n } : n), r.addEventListener(a.end, e.onTouchEnd, o);
+        }(t.simulateTouch && !m.ios && !m.android || t.simulateTouch && !F.touch && m.ios) && (r.addEventListener("mousedown", e.onTouchStart, !1), f.addEventListener("mousemove", e.onTouchMove, n), f.addEventListener("mouseup", e.onTouchEnd, !1));
+      } else r.addEventListener(a.start, e.onTouchStart, !1), f.addEventListener(a.move, e.onTouchMove, n), f.addEventListener(a.end, e.onTouchEnd, !1);(t.preventClicks || t.preventClicksPropagation) && r.addEventListener("click", e.onClick, !0), e.on(m.ios || m.android ? "resize orientationchange observerUpdate" : "resize observerUpdate", g, !0);
+    }, detachEvents: function detachEvents() {
+      var e = this,
+          t = e.params,
+          a = e.touchEvents,
+          i = e.el,
+          s = e.wrapperEl,
+          r = "container" === t.touchEventsTarget ? i : s,
+          n = !!t.nested;if (F.touch || !F.pointerEvents && !F.prefixedPointerEvents) {
+        if (F.touch) {
+          var o = !("onTouchStart" !== a.start || !F.passiveListener || !t.passiveListeners) && { passive: !0, capture: !1 };r.removeEventListener(a.start, e.onTouchStart, o), r.removeEventListener(a.move, e.onTouchMove, n), r.removeEventListener(a.end, e.onTouchEnd, o);
+        }(t.simulateTouch && !m.ios && !m.android || t.simulateTouch && !F.touch && m.ios) && (r.removeEventListener("mousedown", e.onTouchStart, !1), f.removeEventListener("mousemove", e.onTouchMove, n), f.removeEventListener("mouseup", e.onTouchEnd, !1));
+      } else r.removeEventListener(a.start, e.onTouchStart, !1), f.removeEventListener(a.move, e.onTouchMove, n), f.removeEventListener(a.end, e.onTouchEnd, !1);(t.preventClicks || t.preventClicksPropagation) && r.removeEventListener("click", e.onClick, !0), e.off(m.ios || m.android ? "resize orientationchange observerUpdate" : "resize observerUpdate", g);
+    } };var w,
+      y = { setBreakpoint: function setBreakpoint() {
+      var e = this,
+          t = e.activeIndex,
+          a = e.initialized,
+          i = e.loopedSlides;void 0 === i && (i = 0);var s = e.params,
+          r = s.breakpoints;if (r && (!r || 0 !== Object.keys(r).length)) {
+        var n = e.getBreakpoint(r);if (n && e.currentBreakpoint !== n) {
+          var o = n in r ? r[n] : void 0;o && ["slidesPerView", "spaceBetween", "slidesPerGroup"].forEach(function (e) {
+            var t = o[e];void 0 !== t && (o[e] = "slidesPerView" !== e || "AUTO" !== t && "auto" !== t ? "slidesPerView" === e ? parseFloat(t) : parseInt(t, 10) : "auto");
+          });var l = o || e.originalParams,
+              d = s.loop && l.slidesPerView !== s.slidesPerView;V.extend(e.params, l), V.extend(e, { allowTouchMove: e.params.allowTouchMove, allowSlideNext: e.params.allowSlideNext, allowSlidePrev: e.params.allowSlidePrev }), e.currentBreakpoint = n, d && a && (e.loopDestroy(), e.loopCreate(), e.updateSlides(), e.slideTo(t - i + e.loopedSlides, 0, !1)), e.emit("breakpoint", l);
+        }
+      }
+    }, getBreakpoint: function getBreakpoint(e) {
+      if (e) {
+        var t = !1,
+            a = [];Object.keys(e).forEach(function (e) {
+          a.push(e);
+        }), a.sort(function (e, t) {
+          return parseInt(e, 10) - parseInt(t, 10);
+        });for (var i = 0; i < a.length; i += 1) {
+          var s = a[i];this.params.breakpointsInverse ? s <= Y.innerWidth && (t = s) : s >= Y.innerWidth && !t && (t = s);
+        }return t || "max";
+      }
+    } },
+      I = { isIE: !!Y.navigator.userAgent.match(/Trident/g) || !!Y.navigator.userAgent.match(/MSIE/g), isEdge: !!Y.navigator.userAgent.match(/Edge/g), isSafari: (w = Y.navigator.userAgent.toLowerCase(), 0 <= w.indexOf("safari") && w.indexOf("chrome") < 0 && w.indexOf("android") < 0), isUiWebView: /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(Y.navigator.userAgent) };var x = { init: !0, direction: "horizontal", touchEventsTarget: "container", initialSlide: 0, speed: 300, preventInteractionOnTransition: !1, edgeSwipeDetection: !1, edgeSwipeThreshold: 20, freeMode: !1, freeModeMomentum: !0, freeModeMomentumRatio: 1, freeModeMomentumBounce: !0, freeModeMomentumBounceRatio: 1, freeModeMomentumVelocityRatio: 1, freeModeSticky: !1, freeModeMinimumVelocity: .02, autoHeight: !1, setWrapperSize: !1, virtualTranslate: !1, effect: "slide", breakpoints: void 0, breakpointsInverse: !1, spaceBetween: 0, slidesPerView: 1, slidesPerColumn: 1, slidesPerColumnFill: "column", slidesPerGroup: 1, centeredSlides: !1, slidesOffsetBefore: 0, slidesOffsetAfter: 0, normalizeSlideIndex: !0, centerInsufficientSlides: !1, watchOverflow: !1, roundLengths: !1, touchRatio: 1, touchAngle: 45, simulateTouch: !0, shortSwipes: !0, longSwipes: !0, longSwipesRatio: .5, longSwipesMs: 300, followFinger: !0, allowTouchMove: !0, threshold: 0, touchMoveStopPropagation: !0, touchStartPreventDefault: !0, touchStartForcePreventDefault: !1, touchReleaseOnEdges: !1, uniqueNavElements: !0, resistance: !0, resistanceRatio: .85, watchSlidesProgress: !1, watchSlidesVisibility: !1, grabCursor: !1, preventClicks: !0, preventClicksPropagation: !0, slideToClickedSlide: !1, preloadImages: !0, updateOnImagesReady: !0, loop: !1, loopAdditionalSlides: 0, loopedSlides: null, loopFillGroupWithBlank: !1, allowSlidePrev: !0, allowSlideNext: !0, swipeHandler: null, noSwiping: !0, noSwipingClass: "swiper-no-swiping", noSwipingSelector: null, passiveListeners: !0, containerModifierClass: "swiper-container-", slideClass: "swiper-slide", slideBlankClass: "swiper-slide-invisible-blank", slideActiveClass: "swiper-slide-active", slideDuplicateActiveClass: "swiper-slide-duplicate-active", slideVisibleClass: "swiper-slide-visible", slideDuplicateClass: "swiper-slide-duplicate", slideNextClass: "swiper-slide-next", slideDuplicateNextClass: "swiper-slide-duplicate-next", slidePrevClass: "swiper-slide-prev", slideDuplicatePrevClass: "swiper-slide-duplicate-prev", wrapperClass: "swiper-wrapper", runCallbacksOnInit: !0 },
+      T = { update: o, translate: d, transition: p, slide: c, loop: u, grabCursor: h, manipulation: v, events: b, breakpoints: y, checkOverflow: { checkOverflow: function checkOverflow() {
+        var e = this,
+            t = e.isLocked;e.isLocked = 1 === e.snapGrid.length, e.allowSlideNext = !e.isLocked, e.allowSlidePrev = !e.isLocked, t !== e.isLocked && e.emit(e.isLocked ? "lock" : "unlock"), t && t !== e.isLocked && (e.isEnd = !1, e.navigation.update());
+      } }, classes: { addClasses: function addClasses() {
+        var t = this.classNames,
+            a = this.params,
+            e = this.rtl,
+            i = this.$el,
+            s = [];s.push(a.direction), a.freeMode && s.push("free-mode"), F.flexbox || s.push("no-flexbox"), a.autoHeight && s.push("autoheight"), e && s.push("rtl"), 1 < a.slidesPerColumn && s.push("multirow"), m.android && s.push("android"), m.ios && s.push("ios"), (I.isIE || I.isEdge) && (F.pointerEvents || F.prefixedPointerEvents) && s.push("wp8-" + a.direction), s.forEach(function (e) {
+          t.push(a.containerModifierClass + e);
+        }), i.addClass(t.join(" "));
+      }, removeClasses: function removeClasses() {
+        var e = this.$el,
+            t = this.classNames;e.removeClass(t.join(" "));
+      } }, images: { loadImage: function loadImage(e, t, a, i, s, r) {
+        var n;function o() {
+          r && r();
+        }e.complete && s ? o() : t ? ((n = new Y.Image()).onload = o, n.onerror = o, i && (n.sizes = i), a && (n.srcset = a), t && (n.src = t)) : o();
+      }, preloadImages: function preloadImages() {
+        var e = this;function t() {
+          null != e && e && !e.destroyed && (void 0 !== e.imagesLoaded && (e.imagesLoaded += 1), e.imagesLoaded === e.imagesToLoad.length && (e.params.updateOnImagesReady && e.update(), e.emit("imagesReady")));
+        }e.imagesToLoad = e.$el.find("img");for (var a = 0; a < e.imagesToLoad.length; a += 1) {
+          var i = e.imagesToLoad[a];e.loadImage(i, i.currentSrc || i.getAttribute("src"), i.srcset || i.getAttribute("srcset"), i.sizes || i.getAttribute("sizes"), !0, t);
+        }
+      } } },
+      E = {},
+      S = (function (u) {
+    function h() {
+      for (var e, t, s, a = [], i = arguments.length; i--;) a[i] = arguments[i];1 === a.length && a[0].constructor && a[0].constructor === Object ? s = a[0] : (t = (e = a)[0], s = e[1]), s || (s = {}), s = V.extend({}, s), t && !s.el && (s.el = t), u.call(this, s), Object.keys(T).forEach(function (t) {
+        Object.keys(T[t]).forEach(function (e) {
+          h.prototype[e] || (h.prototype[e] = T[t][e]);
+        });
+      });var r = this;void 0 === r.modules && (r.modules = {}), Object.keys(r.modules).forEach(function (e) {
+        var t = r.modules[e];if (t.params) {
+          var a = Object.keys(t.params)[0],
+              i = t.params[a];if ("object" != typeof i || null === i) return;if (!(a in s && "enabled" in i)) return;!0 === s[a] && (s[a] = { enabled: !0 }), "object" != typeof s[a] || "enabled" in s[a] || (s[a].enabled = !0), s[a] || (s[a] = { enabled: !1 });
+        }
+      });var n = V.extend({}, x);r.useModulesParams(n), r.params = V.extend({}, n, E, s), r.originalParams = V.extend({}, r.params), r.passedParams = V.extend({}, s);var o = (r.$ = L)(r.params.el);if (t = o[0]) {
+        if (1 < o.length) {
+          var l = [];return o.each(function (e, t) {
+            var a = V.extend({}, s, { el: t });l.push(new h(a));
+          }), l;
+        }t.swiper = r, o.data("swiper", r);var d,
+            p,
+            c = o.children("." + r.params.wrapperClass);return V.extend(r, { $el: o, el: t, $wrapperEl: c, wrapperEl: c[0], classNames: [], slides: L(), slidesGrid: [], snapGrid: [], slidesSizesGrid: [], isHorizontal: function isHorizontal() {
+            return "horizontal" === r.params.direction;
+          }, isVertical: function isVertical() {
+            return "vertical" === r.params.direction;
+          }, rtl: "rtl" === t.dir.toLowerCase() || "rtl" === o.css("direction"), rtlTranslate: "horizontal" === r.params.direction && ("rtl" === t.dir.toLowerCase() || "rtl" === o.css("direction")), wrongRTL: "-webkit-box" === c.css("display"), activeIndex: 0, realIndex: 0, isBeginning: !0, isEnd: !1, translate: 0, previousTranslate: 0, progress: 0, velocity: 0, animating: !1, allowSlideNext: r.params.allowSlideNext, allowSlidePrev: r.params.allowSlidePrev, touchEvents: (d = ["touchstart", "touchmove", "touchend"], p = ["mousedown", "mousemove", "mouseup"], F.pointerEvents ? p = ["pointerdown", "pointermove", "pointerup"] : F.prefixedPointerEvents && (p = ["MSPointerDown", "MSPointerMove", "MSPointerUp"]), r.touchEventsTouch = { start: d[0], move: d[1], end: d[2] }, r.touchEventsDesktop = { start: p[0], move: p[1], end: p[2] }, F.touch || !r.params.simulateTouch ? r.touchEventsTouch : r.touchEventsDesktop), touchEventsData: { isTouched: void 0, isMoved: void 0, allowTouchCallbacks: void 0, touchStartTime: void 0, isScrolling: void 0, currentTranslate: void 0, startTranslate: void 0, allowThresholdMove: void 0, formElements: "input, select, option, textarea, button, video", lastClickTime: V.now(), clickTimeout: void 0, velocities: [], allowMomentumBounce: void 0, isTouchEvent: void 0, startMoving: void 0 }, allowClick: !0, allowTouchMove: r.params.allowTouchMove, touches: { startX: 0, startY: 0, currentX: 0, currentY: 0, diff: 0 }, imagesToLoad: [], imagesLoaded: 0 }), r.useModules(), r.params.init && r.init(), r;
+      }
+    }u && (h.__proto__ = u);var e = { extendedDefaults: { configurable: !0 }, defaults: { configurable: !0 }, Class: { configurable: !0 }, $: { configurable: !0 } };return ((h.prototype = Object.create(u && u.prototype)).constructor = h).prototype.slidesPerViewDynamic = function () {
+      var e = this,
+          t = e.params,
+          a = e.slides,
+          i = e.slidesGrid,
+          s = e.size,
+          r = e.activeIndex,
+          n = 1;if (t.centeredSlides) {
+        for (var o, l = a[r].swiperSlideSize, d = r + 1; d < a.length; d += 1) a[d] && !o && (n += 1, s < (l += a[d].swiperSlideSize) && (o = !0));for (var p = r - 1; 0 <= p; p -= 1) a[p] && !o && (n += 1, s < (l += a[p].swiperSlideSize) && (o = !0));
+      } else for (var c = r + 1; c < a.length; c += 1) i[c] - i[r] < s && (n += 1);return n;
+    }, h.prototype.update = function () {
+      var a = this;if (a && !a.destroyed) {
+        var e = a.snapGrid,
+            t = a.params;t.breakpoints && a.setBreakpoint(), a.updateSize(), a.updateSlides(), a.updateProgress(), a.updateSlidesClasses(), a.params.freeMode ? (i(), a.params.autoHeight && a.updateAutoHeight()) : (("auto" === a.params.slidesPerView || 1 < a.params.slidesPerView) && a.isEnd && !a.params.centeredSlides ? a.slideTo(a.slides.length - 1, 0, !1, !0) : a.slideTo(a.activeIndex, 0, !1, !0)) || i(), t.watchOverflow && e !== a.snapGrid && a.checkOverflow(), a.emit("update");
+      }function i() {
+        var e = a.rtlTranslate ? -1 * a.translate : a.translate,
+            t = Math.min(Math.max(e, a.maxTranslate()), a.minTranslate());a.setTranslate(t), a.updateActiveIndex(), a.updateSlidesClasses();
+      }
+    }, h.prototype.init = function () {
+      var e = this;e.initialized || (e.emit("beforeInit"), e.params.breakpoints && e.setBreakpoint(), e.addClasses(), e.params.loop && e.loopCreate(), e.updateSize(), e.updateSlides(), e.params.watchOverflow && e.checkOverflow(), e.params.grabCursor && e.setGrabCursor(), e.params.preloadImages && e.preloadImages(), e.params.loop ? e.slideTo(e.params.initialSlide + e.loopedSlides, 0, e.params.runCallbacksOnInit) : e.slideTo(e.params.initialSlide, 0, e.params.runCallbacksOnInit), e.attachEvents(), e.initialized = !0, e.emit("init"));
+    }, h.prototype.destroy = function (e, t) {
+      void 0 === e && (e = !0), void 0 === t && (t = !0);var a = this,
+          i = a.params,
+          s = a.$el,
+          r = a.$wrapperEl,
+          n = a.slides;return void 0 === a.params || a.destroyed || (a.emit("beforeDestroy"), a.initialized = !1, a.detachEvents(), i.loop && a.loopDestroy(), t && (a.removeClasses(), s.removeAttr("style"), r.removeAttr("style"), n && n.length && n.removeClass([i.slideVisibleClass, i.slideActiveClass, i.slideNextClass, i.slidePrevClass].join(" ")).removeAttr("style").removeAttr("data-swiper-slide-index").removeAttr("data-swiper-column").removeAttr("data-swiper-row")), a.emit("destroy"), Object.keys(a.eventsListeners).forEach(function (e) {
+        a.off(e);
+      }), !1 !== e && (a.$el[0].swiper = null, a.$el.data("swiper", null), V.deleteProps(a)), a.destroyed = !0), null;
+    }, h.extendDefaults = function (e) {
+      V.extend(E, e);
+    }, e.extendedDefaults.get = function () {
+      return E;
+    }, e.defaults.get = function () {
+      return x;
+    }, e.Class.get = function () {
+      return u;
+    }, e.$.get = function () {
+      return L;
+    }, Object.defineProperties(h, e), h;
+  })(s),
+      C = { name: "device", proto: { device: m }, "static": { device: m } },
+      M = { name: "support", proto: { support: F }, "static": { support: F } },
+      k = { name: "browser", proto: { browser: I }, "static": { browser: I } },
+      P = { name: "resize", create: function create() {
+      var e = this;V.extend(e, { resize: { resizeHandler: function resizeHandler() {
+            e && !e.destroyed && e.initialized && (e.emit("beforeResize"), e.emit("resize"));
+          }, orientationChangeHandler: function orientationChangeHandler() {
+            e && !e.destroyed && e.initialized && e.emit("orientationchange");
+          } } });
+    }, on: { init: function init() {
+        Y.addEventListener("resize", this.resize.resizeHandler), Y.addEventListener("orientationchange", this.resize.orientationChangeHandler);
+      }, destroy: function destroy() {
+        Y.removeEventListener("resize", this.resize.resizeHandler), Y.removeEventListener("orientationchange", this.resize.orientationChangeHandler);
+      } } },
+      z = { func: Y.MutationObserver || Y.WebkitMutationObserver, attach: function attach(e, t) {
+      void 0 === t && (t = {});var a = this,
+          i = new z.func(function (e) {
+        if (1 !== e.length) {
+          var t = function t() {
+            a.emit("observerUpdate", e[0]);
+          };Y.requestAnimationFrame ? Y.requestAnimationFrame(t) : Y.setTimeout(t, 0);
+        } else a.emit("observerUpdate", e[0]);
+      });i.observe(e, { attributes: void 0 === t.attributes || t.attributes, childList: void 0 === t.childList || t.childList, characterData: void 0 === t.characterData || t.characterData }), a.observer.observers.push(i);
+    }, init: function init() {
+      var e = this;if (F.observer && e.params.observer) {
+        if (e.params.observeParents) for (var t = e.$el.parents(), a = 0; a < t.length; a += 1) e.observer.attach(t[a]);e.observer.attach(e.$el[0], { childList: !1 }), e.observer.attach(e.$wrapperEl[0], { attributes: !1 });
+      }
+    }, destroy: function destroy() {
+      this.observer.observers.forEach(function (e) {
+        e.disconnect();
+      }), this.observer.observers = [];
+    } },
+      $ = { name: "observer", params: { observer: !1, observeParents: !1 }, create: function create() {
+      V.extend(this, { observer: { init: z.init.bind(this), attach: z.attach.bind(this), destroy: z.destroy.bind(this), observers: [] } });
+    }, on: { init: function init() {
+        this.observer.init();
+      }, destroy: function destroy() {
+        this.observer.destroy();
+      } } },
+      D = { update: function update(e) {
+      var t = this,
+          a = t.params,
+          i = a.slidesPerView,
+          s = a.slidesPerGroup,
+          r = a.centeredSlides,
+          n = t.params.virtual,
+          o = n.addSlidesBefore,
+          l = n.addSlidesAfter,
+          d = t.virtual,
+          p = d.from,
+          c = d.to,
+          u = d.slides,
+          h = d.slidesGrid,
+          v = d.renderSlide,
+          f = d.offset;t.updateActiveIndex();var m,
+          g,
+          b,
+          w = t.activeIndex || 0;m = t.rtlTranslate ? "right" : t.isHorizontal() ? "left" : "top", r ? (g = Math.floor(i / 2) + s + o, b = Math.floor(i / 2) + s + l) : (g = i + (s - 1) + o, b = s + l);var y = Math.max((w || 0) - b, 0),
+          x = Math.min((w || 0) + g, u.length - 1),
+          T = (t.slidesGrid[y] || 0) - (t.slidesGrid[0] || 0);function E() {
+        t.updateSlides(), t.updateProgress(), t.updateSlidesClasses(), t.lazy && t.params.lazy.enabled && t.lazy.load();
+      }if ((V.extend(t.virtual, { from: y, to: x, offset: T, slidesGrid: t.slidesGrid }), p === y && c === x && !e)) return t.slidesGrid !== h && T !== f && t.slides.css(m, T + "px"), void t.updateProgress();if (t.params.virtual.renderExternal) return t.params.virtual.renderExternal.call(t, { offset: T, from: y, to: x, slides: (function () {
+          for (var e = [], t = y; t <= x; t += 1) e.push(u[t]);return e;
+        })() }), void E();var S = [],
+          C = [];if (e) t.$wrapperEl.find("." + t.params.slideClass).remove();else for (var M = p; M <= c; M += 1) (M < y || x < M) && t.$wrapperEl.find("." + t.params.slideClass + '[data-swiper-slide-index="' + M + '"]').remove();for (var k = 0; k < u.length; k += 1) y <= k && k <= x && (void 0 === c || e ? C.push(k) : (c < k && C.push(k), k < p && S.push(k)));C.forEach(function (e) {
+        t.$wrapperEl.append(v(u[e], e));
+      }), S.sort(function (e, t) {
+        return t - e;
+      }).forEach(function (e) {
+        t.$wrapperEl.prepend(v(u[e], e));
+      }), t.$wrapperEl.children(".swiper-slide").css(m, T + "px"), E();
+    }, renderSlide: function renderSlide(e, t) {
+      var a = this,
+          i = a.params.virtual;if (i.cache && a.virtual.cache[t]) return a.virtual.cache[t];var s = i.renderSlide ? L(i.renderSlide.call(a, e, t)) : L('<div class="' + a.params.slideClass + '" data-swiper-slide-index="' + t + '">' + e + "</div>");return s.attr("data-swiper-slide-index") || s.attr("data-swiper-slide-index", t), i.cache && (a.virtual.cache[t] = s), s;
+    }, appendSlide: function appendSlide(e) {
+      this.virtual.slides.push(e), this.virtual.update(!0);
+    }, prependSlide: function prependSlide(e) {
+      var t = this;if ((t.virtual.slides.unshift(e), t.params.virtual.cache)) {
+        var a = t.virtual.cache,
+            i = {};Object.keys(a).forEach(function (e) {
+          i[e + 1] = a[e];
+        }), t.virtual.cache = i;
+      }t.virtual.update(!0), t.slideNext(0);
+    } },
+      O = { name: "virtual", params: { virtual: { enabled: !1, slides: [], cache: !0, renderSlide: null, renderExternal: null, addSlidesBefore: 0, addSlidesAfter: 0 } }, create: function create() {
+      var e = this;V.extend(e, { virtual: { update: D.update.bind(e), appendSlide: D.appendSlide.bind(e), prependSlide: D.prependSlide.bind(e), renderSlide: D.renderSlide.bind(e), slides: e.params.virtual.slides, cache: {} } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this;if (e.params.virtual.enabled) {
+          e.classNames.push(e.params.containerModifierClass + "virtual");var t = { watchSlidesProgress: !0 };V.extend(e.params, t), V.extend(e.originalParams, t), e.params.initialSlide || e.virtual.update();
+        }
+      }, setTranslate: function setTranslate() {
+        this.params.virtual.enabled && this.virtual.update();
+      } } },
+      A = { handle: function handle(e) {
+      var t = this,
+          a = t.rtlTranslate,
+          i = e;i.originalEvent && (i = i.originalEvent);var s = i.keyCode || i.charCode;if (!t.allowSlideNext && (t.isHorizontal() && 39 === s || t.isVertical() && 40 === s)) return !1;if (!t.allowSlidePrev && (t.isHorizontal() && 37 === s || t.isVertical() && 38 === s)) return !1;if (!(i.shiftKey || i.altKey || i.ctrlKey || i.metaKey || f.activeElement && f.activeElement.nodeName && ("input" === f.activeElement.nodeName.toLowerCase() || "textarea" === f.activeElement.nodeName.toLowerCase()))) {
+        if (t.params.keyboard.onlyInViewport && (37 === s || 39 === s || 38 === s || 40 === s)) {
+          var r = !1;if (0 < t.$el.parents("." + t.params.slideClass).length && 0 === t.$el.parents("." + t.params.slideActiveClass).length) return;var n = Y.innerWidth,
+              o = Y.innerHeight,
+              l = t.$el.offset();a && (l.left -= t.$el[0].scrollLeft);for (var d = [[l.left, l.top], [l.left + t.width, l.top], [l.left, l.top + t.height], [l.left + t.width, l.top + t.height]], p = 0; p < d.length; p += 1) {
+            var c = d[p];0 <= c[0] && c[0] <= n && 0 <= c[1] && c[1] <= o && (r = !0);
+          }if (!r) return;
+        }t.isHorizontal() ? (37 !== s && 39 !== s || (i.preventDefault ? i.preventDefault() : i.returnValue = !1), (39 === s && !a || 37 === s && a) && t.slideNext(), (37 === s && !a || 39 === s && a) && t.slidePrev()) : (38 !== s && 40 !== s || (i.preventDefault ? i.preventDefault() : i.returnValue = !1), 40 === s && t.slideNext(), 38 === s && t.slidePrev()), t.emit("keyPress", s);
+      }
+    }, enable: function enable() {
+      this.keyboard.enabled || (L(f).on("keydown", this.keyboard.handle), this.keyboard.enabled = !0);
+    }, disable: function disable() {
+      this.keyboard.enabled && (L(f).off("keydown", this.keyboard.handle), this.keyboard.enabled = !1);
+    } },
+      N = { name: "keyboard", params: { keyboard: { enabled: !1, onlyInViewport: !0 } }, create: function create() {
+      V.extend(this, { keyboard: { enabled: !1, enable: A.enable.bind(this), disable: A.disable.bind(this), handle: A.handle.bind(this) } });
+    }, on: { init: function init() {
+        this.params.keyboard.enabled && this.keyboard.enable();
+      }, destroy: function destroy() {
+        this.keyboard.enabled && this.keyboard.disable();
+      } } };var H = { lastScrollTime: V.now(), event: -1 < Y.navigator.userAgent.indexOf("firefox") ? "DOMMouseScroll" : (function () {
+      var e = "onwheel",
+          t = (e in f);if (!t) {
+        var a = f.createElement("div");a.setAttribute(e, "return;"), t = "function" == typeof a[e];
+      }return !t && f.implementation && f.implementation.hasFeature && !0 !== f.implementation.hasFeature("", "") && (t = f.implementation.hasFeature("Events.wheel", "3.0")), t;
+    })() ? "wheel" : "mousewheel", normalize: function normalize(e) {
+      var t = 0,
+          a = 0,
+          i = 0,
+          s = 0;return "detail" in e && (a = e.detail), "wheelDelta" in e && (a = -e.wheelDelta / 120), "wheelDeltaY" in e && (a = -e.wheelDeltaY / 120), "wheelDeltaX" in e && (t = -e.wheelDeltaX / 120), "axis" in e && e.axis === e.HORIZONTAL_AXIS && (t = a, a = 0), i = 10 * t, s = 10 * a, "deltaY" in e && (s = e.deltaY), "deltaX" in e && (i = e.deltaX), (i || s) && e.deltaMode && (1 === e.deltaMode ? (i *= 40, s *= 40) : (i *= 800, s *= 800)), i && !t && (t = i < 1 ? -1 : 1), s && !a && (a = s < 1 ? -1 : 1), { spinX: t, spinY: a, pixelX: i, pixelY: s };
+    }, handleMouseEnter: function handleMouseEnter() {
+      this.mouseEntered = !0;
+    }, handleMouseLeave: function handleMouseLeave() {
+      this.mouseEntered = !1;
+    }, handle: function handle(e) {
+      var t = e,
+          a = this,
+          i = a.params.mousewheel;if (!a.mouseEntered && !i.releaseOnEdges) return !0;t.originalEvent && (t = t.originalEvent);var s = 0,
+          r = a.rtlTranslate ? -1 : 1,
+          n = H.normalize(t);if (i.forceToAxis) if (a.isHorizontal()) {
+        if (!(Math.abs(n.pixelX) > Math.abs(n.pixelY))) return !0;s = n.pixelX * r;
+      } else {
+        if (!(Math.abs(n.pixelY) > Math.abs(n.pixelX))) return !0;s = n.pixelY;
+      } else s = Math.abs(n.pixelX) > Math.abs(n.pixelY) ? -n.pixelX * r : -n.pixelY;if (0 === s) return !0;if ((i.invert && (s = -s), a.params.freeMode)) {
+        a.params.loop && a.loopFix();var o = a.getTranslate() + s * i.sensitivity,
+            l = a.isBeginning,
+            d = a.isEnd;if ((o >= a.minTranslate() && (o = a.minTranslate()), o <= a.maxTranslate() && (o = a.maxTranslate()), a.setTransition(0), a.setTranslate(o), a.updateProgress(), a.updateActiveIndex(), a.updateSlidesClasses(), (!l && a.isBeginning || !d && a.isEnd) && a.updateSlidesClasses(), a.params.freeModeSticky && (clearTimeout(a.mousewheel.timeout), a.mousewheel.timeout = V.nextTick(function () {
+          a.slideToClosest();
+        }, 300)), a.emit("scroll", t), a.params.autoplay && a.params.autoplayDisableOnInteraction && a.autoplay.stop(), o === a.minTranslate() || o === a.maxTranslate())) return !0;
+      } else {
+        if (60 < V.now() - a.mousewheel.lastScrollTime) if (s < 0) if (a.isEnd && !a.params.loop || a.animating) {
+          if (i.releaseOnEdges) return !0;
+        } else a.slideNext(), a.emit("scroll", t);else if (a.isBeginning && !a.params.loop || a.animating) {
+          if (i.releaseOnEdges) return !0;
+        } else a.slidePrev(), a.emit("scroll", t);a.mousewheel.lastScrollTime = new Y.Date().getTime();
+      }return t.preventDefault ? t.preventDefault() : t.returnValue = !1, !1;
+    }, enable: function enable() {
+      var e = this;if (!H.event) return !1;if (e.mousewheel.enabled) return !1;var t = e.$el;return "container" !== e.params.mousewheel.eventsTarged && (t = L(e.params.mousewheel.eventsTarged)), t.on("mouseenter", e.mousewheel.handleMouseEnter), t.on("mouseleave", e.mousewheel.handleMouseLeave), t.on(H.event, e.mousewheel.handle), e.mousewheel.enabled = !0;
+    }, disable: function disable() {
+      var e = this;if (!H.event) return !1;if (!e.mousewheel.enabled) return !1;var t = e.$el;return "container" !== e.params.mousewheel.eventsTarged && (t = L(e.params.mousewheel.eventsTarged)), t.off(H.event, e.mousewheel.handle), !(e.mousewheel.enabled = !1);
+    } },
+      G = { update: function update() {
+      var e = this,
+          t = e.params.navigation;if (!e.params.loop) {
+        var a = e.navigation,
+            i = a.$nextEl,
+            s = a.$prevEl;s && 0 < s.length && (e.isBeginning ? s.addClass(t.disabledClass) : s.removeClass(t.disabledClass), s[e.params.watchOverflow && e.isLocked ? "addClass" : "removeClass"](t.lockClass)), i && 0 < i.length && (e.isEnd ? i.addClass(t.disabledClass) : i.removeClass(t.disabledClass), i[e.params.watchOverflow && e.isLocked ? "addClass" : "removeClass"](t.lockClass));
+      }
+    }, onPrevClick: function onPrevClick(e) {
+      e.preventDefault(), this.isBeginning && !this.params.loop || this.slidePrev();
+    }, onNextClick: function onNextClick(e) {
+      e.preventDefault(), this.isEnd && !this.params.loop || this.slideNext();
+    }, init: function init() {
+      var e,
+          t,
+          a = this,
+          i = a.params.navigation;(i.nextEl || i.prevEl) && (i.nextEl && (e = L(i.nextEl), a.params.uniqueNavElements && "string" == typeof i.nextEl && 1 < e.length && 1 === a.$el.find(i.nextEl).length && (e = a.$el.find(i.nextEl))), i.prevEl && (t = L(i.prevEl), a.params.uniqueNavElements && "string" == typeof i.prevEl && 1 < t.length && 1 === a.$el.find(i.prevEl).length && (t = a.$el.find(i.prevEl))), e && 0 < e.length && e.on("click", a.navigation.onNextClick), t && 0 < t.length && t.on("click", a.navigation.onPrevClick), V.extend(a.navigation, { $nextEl: e, nextEl: e && e[0], $prevEl: t, prevEl: t && t[0] }));
+    }, destroy: function destroy() {
+      var e = this,
+          t = e.navigation,
+          a = t.$nextEl,
+          i = t.$prevEl;a && a.length && (a.off("click", e.navigation.onNextClick), a.removeClass(e.params.navigation.disabledClass)), i && i.length && (i.off("click", e.navigation.onPrevClick), i.removeClass(e.params.navigation.disabledClass));
+    } },
+      B = { update: function update() {
+      var e = this,
+          t = e.rtl,
+          s = e.params.pagination;if (s.el && e.pagination.el && e.pagination.$el && 0 !== e.pagination.$el.length) {
+        var r,
+            a = e.virtual && e.params.virtual.enabled ? e.virtual.slides.length : e.slides.length,
+            i = e.pagination.$el,
+            n = e.params.loop ? Math.ceil((a - 2 * e.loopedSlides) / e.params.slidesPerGroup) : e.snapGrid.length;if ((e.params.loop ? ((r = Math.ceil((e.activeIndex - e.loopedSlides) / e.params.slidesPerGroup)) > a - 1 - 2 * e.loopedSlides && (r -= a - 2 * e.loopedSlides), n - 1 < r && (r -= n), r < 0 && "bullets" !== e.params.paginationType && (r = n + r)) : r = void 0 !== e.snapIndex ? e.snapIndex : e.activeIndex || 0, "bullets" === s.type && e.pagination.bullets && 0 < e.pagination.bullets.length)) {
+          var o,
+              l,
+              d,
+              p = e.pagination.bullets;if ((s.dynamicBullets && (e.pagination.bulletSize = p.eq(0)[e.isHorizontal() ? "outerWidth" : "outerHeight"](!0), i.css(e.isHorizontal() ? "width" : "height", e.pagination.bulletSize * (s.dynamicMainBullets + 4) + "px"), 1 < s.dynamicMainBullets && void 0 !== e.previousIndex && (e.pagination.dynamicBulletIndex += r - e.previousIndex, e.pagination.dynamicBulletIndex > s.dynamicMainBullets - 1 ? e.pagination.dynamicBulletIndex = s.dynamicMainBullets - 1 : e.pagination.dynamicBulletIndex < 0 && (e.pagination.dynamicBulletIndex = 0)), o = r - e.pagination.dynamicBulletIndex, d = ((l = o + (Math.min(p.length, s.dynamicMainBullets) - 1)) + o) / 2), p.removeClass(s.bulletActiveClass + " " + s.bulletActiveClass + "-next " + s.bulletActiveClass + "-next-next " + s.bulletActiveClass + "-prev " + s.bulletActiveClass + "-prev-prev " + s.bulletActiveClass + "-main"), 1 < i.length)) p.each(function (e, t) {
+            var a = L(t),
+                i = a.index();i === r && a.addClass(s.bulletActiveClass), s.dynamicBullets && (o <= i && i <= l && a.addClass(s.bulletActiveClass + "-main"), i === o && a.prev().addClass(s.bulletActiveClass + "-prev").prev().addClass(s.bulletActiveClass + "-prev-prev"), i === l && a.next().addClass(s.bulletActiveClass + "-next").next().addClass(s.bulletActiveClass + "-next-next"));
+          });else if ((p.eq(r).addClass(s.bulletActiveClass), s.dynamicBullets)) {
+            for (var c = p.eq(o), u = p.eq(l), h = o; h <= l; h += 1) p.eq(h).addClass(s.bulletActiveClass + "-main");c.prev().addClass(s.bulletActiveClass + "-prev").prev().addClass(s.bulletActiveClass + "-prev-prev"), u.next().addClass(s.bulletActiveClass + "-next").next().addClass(s.bulletActiveClass + "-next-next");
+          }if (s.dynamicBullets) {
+            var v = Math.min(p.length, s.dynamicMainBullets + 4),
+                f = (e.pagination.bulletSize * v - e.pagination.bulletSize) / 2 - d * e.pagination.bulletSize,
+                m = t ? "right" : "left";p.css(e.isHorizontal() ? m : "top", f + "px");
+          }
+        }if (("fraction" === s.type && (i.find("." + s.currentClass).text(s.formatFractionCurrent(r + 1)), i.find("." + s.totalClass).text(s.formatFractionTotal(n))), "progressbar" === s.type)) {
+          var g;g = s.progressbarOpposite ? e.isHorizontal() ? "vertical" : "horizontal" : e.isHorizontal() ? "horizontal" : "vertical";var b = (r + 1) / n,
+              w = 1,
+              y = 1;"horizontal" === g ? w = b : y = b, i.find("." + s.progressbarFillClass).transform("translate3d(0,0,0) scaleX(" + w + ") scaleY(" + y + ")").transition(e.params.speed);
+        }"custom" === s.type && s.renderCustom ? (i.html(s.renderCustom(e, r + 1, n)), e.emit("paginationRender", e, i[0])) : e.emit("paginationUpdate", e, i[0]), i[e.params.watchOverflow && e.isLocked ? "addClass" : "removeClass"](s.lockClass);
+      }
+    }, render: function render() {
+      var e = this,
+          t = e.params.pagination;if (t.el && e.pagination.el && e.pagination.$el && 0 !== e.pagination.$el.length) {
+        var a = e.virtual && e.params.virtual.enabled ? e.virtual.slides.length : e.slides.length,
+            i = e.pagination.$el,
+            s = "";if ("bullets" === t.type) {
+          for (var r = e.params.loop ? Math.ceil((a - 2 * e.loopedSlides) / e.params.slidesPerGroup) : e.snapGrid.length, n = 0; n < r; n += 1) t.renderBullet ? s += t.renderBullet.call(e, n, t.bulletClass) : s += "<" + t.bulletElement + ' class="' + t.bulletClass + '"></' + t.bulletElement + ">";i.html(s), e.pagination.bullets = i.find("." + t.bulletClass);
+        }"fraction" === t.type && (s = t.renderFraction ? t.renderFraction.call(e, t.currentClass, t.totalClass) : '<span class="' + t.currentClass + '"></span> / <span class="' + t.totalClass + '"></span>', i.html(s)), "progressbar" === t.type && (s = t.renderProgressbar ? t.renderProgressbar.call(e, t.progressbarFillClass) : '<span class="' + t.progressbarFillClass + '"></span>', i.html(s)), "custom" !== t.type && e.emit("paginationRender", e.pagination.$el[0]);
+      }
+    }, init: function init() {
+      var a = this,
+          e = a.params.pagination;if (e.el) {
+        var t = L(e.el);0 !== t.length && (a.params.uniqueNavElements && "string" == typeof e.el && 1 < t.length && 1 === a.$el.find(e.el).length && (t = a.$el.find(e.el)), "bullets" === e.type && e.clickable && t.addClass(e.clickableClass), t.addClass(e.modifierClass + e.type), "bullets" === e.type && e.dynamicBullets && (t.addClass("" + e.modifierClass + e.type + "-dynamic"), a.pagination.dynamicBulletIndex = 0, e.dynamicMainBullets < 1 && (e.dynamicMainBullets = 1)), "progressbar" === e.type && e.progressbarOpposite && t.addClass(e.progressbarOppositeClass), e.clickable && t.on("click", "." + e.bulletClass, function (e) {
+          e.preventDefault();var t = L(this).index() * a.params.slidesPerGroup;a.params.loop && (t += a.loopedSlides), a.slideTo(t);
+        }), V.extend(a.pagination, { $el: t, el: t[0] }));
+      }
+    }, destroy: function destroy() {
+      var e = this,
+          t = e.params.pagination;if (t.el && e.pagination.el && e.pagination.$el && 0 !== e.pagination.$el.length) {
+        var a = e.pagination.$el;a.removeClass(t.hiddenClass), a.removeClass(t.modifierClass + t.type), e.pagination.bullets && e.pagination.bullets.removeClass(t.bulletActiveClass), t.clickable && a.off("click", "." + t.bulletClass);
+      }
+    } },
+      X = { setTranslate: function setTranslate() {
+      var e = this;if (e.params.scrollbar.el && e.scrollbar.el) {
+        var t = e.scrollbar,
+            a = e.rtlTranslate,
+            i = e.progress,
+            s = t.dragSize,
+            r = t.trackSize,
+            n = t.$dragEl,
+            o = t.$el,
+            l = e.params.scrollbar,
+            d = s,
+            p = (r - s) * i;a ? 0 < (p = -p) ? (d = s - p, p = 0) : r < -p + s && (d = r + p) : p < 0 ? (d = s + p, p = 0) : r < p + s && (d = r - p), e.isHorizontal() ? (F.transforms3d ? n.transform("translate3d(" + p + "px, 0, 0)") : n.transform("translateX(" + p + "px)"), n[0].style.width = d + "px") : (F.transforms3d ? n.transform("translate3d(0px, " + p + "px, 0)") : n.transform("translateY(" + p + "px)"), n[0].style.height = d + "px"), l.hide && (clearTimeout(e.scrollbar.timeout), o[0].style.opacity = 1, e.scrollbar.timeout = setTimeout(function () {
+          o[0].style.opacity = 0, o.transition(400);
+        }, 1e3));
+      }
+    }, setTransition: function setTransition(e) {
+      this.params.scrollbar.el && this.scrollbar.el && this.scrollbar.$dragEl.transition(e);
+    }, updateSize: function updateSize() {
+      var e = this;if (e.params.scrollbar.el && e.scrollbar.el) {
+        var t = e.scrollbar,
+            a = t.$dragEl,
+            i = t.$el;a[0].style.width = "", a[0].style.height = "";var s,
+            r = e.isHorizontal() ? i[0].offsetWidth : i[0].offsetHeight,
+            n = e.size / e.virtualSize,
+            o = n * (r / e.size);s = "auto" === e.params.scrollbar.dragSize ? r * n : parseInt(e.params.scrollbar.dragSize, 10), e.isHorizontal() ? a[0].style.width = s + "px" : a[0].style.height = s + "px", i[0].style.display = 1 <= n ? "none" : "", e.params.scrollbarHide && (i[0].style.opacity = 0), V.extend(t, { trackSize: r, divider: n, moveDivider: o, dragSize: s }), t.$el[e.params.watchOverflow && e.isLocked ? "addClass" : "removeClass"](e.params.scrollbar.lockClass);
+      }
+    }, setDragPosition: function setDragPosition(e) {
+      var t,
+          a = this,
+          i = a.scrollbar,
+          s = a.rtlTranslate,
+          r = i.$el,
+          n = i.dragSize,
+          o = i.trackSize;t = ((a.isHorizontal() ? "touchstart" === e.type || "touchmove" === e.type ? e.targetTouches[0].pageX : e.pageX || e.clientX : "touchstart" === e.type || "touchmove" === e.type ? e.targetTouches[0].pageY : e.pageY || e.clientY) - r.offset()[a.isHorizontal() ? "left" : "top"] - n / 2) / (o - n), t = Math.max(Math.min(t, 1), 0), s && (t = 1 - t);var l = a.minTranslate() + (a.maxTranslate() - a.minTranslate()) * t;a.updateProgress(l), a.setTranslate(l), a.updateActiveIndex(), a.updateSlidesClasses();
+    }, onDragStart: function onDragStart(e) {
+      var t = this,
+          a = t.params.scrollbar,
+          i = t.scrollbar,
+          s = t.$wrapperEl,
+          r = i.$el,
+          n = i.$dragEl;t.scrollbar.isTouched = !0, e.preventDefault(), e.stopPropagation(), s.transition(100), n.transition(100), i.setDragPosition(e), clearTimeout(t.scrollbar.dragTimeout), r.transition(0), a.hide && r.css("opacity", 1), t.emit("scrollbarDragStart", e);
+    }, onDragMove: function onDragMove(e) {
+      var t = this.scrollbar,
+          a = this.$wrapperEl,
+          i = t.$el,
+          s = t.$dragEl;this.scrollbar.isTouched && (e.preventDefault ? e.preventDefault() : e.returnValue = !1, t.setDragPosition(e), a.transition(0), i.transition(0), s.transition(0), this.emit("scrollbarDragMove", e));
+    }, onDragEnd: function onDragEnd(e) {
+      var t = this,
+          a = t.params.scrollbar,
+          i = t.scrollbar.$el;t.scrollbar.isTouched && (t.scrollbar.isTouched = !1, a.hide && (clearTimeout(t.scrollbar.dragTimeout), t.scrollbar.dragTimeout = V.nextTick(function () {
+        i.css("opacity", 0), i.transition(400);
+      }, 1e3)), t.emit("scrollbarDragEnd", e), a.snapOnRelease && t.slideToClosest());
+    }, enableDraggable: function enableDraggable() {
+      var e = this;if (e.params.scrollbar.el) {
+        var t = e.scrollbar,
+            a = e.touchEventsTouch,
+            i = e.touchEventsDesktop,
+            s = e.params,
+            r = t.$el[0],
+            n = !(!F.passiveListener || !s.passiveListeners) && { passive: !1, capture: !1 },
+            o = !(!F.passiveListener || !s.passiveListeners) && { passive: !0, capture: !1 };F.touch ? (r.addEventListener(a.start, e.scrollbar.onDragStart, n), r.addEventListener(a.move, e.scrollbar.onDragMove, n), r.addEventListener(a.end, e.scrollbar.onDragEnd, o)) : (r.addEventListener(i.start, e.scrollbar.onDragStart, n), f.addEventListener(i.move, e.scrollbar.onDragMove, n), f.addEventListener(i.end, e.scrollbar.onDragEnd, o));
+      }
+    }, disableDraggable: function disableDraggable() {
+      var e = this;if (e.params.scrollbar.el) {
+        var t = e.scrollbar,
+            a = e.touchEventsTouch,
+            i = e.touchEventsDesktop,
+            s = e.params,
+            r = t.$el[0],
+            n = !(!F.passiveListener || !s.passiveListeners) && { passive: !1, capture: !1 },
+            o = !(!F.passiveListener || !s.passiveListeners) && { passive: !0, capture: !1 };F.touch ? (r.removeEventListener(a.start, e.scrollbar.onDragStart, n), r.removeEventListener(a.move, e.scrollbar.onDragMove, n), r.removeEventListener(a.end, e.scrollbar.onDragEnd, o)) : (r.removeEventListener(i.start, e.scrollbar.onDragStart, n), f.removeEventListener(i.move, e.scrollbar.onDragMove, n), f.removeEventListener(i.end, e.scrollbar.onDragEnd, o));
+      }
+    }, init: function init() {
+      var e = this;if (e.params.scrollbar.el) {
+        var t = e.scrollbar,
+            a = e.$el,
+            i = e.params.scrollbar,
+            s = L(i.el);e.params.uniqueNavElements && "string" == typeof i.el && 1 < s.length && 1 === a.find(i.el).length && (s = a.find(i.el));var r = s.find("." + e.params.scrollbar.dragClass);0 === r.length && (r = L('<div class="' + e.params.scrollbar.dragClass + '"></div>'), s.append(r)), V.extend(t, { $el: s, el: s[0], $dragEl: r, dragEl: r[0] }), i.draggable && t.enableDraggable();
+      }
+    }, destroy: function destroy() {
+      this.scrollbar.disableDraggable();
+    } },
+      R = { setTransform: function setTransform(e, t) {
+      var a = this.rtl,
+          i = L(e),
+          s = a ? -1 : 1,
+          r = i.attr("data-swiper-parallax") || "0",
+          n = i.attr("data-swiper-parallax-x"),
+          o = i.attr("data-swiper-parallax-y"),
+          l = i.attr("data-swiper-parallax-scale"),
+          d = i.attr("data-swiper-parallax-opacity");if ((n || o ? (n = n || "0", o = o || "0") : this.isHorizontal() ? (n = r, o = "0") : (o = r, n = "0"), n = 0 <= n.indexOf("%") ? parseInt(n, 10) * t * s + "%" : n * t * s + "px", o = 0 <= o.indexOf("%") ? parseInt(o, 10) * t + "%" : o * t + "px", null != d)) {
+        var p = d - (d - 1) * (1 - Math.abs(t));i[0].style.opacity = p;
+      }if (null == l) i.transform("translate3d(" + n + ", " + o + ", 0px)");else {
+        var c = l - (l - 1) * (1 - Math.abs(t));i.transform("translate3d(" + n + ", " + o + ", 0px) scale(" + c + ")");
+      }
+    }, setTranslate: function setTranslate() {
+      var i = this,
+          e = i.$el,
+          t = i.slides,
+          s = i.progress,
+          r = i.snapGrid;e.children("[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y]").each(function (e, t) {
+        i.parallax.setTransform(t, s);
+      }), t.each(function (e, t) {
+        var a = t.progress;1 < i.params.slidesPerGroup && "auto" !== i.params.slidesPerView && (a += Math.ceil(e / 2) - s * (r.length - 1)), a = Math.min(Math.max(a, -1), 1), L(t).find("[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y]").each(function (e, t) {
+          i.parallax.setTransform(t, a);
+        });
+      });
+    }, setTransition: function setTransition(s) {
+      void 0 === s && (s = this.params.speed);this.$el.find("[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y]").each(function (e, t) {
+        var a = L(t),
+            i = parseInt(a.attr("data-swiper-parallax-duration"), 10) || s;0 === s && (i = 0), a.transition(i);
+      });
+    } },
+      q = { getDistanceBetweenTouches: function getDistanceBetweenTouches(e) {
+      if (e.targetTouches.length < 2) return 1;var t = e.targetTouches[0].pageX,
+          a = e.targetTouches[0].pageY,
+          i = e.targetTouches[1].pageX,
+          s = e.targetTouches[1].pageY;return Math.sqrt(Math.pow(i - t, 2) + Math.pow(s - a, 2));
+    }, onGestureStart: function onGestureStart(e) {
+      var t = this,
+          a = t.params.zoom,
+          i = t.zoom,
+          s = i.gesture;if ((i.fakeGestureTouched = !1, i.fakeGestureMoved = !1, !F.gestures)) {
+        if ("touchstart" !== e.type || "touchstart" === e.type && e.targetTouches.length < 2) return;i.fakeGestureTouched = !0, s.scaleStart = q.getDistanceBetweenTouches(e);
+      }s.$slideEl && s.$slideEl.length || (s.$slideEl = L(e.target).closest(".swiper-slide"), 0 === s.$slideEl.length && (s.$slideEl = t.slides.eq(t.activeIndex)), s.$imageEl = s.$slideEl.find("img, svg, canvas"), s.$imageWrapEl = s.$imageEl.parent("." + a.containerClass), s.maxRatio = s.$imageWrapEl.attr("data-swiper-zoom") || a.maxRatio, 0 !== s.$imageWrapEl.length) ? (s.$imageEl.transition(0), t.zoom.isScaling = !0) : s.$imageEl = void 0;
+    }, onGestureChange: function onGestureChange(e) {
+      var t = this.params.zoom,
+          a = this.zoom,
+          i = a.gesture;if (!F.gestures) {
+        if ("touchmove" !== e.type || "touchmove" === e.type && e.targetTouches.length < 2) return;a.fakeGestureMoved = !0, i.scaleMove = q.getDistanceBetweenTouches(e);
+      }i.$imageEl && 0 !== i.$imageEl.length && (F.gestures ? this.zoom.scale = e.scale * a.currentScale : a.scale = i.scaleMove / i.scaleStart * a.currentScale, a.scale > i.maxRatio && (a.scale = i.maxRatio - 1 + Math.pow(a.scale - i.maxRatio + 1, .5)), a.scale < t.minRatio && (a.scale = t.minRatio + 1 - Math.pow(t.minRatio - a.scale + 1, .5)), i.$imageEl.transform("translate3d(0,0,0) scale(" + a.scale + ")"));
+    }, onGestureEnd: function onGestureEnd(e) {
+      var t = this.params.zoom,
+          a = this.zoom,
+          i = a.gesture;if (!F.gestures) {
+        if (!a.fakeGestureTouched || !a.fakeGestureMoved) return;if ("touchend" !== e.type || "touchend" === e.type && e.changedTouches.length < 2 && !m.android) return;a.fakeGestureTouched = !1, a.fakeGestureMoved = !1;
+      }i.$imageEl && 0 !== i.$imageEl.length && (a.scale = Math.max(Math.min(a.scale, i.maxRatio), t.minRatio), i.$imageEl.transition(this.params.speed).transform("translate3d(0,0,0) scale(" + a.scale + ")"), a.currentScale = a.scale, a.isScaling = !1, 1 === a.scale && (i.$slideEl = void 0));
+    }, onTouchStart: function onTouchStart(e) {
+      var t = this.zoom,
+          a = t.gesture,
+          i = t.image;a.$imageEl && 0 !== a.$imageEl.length && (i.isTouched || (m.android && e.preventDefault(), i.isTouched = !0, i.touchesStart.x = "touchstart" === e.type ? e.targetTouches[0].pageX : e.pageX, i.touchesStart.y = "touchstart" === e.type ? e.targetTouches[0].pageY : e.pageY));
+    }, onTouchMove: function onTouchMove(e) {
+      var t = this,
+          a = t.zoom,
+          i = a.gesture,
+          s = a.image,
+          r = a.velocity;if (i.$imageEl && 0 !== i.$imageEl.length && (t.allowClick = !1, s.isTouched && i.$slideEl)) {
+        s.isMoved || (s.width = i.$imageEl[0].offsetWidth, s.height = i.$imageEl[0].offsetHeight, s.startX = V.getTranslate(i.$imageWrapEl[0], "x") || 0, s.startY = V.getTranslate(i.$imageWrapEl[0], "y") || 0, i.slideWidth = i.$slideEl[0].offsetWidth, i.slideHeight = i.$slideEl[0].offsetHeight, i.$imageWrapEl.transition(0), t.rtl && (s.startX = -s.startX, s.startY = -s.startY));var n = s.width * a.scale,
+            o = s.height * a.scale;if (!(n < i.slideWidth && o < i.slideHeight)) {
+          if ((s.minX = Math.min(i.slideWidth / 2 - n / 2, 0), s.maxX = -s.minX, s.minY = Math.min(i.slideHeight / 2 - o / 2, 0), s.maxY = -s.minY, s.touchesCurrent.x = "touchmove" === e.type ? e.targetTouches[0].pageX : e.pageX, s.touchesCurrent.y = "touchmove" === e.type ? e.targetTouches[0].pageY : e.pageY, !s.isMoved && !a.isScaling)) {
+            if (t.isHorizontal() && (Math.floor(s.minX) === Math.floor(s.startX) && s.touchesCurrent.x < s.touchesStart.x || Math.floor(s.maxX) === Math.floor(s.startX) && s.touchesCurrent.x > s.touchesStart.x)) return void (s.isTouched = !1);if (!t.isHorizontal() && (Math.floor(s.minY) === Math.floor(s.startY) && s.touchesCurrent.y < s.touchesStart.y || Math.floor(s.maxY) === Math.floor(s.startY) && s.touchesCurrent.y > s.touchesStart.y)) return void (s.isTouched = !1);
+          }e.preventDefault(), e.stopPropagation(), s.isMoved = !0, s.currentX = s.touchesCurrent.x - s.touchesStart.x + s.startX, s.currentY = s.touchesCurrent.y - s.touchesStart.y + s.startY, s.currentX < s.minX && (s.currentX = s.minX + 1 - Math.pow(s.minX - s.currentX + 1, .8)), s.currentX > s.maxX && (s.currentX = s.maxX - 1 + Math.pow(s.currentX - s.maxX + 1, .8)), s.currentY < s.minY && (s.currentY = s.minY + 1 - Math.pow(s.minY - s.currentY + 1, .8)), s.currentY > s.maxY && (s.currentY = s.maxY - 1 + Math.pow(s.currentY - s.maxY + 1, .8)), r.prevPositionX || (r.prevPositionX = s.touchesCurrent.x), r.prevPositionY || (r.prevPositionY = s.touchesCurrent.y), r.prevTime || (r.prevTime = Date.now()), r.x = (s.touchesCurrent.x - r.prevPositionX) / (Date.now() - r.prevTime) / 2, r.y = (s.touchesCurrent.y - r.prevPositionY) / (Date.now() - r.prevTime) / 2, Math.abs(s.touchesCurrent.x - r.prevPositionX) < 2 && (r.x = 0), Math.abs(s.touchesCurrent.y - r.prevPositionY) < 2 && (r.y = 0), r.prevPositionX = s.touchesCurrent.x, r.prevPositionY = s.touchesCurrent.y, r.prevTime = Date.now(), i.$imageWrapEl.transform("translate3d(" + s.currentX + "px, " + s.currentY + "px,0)");
+        }
+      }
+    }, onTouchEnd: function onTouchEnd() {
+      var e = this.zoom,
+          t = e.gesture,
+          a = e.image,
+          i = e.velocity;if (t.$imageEl && 0 !== t.$imageEl.length) {
+        if (!a.isTouched || !a.isMoved) return a.isTouched = !1, void (a.isMoved = !1);a.isTouched = !1, a.isMoved = !1;var s = 300,
+            r = 300,
+            n = i.x * s,
+            o = a.currentX + n,
+            l = i.y * r,
+            d = a.currentY + l;0 !== i.x && (s = Math.abs((o - a.currentX) / i.x)), 0 !== i.y && (r = Math.abs((d - a.currentY) / i.y));var p = Math.max(s, r);a.currentX = o, a.currentY = d;var c = a.width * e.scale,
+            u = a.height * e.scale;a.minX = Math.min(t.slideWidth / 2 - c / 2, 0), a.maxX = -a.minX, a.minY = Math.min(t.slideHeight / 2 - u / 2, 0), a.maxY = -a.minY, a.currentX = Math.max(Math.min(a.currentX, a.maxX), a.minX), a.currentY = Math.max(Math.min(a.currentY, a.maxY), a.minY), t.$imageWrapEl.transition(p).transform("translate3d(" + a.currentX + "px, " + a.currentY + "px,0)");
+      }
+    }, onTransitionEnd: function onTransitionEnd() {
+      var e = this.zoom,
+          t = e.gesture;t.$slideEl && this.previousIndex !== this.activeIndex && (t.$imageEl.transform("translate3d(0,0,0) scale(1)"), t.$imageWrapEl.transform("translate3d(0,0,0)"), t.$slideEl = void 0, t.$imageEl = void 0, t.$imageWrapEl = void 0, e.scale = 1, e.currentScale = 1);
+    }, toggle: function toggle(e) {
+      var t = this.zoom;t.scale && 1 !== t.scale ? t.out() : t["in"](e);
+    }, "in": function _in(e) {
+      var t,
+          a,
+          i,
+          s,
+          r,
+          n,
+          o,
+          l,
+          d,
+          p,
+          c,
+          u,
+          h,
+          v,
+          f,
+          m,
+          g = this,
+          b = g.zoom,
+          w = g.params.zoom,
+          y = b.gesture,
+          x = b.image;(y.$slideEl || (y.$slideEl = g.clickedSlide ? L(g.clickedSlide) : g.slides.eq(g.activeIndex), y.$imageEl = y.$slideEl.find("img, svg, canvas"), y.$imageWrapEl = y.$imageEl.parent("." + w.containerClass)), y.$imageEl && 0 !== y.$imageEl.length) && (y.$slideEl.addClass("" + w.zoomedSlideClass), void 0 === x.touchesStart.x && e ? (t = "touchend" === e.type ? e.changedTouches[0].pageX : e.pageX, a = "touchend" === e.type ? e.changedTouches[0].pageY : e.pageY) : (t = x.touchesStart.x, a = x.touchesStart.y), b.scale = y.$imageWrapEl.attr("data-swiper-zoom") || w.maxRatio, b.currentScale = y.$imageWrapEl.attr("data-swiper-zoom") || w.maxRatio, e ? (f = y.$slideEl[0].offsetWidth, m = y.$slideEl[0].offsetHeight, i = y.$slideEl.offset().left + f / 2 - t, s = y.$slideEl.offset().top + m / 2 - a, o = y.$imageEl[0].offsetWidth, l = y.$imageEl[0].offsetHeight, d = o * b.scale, p = l * b.scale, h = -(c = Math.min(f / 2 - d / 2, 0)), v = -(u = Math.min(m / 2 - p / 2, 0)), (r = i * b.scale) < c && (r = c), h < r && (r = h), (n = s * b.scale) < u && (n = u), v < n && (n = v)) : n = r = 0, y.$imageWrapEl.transition(300).transform("translate3d(" + r + "px, " + n + "px,0)"), y.$imageEl.transition(300).transform("translate3d(0,0,0) scale(" + b.scale + ")"));
+    }, out: function out() {
+      var e = this,
+          t = e.zoom,
+          a = e.params.zoom,
+          i = t.gesture;i.$slideEl || (i.$slideEl = e.clickedSlide ? L(e.clickedSlide) : e.slides.eq(e.activeIndex), i.$imageEl = i.$slideEl.find("img, svg, canvas"), i.$imageWrapEl = i.$imageEl.parent("." + a.containerClass)), i.$imageEl && 0 !== i.$imageEl.length && (t.scale = 1, t.currentScale = 1, i.$imageWrapEl.transition(300).transform("translate3d(0,0,0)"), i.$imageEl.transition(300).transform("translate3d(0,0,0) scale(1)"), i.$slideEl.removeClass("" + a.zoomedSlideClass), i.$slideEl = void 0);
+    }, enable: function enable() {
+      var e = this,
+          t = e.zoom;if (!t.enabled) {
+        t.enabled = !0;var a = !("touchstart" !== e.touchEvents.start || !F.passiveListener || !e.params.passiveListeners) && { passive: !0, capture: !1 };F.gestures ? (e.$wrapperEl.on("gesturestart", ".swiper-slide", t.onGestureStart, a), e.$wrapperEl.on("gesturechange", ".swiper-slide", t.onGestureChange, a), e.$wrapperEl.on("gestureend", ".swiper-slide", t.onGestureEnd, a)) : "touchstart" === e.touchEvents.start && (e.$wrapperEl.on(e.touchEvents.start, ".swiper-slide", t.onGestureStart, a), e.$wrapperEl.on(e.touchEvents.move, ".swiper-slide", t.onGestureChange, a), e.$wrapperEl.on(e.touchEvents.end, ".swiper-slide", t.onGestureEnd, a)), e.$wrapperEl.on(e.touchEvents.move, "." + e.params.zoom.containerClass, t.onTouchMove);
+      }
+    }, disable: function disable() {
+      var e = this,
+          t = e.zoom;if (t.enabled) {
+        e.zoom.enabled = !1;var a = !("touchstart" !== e.touchEvents.start || !F.passiveListener || !e.params.passiveListeners) && { passive: !0, capture: !1 };F.gestures ? (e.$wrapperEl.off("gesturestart", ".swiper-slide", t.onGestureStart, a), e.$wrapperEl.off("gesturechange", ".swiper-slide", t.onGestureChange, a), e.$wrapperEl.off("gestureend", ".swiper-slide", t.onGestureEnd, a)) : "touchstart" === e.touchEvents.start && (e.$wrapperEl.off(e.touchEvents.start, ".swiper-slide", t.onGestureStart, a), e.$wrapperEl.off(e.touchEvents.move, ".swiper-slide", t.onGestureChange, a), e.$wrapperEl.off(e.touchEvents.end, ".swiper-slide", t.onGestureEnd, a)), e.$wrapperEl.off(e.touchEvents.move, "." + e.params.zoom.containerClass, t.onTouchMove);
+      }
+    } },
+      W = { loadInSlide: function loadInSlide(e, l) {
+      void 0 === l && (l = !0);var d = this,
+          p = d.params.lazy;if (void 0 !== e && 0 !== d.slides.length) {
+        var c = d.virtual && d.params.virtual.enabled ? d.$wrapperEl.children("." + d.params.slideClass + '[data-swiper-slide-index="' + e + '"]') : d.slides.eq(e),
+            t = c.find("." + p.elementClass + ":not(." + p.loadedClass + "):not(." + p.loadingClass + ")");!c.hasClass(p.elementClass) || c.hasClass(p.loadedClass) || c.hasClass(p.loadingClass) || (t = t.add(c[0])), 0 !== t.length && t.each(function (e, t) {
+          var i = L(t);i.addClass(p.loadingClass);var s = i.attr("data-background"),
+              r = i.attr("data-src"),
+              n = i.attr("data-srcset"),
+              o = i.attr("data-sizes");d.loadImage(i[0], r || s, n, o, !1, function () {
+            if (null != d && d && (!d || d.params) && !d.destroyed) {
+              if ((s ? (i.css("background-image", 'url("' + s + '")'), i.removeAttr("data-background")) : (n && (i.attr("srcset", n), i.removeAttr("data-srcset")), o && (i.attr("sizes", o), i.removeAttr("data-sizes")), r && (i.attr("src", r), i.removeAttr("data-src"))), i.addClass(p.loadedClass).removeClass(p.loadingClass), c.find("." + p.preloaderClass).remove(), d.params.loop && l)) {
+                var e = c.attr("data-swiper-slide-index");if (c.hasClass(d.params.slideDuplicateClass)) {
+                  var t = d.$wrapperEl.children('[data-swiper-slide-index="' + e + '"]:not(.' + d.params.slideDuplicateClass + ")");d.lazy.loadInSlide(t.index(), !1);
+                } else {
+                  var a = d.$wrapperEl.children("." + d.params.slideDuplicateClass + '[data-swiper-slide-index="' + e + '"]');d.lazy.loadInSlide(a.index(), !1);
+                }
+              }d.emit("lazyImageReady", c[0], i[0]);
+            }
+          }), d.emit("lazyImageLoad", c[0], i[0]);
+        });
+      }
+    }, load: function load() {
+      var i = this,
+          t = i.$wrapperEl,
+          a = i.params,
+          s = i.slides,
+          e = i.activeIndex,
+          r = i.virtual && a.virtual.enabled,
+          n = a.lazy,
+          o = a.slidesPerView;function l(e) {
+        if (r) {
+          if (t.children("." + a.slideClass + '[data-swiper-slide-index="' + e + '"]').length) return !0;
+        } else if (s[e]) return !0;return !1;
+      }function d(e) {
+        return r ? L(e).attr("data-swiper-slide-index") : L(e).index();
+      }if (("auto" === o && (o = 0), i.lazy.initialImageLoaded || (i.lazy.initialImageLoaded = !0), i.params.watchSlidesVisibility)) t.children("." + a.slideVisibleClass).each(function (e, t) {
+        var a = r ? L(t).attr("data-swiper-slide-index") : L(t).index();i.lazy.loadInSlide(a);
+      });else if (1 < o) for (var p = e; p < e + o; p += 1) l(p) && i.lazy.loadInSlide(p);else i.lazy.loadInSlide(e);if (n.loadPrevNext) if (1 < o || n.loadPrevNextAmount && 1 < n.loadPrevNextAmount) {
+        for (var c = n.loadPrevNextAmount, u = o, h = Math.min(e + u + Math.max(c, u), s.length), v = Math.max(e - Math.max(u, c), 0), f = e + o; f < h; f += 1) l(f) && i.lazy.loadInSlide(f);for (var m = v; m < e; m += 1) l(m) && i.lazy.loadInSlide(m);
+      } else {
+        var g = t.children("." + a.slideNextClass);0 < g.length && i.lazy.loadInSlide(d(g));var b = t.children("." + a.slidePrevClass);0 < b.length && i.lazy.loadInSlide(d(b));
+      }
+    } },
+      j = { LinearSpline: function LinearSpline(e, t) {
+      var a,
+          i,
+          s,
+          r,
+          n,
+          o = function o(e, t) {
+        for (i = -1, a = e.length; 1 < a - i;) e[s = a + i >> 1] <= t ? i = s : a = s;return a;
+      };return this.x = e, this.y = t, this.lastIndex = e.length - 1, this.interpolate = function (e) {
+        return e ? (n = o(this.x, e), r = n - 1, (e - this.x[r]) * (this.y[n] - this.y[r]) / (this.x[n] - this.x[r]) + this.y[r]) : 0;
+      }, this;
+    }, getInterpolateFunction: function getInterpolateFunction(e) {
+      var t = this;t.controller.spline || (t.controller.spline = t.params.loop ? new j.LinearSpline(t.slidesGrid, e.slidesGrid) : new j.LinearSpline(t.snapGrid, e.snapGrid));
+    }, setTranslate: function setTranslate(e, t) {
+      var a,
+          i,
+          s = this,
+          r = s.controller.control;function n(e) {
+        var t = s.rtlTranslate ? -s.translate : s.translate;"slide" === s.params.controller.by && (s.controller.getInterpolateFunction(e), i = -s.controller.spline.interpolate(-t)), i && "container" !== s.params.controller.by || (a = (e.maxTranslate() - e.minTranslate()) / (s.maxTranslate() - s.minTranslate()), i = (t - s.minTranslate()) * a + e.minTranslate()), s.params.controller.inverse && (i = e.maxTranslate() - i), e.updateProgress(i), e.setTranslate(i, s), e.updateActiveIndex(), e.updateSlidesClasses();
+      }if (Array.isArray(r)) for (var o = 0; o < r.length; o += 1) r[o] !== t && r[o] instanceof S && n(r[o]);else r instanceof S && t !== r && n(r);
+    }, setTransition: function setTransition(t, e) {
+      var a,
+          i = this,
+          s = i.controller.control;function r(e) {
+        e.setTransition(t, i), 0 !== t && (e.transitionStart(), e.params.autoHeight && V.nextTick(function () {
+          e.updateAutoHeight();
+        }), e.$wrapperEl.transitionEnd(function () {
+          s && (e.params.loop && "slide" === i.params.controller.by && e.loopFix(), e.transitionEnd());
+        }));
+      }if (Array.isArray(s)) for (a = 0; a < s.length; a += 1) s[a] !== e && s[a] instanceof S && r(s[a]);else s instanceof S && e !== s && r(s);
+    } },
+      U = { makeElFocusable: function makeElFocusable(e) {
+      return e.attr("tabIndex", "0"), e;
+    }, addElRole: function addElRole(e, t) {
+      return e.attr("role", t), e;
+    }, addElLabel: function addElLabel(e, t) {
+      return e.attr("aria-label", t), e;
+    }, disableEl: function disableEl(e) {
+      return e.attr("aria-disabled", !0), e;
+    }, enableEl: function enableEl(e) {
+      return e.attr("aria-disabled", !1), e;
+    }, onEnterKey: function onEnterKey(e) {
+      var t = this,
+          a = t.params.a11y;if (13 === e.keyCode) {
+        var i = L(e.target);t.navigation && t.navigation.$nextEl && i.is(t.navigation.$nextEl) && (t.isEnd && !t.params.loop || t.slideNext(), t.isEnd ? t.a11y.notify(a.lastSlideMessage) : t.a11y.notify(a.nextSlideMessage)), t.navigation && t.navigation.$prevEl && i.is(t.navigation.$prevEl) && (t.isBeginning && !t.params.loop || t.slidePrev(), t.isBeginning ? t.a11y.notify(a.firstSlideMessage) : t.a11y.notify(a.prevSlideMessage)), t.pagination && i.is("." + t.params.pagination.bulletClass) && i[0].click();
+      }
+    }, notify: function notify(e) {
+      var t = this.a11y.liveRegion;0 !== t.length && (t.html(""), t.html(e));
+    }, updateNavigation: function updateNavigation() {
+      var e = this;if (!e.params.loop) {
+        var t = e.navigation,
+            a = t.$nextEl,
+            i = t.$prevEl;i && 0 < i.length && (e.isBeginning ? e.a11y.disableEl(i) : e.a11y.enableEl(i)), a && 0 < a.length && (e.isEnd ? e.a11y.disableEl(a) : e.a11y.enableEl(a));
+      }
+    }, updatePagination: function updatePagination() {
+      var i = this,
+          s = i.params.a11y;i.pagination && i.params.pagination.clickable && i.pagination.bullets && i.pagination.bullets.length && i.pagination.bullets.each(function (e, t) {
+        var a = L(t);i.a11y.makeElFocusable(a), i.a11y.addElRole(a, "button"), i.a11y.addElLabel(a, s.paginationBulletMessage.replace(/{{index}}/, a.index() + 1));
+      });
+    }, init: function init() {
+      var e = this;e.$el.append(e.a11y.liveRegion);var t,
+          a,
+          i = e.params.a11y;e.navigation && e.navigation.$nextEl && (t = e.navigation.$nextEl), e.navigation && e.navigation.$prevEl && (a = e.navigation.$prevEl), t && (e.a11y.makeElFocusable(t), e.a11y.addElRole(t, "button"), e.a11y.addElLabel(t, i.nextSlideMessage), t.on("keydown", e.a11y.onEnterKey)), a && (e.a11y.makeElFocusable(a), e.a11y.addElRole(a, "button"), e.a11y.addElLabel(a, i.prevSlideMessage), a.on("keydown", e.a11y.onEnterKey)), e.pagination && e.params.pagination.clickable && e.pagination.bullets && e.pagination.bullets.length && e.pagination.$el.on("keydown", "." + e.params.pagination.bulletClass, e.a11y.onEnterKey);
+    }, destroy: function destroy() {
+      var e,
+          t,
+          a = this;a.a11y.liveRegion && 0 < a.a11y.liveRegion.length && a.a11y.liveRegion.remove(), a.navigation && a.navigation.$nextEl && (e = a.navigation.$nextEl), a.navigation && a.navigation.$prevEl && (t = a.navigation.$prevEl), e && e.off("keydown", a.a11y.onEnterKey), t && t.off("keydown", a.a11y.onEnterKey), a.pagination && a.params.pagination.clickable && a.pagination.bullets && a.pagination.bullets.length && a.pagination.$el.off("keydown", "." + a.params.pagination.bulletClass, a.a11y.onEnterKey);
+    } },
+      K = { init: function init() {
+      var e = this;if (e.params.history) {
+        if (!Y.history || !Y.history.pushState) return e.params.history.enabled = !1, void (e.params.hashNavigation.enabled = !0);var t = e.history;t.initialized = !0, t.paths = K.getPathValues(), (t.paths.key || t.paths.value) && (t.scrollToSlide(0, t.paths.value, e.params.runCallbacksOnInit), e.params.history.replaceState || Y.addEventListener("popstate", e.history.setHistoryPopState));
+      }
+    }, destroy: function destroy() {
+      this.params.history.replaceState || Y.removeEventListener("popstate", this.history.setHistoryPopState);
+    }, setHistoryPopState: function setHistoryPopState() {
+      this.history.paths = K.getPathValues(), this.history.scrollToSlide(this.params.speed, this.history.paths.value, !1);
+    }, getPathValues: function getPathValues() {
+      var e = Y.location.pathname.slice(1).split("/").filter(function (e) {
+        return "" !== e;
+      }),
+          t = e.length;return { key: e[t - 2], value: e[t - 1] };
+    }, setHistory: function setHistory(e, t) {
+      if (this.history.initialized && this.params.history.enabled) {
+        var a = this.slides.eq(t),
+            i = K.slugify(a.attr("data-history"));Y.location.pathname.includes(e) || (i = e + "/" + i);var s = Y.history.state;s && s.value === i || (this.params.history.replaceState ? Y.history.replaceState({ value: i }, null, i) : Y.history.pushState({ value: i }, null, i));
+      }
+    }, slugify: function slugify(e) {
+      return e.toString().toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]+/g, "").replace(/--+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
+    }, scrollToSlide: function scrollToSlide(e, t, a) {
+      var i = this;if (t) for (var s = 0, r = i.slides.length; s < r; s += 1) {
+        var n = i.slides.eq(s);if (K.slugify(n.attr("data-history")) === t && !n.hasClass(i.params.slideDuplicateClass)) {
+          var o = n.index();i.slideTo(o, e, a);
+        }
+      } else i.slideTo(0, e, a);
+    } },
+      _ = { onHashCange: function onHashCange() {
+      var e = this,
+          t = f.location.hash.replace("#", "");if (t !== e.slides.eq(e.activeIndex).attr("data-hash")) {
+        var a = e.$wrapperEl.children("." + e.params.slideClass + '[data-hash="' + t + '"]').index();if (void 0 === a) return;e.slideTo(a);
+      }
+    }, setHash: function setHash() {
+      var e = this;if (e.hashNavigation.initialized && e.params.hashNavigation.enabled) if (e.params.hashNavigation.replaceState && Y.history && Y.history.replaceState) Y.history.replaceState(null, null, "#" + e.slides.eq(e.activeIndex).attr("data-hash") || "");else {
+        var t = e.slides.eq(e.activeIndex),
+            a = t.attr("data-hash") || t.attr("data-history");f.location.hash = a || "";
+      }
+    }, init: function init() {
+      var e = this;if (!(!e.params.hashNavigation.enabled || e.params.history && e.params.history.enabled)) {
+        e.hashNavigation.initialized = !0;var t = f.location.hash.replace("#", "");if (t) for (var a = 0, i = e.slides.length; a < i; a += 1) {
+          var s = e.slides.eq(a);if ((s.attr("data-hash") || s.attr("data-history")) === t && !s.hasClass(e.params.slideDuplicateClass)) {
+            var r = s.index();e.slideTo(r, 0, e.params.runCallbacksOnInit, !0);
+          }
+        }e.params.hashNavigation.watchState && L(Y).on("hashchange", e.hashNavigation.onHashCange);
+      }
+    }, destroy: function destroy() {
+      this.params.hashNavigation.watchState && L(Y).off("hashchange", this.hashNavigation.onHashCange);
+    } },
+      Z = { run: function run() {
+      var e = this,
+          t = e.slides.eq(e.activeIndex),
+          a = e.params.autoplay.delay;t.attr("data-swiper-autoplay") && (a = t.attr("data-swiper-autoplay") || e.params.autoplay.delay), e.autoplay.timeout = V.nextTick(function () {
+        e.params.autoplay.reverseDirection ? e.params.loop ? (e.loopFix(), e.slidePrev(e.params.speed, !0, !0), e.emit("autoplay")) : e.isBeginning ? e.params.autoplay.stopOnLastSlide ? e.autoplay.stop() : (e.slideTo(e.slides.length - 1, e.params.speed, !0, !0), e.emit("autoplay")) : (e.slidePrev(e.params.speed, !0, !0), e.emit("autoplay")) : e.params.loop ? (e.loopFix(), e.slideNext(e.params.speed, !0, !0), e.emit("autoplay")) : e.isEnd ? e.params.autoplay.stopOnLastSlide ? e.autoplay.stop() : (e.slideTo(0, e.params.speed, !0, !0), e.emit("autoplay")) : (e.slideNext(e.params.speed, !0, !0), e.emit("autoplay"));
+      }, a);
+    }, start: function start() {
+      var e = this;return void 0 === e.autoplay.timeout && !e.autoplay.running && (e.autoplay.running = !0, e.emit("autoplayStart"), e.autoplay.run(), !0);
+    }, stop: function stop() {
+      var e = this;return !!e.autoplay.running && void 0 !== e.autoplay.timeout && (e.autoplay.timeout && (clearTimeout(e.autoplay.timeout), e.autoplay.timeout = void 0), e.autoplay.running = !1, e.emit("autoplayStop"), !0);
+    }, pause: function pause(e) {
+      var t = this;t.autoplay.running && (t.autoplay.paused || (t.autoplay.timeout && clearTimeout(t.autoplay.timeout), t.autoplay.paused = !0, 0 !== e && t.params.autoplay.waitForTransition ? (t.$wrapperEl[0].addEventListener("transitionend", t.autoplay.onTransitionEnd), t.$wrapperEl[0].addEventListener("webkitTransitionEnd", t.autoplay.onTransitionEnd)) : (t.autoplay.paused = !1, t.autoplay.run())));
+    } },
+      Q = { setTranslate: function setTranslate() {
+      for (var e = this, t = e.slides, a = 0; a < t.length; a += 1) {
+        var i = e.slides.eq(a),
+            s = -i[0].swiperSlideOffset;e.params.virtualTranslate || (s -= e.translate);var r = 0;e.isHorizontal() || (r = s, s = 0);var n = e.params.fadeEffect.crossFade ? Math.max(1 - Math.abs(i[0].progress), 0) : 1 + Math.min(Math.max(i[0].progress, -1), 0);i.css({ opacity: n }).transform("translate3d(" + s + "px, " + r + "px, 0px)");
+      }
+    }, setTransition: function setTransition(e) {
+      var a = this,
+          t = a.slides,
+          i = a.$wrapperEl;if ((t.transition(e), a.params.virtualTranslate && 0 !== e)) {
+        var s = !1;t.transitionEnd(function () {
+          if (!s && a && !a.destroyed) {
+            s = !0, a.animating = !1;for (var e = ["webkitTransitionEnd", "transitionend"], t = 0; t < e.length; t += 1) i.trigger(e[t]);
+          }
+        });
+      }
+    } },
+      J = { setTranslate: function setTranslate() {
+      var e,
+          t = this,
+          a = t.$el,
+          i = t.$wrapperEl,
+          s = t.slides,
+          r = t.width,
+          n = t.height,
+          o = t.rtlTranslate,
+          l = t.size,
+          d = t.params.cubeEffect,
+          p = t.isHorizontal(),
+          c = t.virtual && t.params.virtual.enabled,
+          u = 0;d.shadow && (p ? (0 === (e = i.find(".swiper-cube-shadow")).length && (e = L('<div class="swiper-cube-shadow"></div>'), i.append(e)), e.css({ height: r + "px" })) : 0 === (e = a.find(".swiper-cube-shadow")).length && (e = L('<div class="swiper-cube-shadow"></div>'), a.append(e)));for (var h = 0; h < s.length; h += 1) {
+        var v = s.eq(h),
+            f = h;c && (f = parseInt(v.attr("data-swiper-slide-index"), 10));var m = 90 * f,
+            g = Math.floor(m / 360);o && (m = -m, g = Math.floor(-m / 360));var b = Math.max(Math.min(v[0].progress, 1), -1),
+            w = 0,
+            y = 0,
+            x = 0;f % 4 == 0 ? (w = 4 * -g * l, x = 0) : (f - 1) % 4 == 0 ? (w = 0, x = 4 * -g * l) : (f - 2) % 4 == 0 ? (w = l + 4 * g * l, x = l) : (f - 3) % 4 == 0 && (w = -l, x = 3 * l + 4 * l * g), o && (w = -w), p || (y = w, w = 0);var T = "rotateX(" + (p ? 0 : -m) + "deg) rotateY(" + (p ? m : 0) + "deg) translate3d(" + w + "px, " + y + "px, " + x + "px)";if ((b <= 1 && -1 < b && (u = 90 * f + 90 * b, o && (u = 90 * -f - 90 * b)), v.transform(T), d.slideShadows)) {
+          var E = p ? v.find(".swiper-slide-shadow-left") : v.find(".swiper-slide-shadow-top"),
+              S = p ? v.find(".swiper-slide-shadow-right") : v.find(".swiper-slide-shadow-bottom");0 === E.length && (E = L('<div class="swiper-slide-shadow-' + (p ? "left" : "top") + '"></div>'), v.append(E)), 0 === S.length && (S = L('<div class="swiper-slide-shadow-' + (p ? "right" : "bottom") + '"></div>'), v.append(S)), E.length && (E[0].style.opacity = Math.max(-b, 0)), S.length && (S[0].style.opacity = Math.max(b, 0));
+        }
+      }if ((i.css({ "-webkit-transform-origin": "50% 50% -" + l / 2 + "px", "-moz-transform-origin": "50% 50% -" + l / 2 + "px", "-ms-transform-origin": "50% 50% -" + l / 2 + "px", "transform-origin": "50% 50% -" + l / 2 + "px" }), d.shadow)) if (p) e.transform("translate3d(0px, " + (r / 2 + d.shadowOffset) + "px, " + -r / 2 + "px) rotateX(90deg) rotateZ(0deg) scale(" + d.shadowScale + ")");else {
+        var C = Math.abs(u) - 90 * Math.floor(Math.abs(u) / 90),
+            M = 1.5 - (Math.sin(2 * C * Math.PI / 360) / 2 + Math.cos(2 * C * Math.PI / 360) / 2),
+            k = d.shadowScale,
+            P = d.shadowScale / M,
+            z = d.shadowOffset;e.transform("scale3d(" + k + ", 1, " + P + ") translate3d(0px, " + (n / 2 + z) + "px, " + -n / 2 / P + "px) rotateX(-90deg)");
+      }var $ = I.isSafari || I.isUiWebView ? -l / 2 : 0;i.transform("translate3d(0px,0," + $ + "px) rotateX(" + (t.isHorizontal() ? 0 : u) + "deg) rotateY(" + (t.isHorizontal() ? -u : 0) + "deg)");
+    }, setTransition: function setTransition(e) {
+      var t = this.$el;this.slides.transition(e).find(".swiper-slide-shadow-top, .swiper-slide-shadow-right, .swiper-slide-shadow-bottom, .swiper-slide-shadow-left").transition(e), this.params.cubeEffect.shadow && !this.isHorizontal() && t.find(".swiper-cube-shadow").transition(e);
+    } },
+      ee = { setTranslate: function setTranslate() {
+      for (var e = this, t = e.slides, a = e.rtlTranslate, i = 0; i < t.length; i += 1) {
+        var s = t.eq(i),
+            r = s[0].progress;e.params.flipEffect.limitRotation && (r = Math.max(Math.min(s[0].progress, 1), -1));var n = -180 * r,
+            o = 0,
+            l = -s[0].swiperSlideOffset,
+            d = 0;if ((e.isHorizontal() ? a && (n = -n) : (d = l, o = -n, n = l = 0), s[0].style.zIndex = -Math.abs(Math.round(r)) + t.length, e.params.flipEffect.slideShadows)) {
+          var p = e.isHorizontal() ? s.find(".swiper-slide-shadow-left") : s.find(".swiper-slide-shadow-top"),
+              c = e.isHorizontal() ? s.find(".swiper-slide-shadow-right") : s.find(".swiper-slide-shadow-bottom");0 === p.length && (p = L('<div class="swiper-slide-shadow-' + (e.isHorizontal() ? "left" : "top") + '"></div>'), s.append(p)), 0 === c.length && (c = L('<div class="swiper-slide-shadow-' + (e.isHorizontal() ? "right" : "bottom") + '"></div>'), s.append(c)), p.length && (p[0].style.opacity = Math.max(-r, 0)), c.length && (c[0].style.opacity = Math.max(r, 0));
+        }s.transform("translate3d(" + l + "px, " + d + "px, 0px) rotateX(" + o + "deg) rotateY(" + n + "deg)");
+      }
+    }, setTransition: function setTransition(e) {
+      var a = this,
+          t = a.slides,
+          i = a.activeIndex,
+          s = a.$wrapperEl;if ((t.transition(e).find(".swiper-slide-shadow-top, .swiper-slide-shadow-right, .swiper-slide-shadow-bottom, .swiper-slide-shadow-left").transition(e), a.params.virtualTranslate && 0 !== e)) {
+        var r = !1;t.eq(i).transitionEnd(function () {
+          if (!r && a && !a.destroyed) {
+            r = !0, a.animating = !1;for (var e = ["webkitTransitionEnd", "transitionend"], t = 0; t < e.length; t += 1) s.trigger(e[t]);
+          }
+        });
+      }
+    } },
+      te = { setTranslate: function setTranslate() {
+      for (var e = this, t = e.width, a = e.height, i = e.slides, s = e.$wrapperEl, r = e.slidesSizesGrid, n = e.params.coverflowEffect, o = e.isHorizontal(), l = e.translate, d = o ? t / 2 - l : a / 2 - l, p = o ? n.rotate : -n.rotate, c = n.depth, u = 0, h = i.length; u < h; u += 1) {
+        var v = i.eq(u),
+            f = r[u],
+            m = (d - v[0].swiperSlideOffset - f / 2) / f * n.modifier,
+            g = o ? p * m : 0,
+            b = o ? 0 : p * m,
+            w = -c * Math.abs(m),
+            y = o ? 0 : n.stretch * m,
+            x = o ? n.stretch * m : 0;Math.abs(x) < .001 && (x = 0), Math.abs(y) < .001 && (y = 0), Math.abs(w) < .001 && (w = 0), Math.abs(g) < .001 && (g = 0), Math.abs(b) < .001 && (b = 0);var T = "translate3d(" + x + "px," + y + "px," + w + "px)  rotateX(" + b + "deg) rotateY(" + g + "deg)";if ((v.transform(T), v[0].style.zIndex = 1 - Math.abs(Math.round(m)), n.slideShadows)) {
+          var E = o ? v.find(".swiper-slide-shadow-left") : v.find(".swiper-slide-shadow-top"),
+              S = o ? v.find(".swiper-slide-shadow-right") : v.find(".swiper-slide-shadow-bottom");0 === E.length && (E = L('<div class="swiper-slide-shadow-' + (o ? "left" : "top") + '"></div>'), v.append(E)), 0 === S.length && (S = L('<div class="swiper-slide-shadow-' + (o ? "right" : "bottom") + '"></div>'), v.append(S)), E.length && (E[0].style.opacity = 0 < m ? m : 0), S.length && (S[0].style.opacity = 0 < -m ? -m : 0);
+        }
+      }(F.pointerEvents || F.prefixedPointerEvents) && (s[0].style.perspectiveOrigin = d + "px 50%");
+    }, setTransition: function setTransition(e) {
+      this.slides.transition(e).find(".swiper-slide-shadow-top, .swiper-slide-shadow-right, .swiper-slide-shadow-bottom, .swiper-slide-shadow-left").transition(e);
+    } },
+      ae = { init: function init() {
+      var e = this,
+          t = e.params.thumbs,
+          a = e.constructor;t.swiper instanceof a ? (e.thumbs.swiper = t.swiper, V.extend(e.thumbs.swiper.originalParams, { watchSlidesProgress: !0, slideToClickedSlide: !1 }), V.extend(e.thumbs.swiper.params, { watchSlidesProgress: !0, slideToClickedSlide: !1 })) : V.isObject(t.swiper) && (e.thumbs.swiper = new a(V.extend({}, t.swiper, { watchSlidesVisibility: !0, watchSlidesProgress: !0, slideToClickedSlide: !1 })), e.thumbs.swiperCreated = !0), e.thumbs.swiper.$el.addClass(e.params.thumbs.thumbsContainerClass), e.thumbs.swiper.on("tap", e.thumbs.onThumbClick);
+    }, onThumbClick: function onThumbClick() {
+      var e = this,
+          t = e.thumbs.swiper;if (t) {
+        var a = t.clickedIndex,
+            i = t.clickedSlide;if (!(i && L(i).hasClass(e.params.thumbs.slideThumbActiveClass) || null == a)) {
+          var s;if ((s = t.params.loop ? parseInt(L(t.clickedSlide).attr("data-swiper-slide-index"), 10) : a, e.params.loop)) {
+            var r = e.activeIndex;e.slides.eq(r).hasClass(e.params.slideDuplicateClass) && (e.loopFix(), e._clientLeft = e.$wrapperEl[0].clientLeft, r = e.activeIndex);var n = e.slides.eq(r).prevAll('[data-swiper-slide-index="' + s + '"]').eq(0).index(),
+                o = e.slides.eq(r).nextAll('[data-swiper-slide-index="' + s + '"]').eq(0).index();s = void 0 === n ? o : void 0 === o ? n : o - r < r - n ? o : n;
+          }e.slideTo(s);
+        }
+      }
+    }, update: function update(e) {
+      var t = this,
+          a = t.thumbs.swiper;if (a) {
+        var i = "auto" === a.params.slidesPerView ? a.slidesPerViewDynamic() : a.params.slidesPerView;if (t.realIndex !== a.realIndex) {
+          var s,
+              r = a.activeIndex;if (a.params.loop) {
+            a.slides.eq(r).hasClass(a.params.slideDuplicateClass) && (a.loopFix(), a._clientLeft = a.$wrapperEl[0].clientLeft, r = a.activeIndex);var n = a.slides.eq(r).prevAll('[data-swiper-slide-index="' + t.realIndex + '"]').eq(0).index(),
+                o = a.slides.eq(r).nextAll('[data-swiper-slide-index="' + t.realIndex + '"]').eq(0).index();s = void 0 === n ? o : void 0 === o ? n : o - r == r - n ? r : o - r < r - n ? o : n;
+          } else s = t.realIndex;a.visibleSlidesIndexes.indexOf(s) < 0 && (a.params.centeredSlides ? s = r < s ? s - Math.floor(i / 2) + 1 : s + Math.floor(i / 2) - 1 : r < s && (s = s - i + 1), a.slideTo(s, e ? 0 : void 0));
+        }var l = 1,
+            d = t.params.thumbs.slideThumbActiveClass;if ((1 < t.params.slidesPerView && !t.params.centeredSlides && (l = t.params.slidesPerView), a.slides.removeClass(d), a.params.loop)) for (var p = 0; p < l; p += 1) a.$wrapperEl.children('[data-swiper-slide-index="' + (t.realIndex + p) + '"]').addClass(d);else for (var c = 0; c < l; c += 1) a.slides.eq(t.realIndex + c).addClass(d);
+      }
+    } },
+      ie = [C, M, k, P, $, O, N, { name: "mousewheel", params: { mousewheel: { enabled: !1, releaseOnEdges: !1, invert: !1, forceToAxis: !1, sensitivity: 1, eventsTarged: "container" } }, create: function create() {
+      var e = this;V.extend(e, { mousewheel: { enabled: !1, enable: H.enable.bind(e), disable: H.disable.bind(e), handle: H.handle.bind(e), handleMouseEnter: H.handleMouseEnter.bind(e), handleMouseLeave: H.handleMouseLeave.bind(e), lastScrollTime: V.now() } });
+    }, on: { init: function init() {
+        this.params.mousewheel.enabled && this.mousewheel.enable();
+      }, destroy: function destroy() {
+        this.mousewheel.enabled && this.mousewheel.disable();
+      } } }, { name: "navigation", params: { navigation: { nextEl: null, prevEl: null, hideOnClick: !1, disabledClass: "swiper-button-disabled", hiddenClass: "swiper-button-hidden", lockClass: "swiper-button-lock" } }, create: function create() {
+      var e = this;V.extend(e, { navigation: { init: G.init.bind(e), update: G.update.bind(e), destroy: G.destroy.bind(e), onNextClick: G.onNextClick.bind(e), onPrevClick: G.onPrevClick.bind(e) } });
+    }, on: { init: function init() {
+        this.navigation.init(), this.navigation.update();
+      }, toEdge: function toEdge() {
+        this.navigation.update();
+      }, fromEdge: function fromEdge() {
+        this.navigation.update();
+      }, destroy: function destroy() {
+        this.navigation.destroy();
+      }, click: function click(e) {
+        var t = this.navigation,
+            a = t.$nextEl,
+            i = t.$prevEl;!this.params.navigation.hideOnClick || L(e.target).is(i) || L(e.target).is(a) || (a && a.toggleClass(this.params.navigation.hiddenClass), i && i.toggleClass(this.params.navigation.hiddenClass));
+      } } }, { name: "pagination", params: { pagination: { el: null, bulletElement: "span", clickable: !1, hideOnClick: !1, renderBullet: null, renderProgressbar: null, renderFraction: null, renderCustom: null, progressbarOpposite: !1, type: "bullets", dynamicBullets: !1, dynamicMainBullets: 1, formatFractionCurrent: function formatFractionCurrent(e) {
+          return e;
+        }, formatFractionTotal: function formatFractionTotal(e) {
+          return e;
+        }, bulletClass: "swiper-pagination-bullet", bulletActiveClass: "swiper-pagination-bullet-active", modifierClass: "swiper-pagination-", currentClass: "swiper-pagination-current", totalClass: "swiper-pagination-total", hiddenClass: "swiper-pagination-hidden", progressbarFillClass: "swiper-pagination-progressbar-fill", progressbarOppositeClass: "swiper-pagination-progressbar-opposite", clickableClass: "swiper-pagination-clickable", lockClass: "swiper-pagination-lock" } }, create: function create() {
+      var e = this;V.extend(e, { pagination: { init: B.init.bind(e), render: B.render.bind(e), update: B.update.bind(e), destroy: B.destroy.bind(e), dynamicBulletIndex: 0 } });
+    }, on: { init: function init() {
+        this.pagination.init(), this.pagination.render(), this.pagination.update();
+      }, activeIndexChange: function activeIndexChange() {
+        this.params.loop ? this.pagination.update() : void 0 === this.snapIndex && this.pagination.update();
+      }, snapIndexChange: function snapIndexChange() {
+        this.params.loop || this.pagination.update();
+      }, slidesLengthChange: function slidesLengthChange() {
+        this.params.loop && (this.pagination.render(), this.pagination.update());
+      }, snapGridLengthChange: function snapGridLengthChange() {
+        this.params.loop || (this.pagination.render(), this.pagination.update());
+      }, destroy: function destroy() {
+        this.pagination.destroy();
+      }, click: function click(e) {
+        var t = this;t.params.pagination.el && t.params.pagination.hideOnClick && 0 < t.pagination.$el.length && !L(e.target).hasClass(t.params.pagination.bulletClass) && t.pagination.$el.toggleClass(t.params.pagination.hiddenClass);
+      } } }, { name: "scrollbar", params: { scrollbar: { el: null, dragSize: "auto", hide: !1, draggable: !1, snapOnRelease: !0, lockClass: "swiper-scrollbar-lock", dragClass: "swiper-scrollbar-drag" } }, create: function create() {
+      var e = this;V.extend(e, { scrollbar: { init: X.init.bind(e), destroy: X.destroy.bind(e), updateSize: X.updateSize.bind(e), setTranslate: X.setTranslate.bind(e), setTransition: X.setTransition.bind(e), enableDraggable: X.enableDraggable.bind(e), disableDraggable: X.disableDraggable.bind(e), setDragPosition: X.setDragPosition.bind(e), onDragStart: X.onDragStart.bind(e), onDragMove: X.onDragMove.bind(e), onDragEnd: X.onDragEnd.bind(e), isTouched: !1, timeout: null, dragTimeout: null } });
+    }, on: { init: function init() {
+        this.scrollbar.init(), this.scrollbar.updateSize(), this.scrollbar.setTranslate();
+      }, update: function update() {
+        this.scrollbar.updateSize();
+      }, resize: function resize() {
+        this.scrollbar.updateSize();
+      }, observerUpdate: function observerUpdate() {
+        this.scrollbar.updateSize();
+      }, setTranslate: function setTranslate() {
+        this.scrollbar.setTranslate();
+      }, setTransition: function setTransition(e) {
+        this.scrollbar.setTransition(e);
+      }, destroy: function destroy() {
+        this.scrollbar.destroy();
+      } } }, { name: "parallax", params: { parallax: { enabled: !1 } }, create: function create() {
+      V.extend(this, { parallax: { setTransform: R.setTransform.bind(this), setTranslate: R.setTranslate.bind(this), setTransition: R.setTransition.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        this.params.parallax.enabled && (this.params.watchSlidesProgress = !0, this.originalParams.watchSlidesProgress = !0);
+      }, init: function init() {
+        this.params.parallax && this.parallax.setTranslate();
+      }, setTranslate: function setTranslate() {
+        this.params.parallax && this.parallax.setTranslate();
+      }, setTransition: function setTransition(e) {
+        this.params.parallax && this.parallax.setTransition(e);
+      } } }, { name: "zoom", params: { zoom: { enabled: !1, maxRatio: 3, minRatio: 1, toggle: !0, containerClass: "swiper-zoom-container", zoomedSlideClass: "swiper-slide-zoomed" } }, create: function create() {
+      var t = this,
+          a = { enabled: !1, scale: 1, currentScale: 1, isScaling: !1, gesture: { $slideEl: void 0, slideWidth: void 0, slideHeight: void 0, $imageEl: void 0, $imageWrapEl: void 0, maxRatio: 3 }, image: { isTouched: void 0, isMoved: void 0, currentX: void 0, currentY: void 0, minX: void 0, minY: void 0, maxX: void 0, maxY: void 0, width: void 0, height: void 0, startX: void 0, startY: void 0, touchesStart: {}, touchesCurrent: {} }, velocity: { x: void 0, y: void 0, prevPositionX: void 0, prevPositionY: void 0, prevTime: void 0 } };"onGestureStart onGestureChange onGestureEnd onTouchStart onTouchMove onTouchEnd onTransitionEnd toggle enable disable in out".split(" ").forEach(function (e) {
+        a[e] = q[e].bind(t);
+      }), V.extend(t, { zoom: a });
+    }, on: { init: function init() {
+        this.params.zoom.enabled && this.zoom.enable();
+      }, destroy: function destroy() {
+        this.zoom.disable();
+      }, touchStart: function touchStart(e) {
+        this.zoom.enabled && this.zoom.onTouchStart(e);
+      }, touchEnd: function touchEnd(e) {
+        this.zoom.enabled && this.zoom.onTouchEnd(e);
+      }, doubleTap: function doubleTap(e) {
+        this.params.zoom.enabled && this.zoom.enabled && this.params.zoom.toggle && this.zoom.toggle(e);
+      }, transitionEnd: function transitionEnd() {
+        this.zoom.enabled && this.params.zoom.enabled && this.zoom.onTransitionEnd();
+      } } }, { name: "lazy", params: { lazy: { enabled: !1, loadPrevNext: !1, loadPrevNextAmount: 1, loadOnTransitionStart: !1, elementClass: "swiper-lazy", loadingClass: "swiper-lazy-loading", loadedClass: "swiper-lazy-loaded", preloaderClass: "swiper-lazy-preloader" } }, create: function create() {
+      V.extend(this, { lazy: { initialImageLoaded: !1, load: W.load.bind(this), loadInSlide: W.loadInSlide.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        this.params.lazy.enabled && this.params.preloadImages && (this.params.preloadImages = !1);
+      }, init: function init() {
+        this.params.lazy.enabled && !this.params.loop && 0 === this.params.initialSlide && this.lazy.load();
+      }, scroll: function scroll() {
+        this.params.freeMode && !this.params.freeModeSticky && this.lazy.load();
+      }, resize: function resize() {
+        this.params.lazy.enabled && this.lazy.load();
+      }, scrollbarDragMove: function scrollbarDragMove() {
+        this.params.lazy.enabled && this.lazy.load();
+      }, transitionStart: function transitionStart() {
+        var e = this;e.params.lazy.enabled && (e.params.lazy.loadOnTransitionStart || !e.params.lazy.loadOnTransitionStart && !e.lazy.initialImageLoaded) && e.lazy.load();
+      }, transitionEnd: function transitionEnd() {
+        this.params.lazy.enabled && !this.params.lazy.loadOnTransitionStart && this.lazy.load();
+      } } }, { name: "controller", params: { controller: { control: void 0, inverse: !1, by: "slide" } }, create: function create() {
+      var e = this;V.extend(e, { controller: { control: e.params.controller.control, getInterpolateFunction: j.getInterpolateFunction.bind(e), setTranslate: j.setTranslate.bind(e), setTransition: j.setTransition.bind(e) } });
+    }, on: { update: function update() {
+        this.controller.control && this.controller.spline && (this.controller.spline = void 0, delete this.controller.spline);
+      }, resize: function resize() {
+        this.controller.control && this.controller.spline && (this.controller.spline = void 0, delete this.controller.spline);
+      }, observerUpdate: function observerUpdate() {
+        this.controller.control && this.controller.spline && (this.controller.spline = void 0, delete this.controller.spline);
+      }, setTranslate: function setTranslate(e, t) {
+        this.controller.control && this.controller.setTranslate(e, t);
+      }, setTransition: function setTransition(e, t) {
+        this.controller.control && this.controller.setTransition(e, t);
+      } } }, { name: "a11y", params: { a11y: { enabled: !0, notificationClass: "swiper-notification", prevSlideMessage: "Previous slide", nextSlideMessage: "Next slide", firstSlideMessage: "This is the first slide", lastSlideMessage: "This is the last slide", paginationBulletMessage: "Go to slide {{index}}" } }, create: function create() {
+      var t = this;V.extend(t, { a11y: { liveRegion: L('<span class="' + t.params.a11y.notificationClass + '" aria-live="assertive" aria-atomic="true"></span>') } }), Object.keys(U).forEach(function (e) {
+        t.a11y[e] = U[e].bind(t);
+      });
+    }, on: { init: function init() {
+        this.params.a11y.enabled && (this.a11y.init(), this.a11y.updateNavigation());
+      }, toEdge: function toEdge() {
+        this.params.a11y.enabled && this.a11y.updateNavigation();
+      }, fromEdge: function fromEdge() {
+        this.params.a11y.enabled && this.a11y.updateNavigation();
+      }, paginationUpdate: function paginationUpdate() {
+        this.params.a11y.enabled && this.a11y.updatePagination();
+      }, destroy: function destroy() {
+        this.params.a11y.enabled && this.a11y.destroy();
+      } } }, { name: "history", params: { history: { enabled: !1, replaceState: !1, key: "slides" } }, create: function create() {
+      var e = this;V.extend(e, { history: { init: K.init.bind(e), setHistory: K.setHistory.bind(e), setHistoryPopState: K.setHistoryPopState.bind(e), scrollToSlide: K.scrollToSlide.bind(e), destroy: K.destroy.bind(e) } });
+    }, on: { init: function init() {
+        this.params.history.enabled && this.history.init();
+      }, destroy: function destroy() {
+        this.params.history.enabled && this.history.destroy();
+      }, transitionEnd: function transitionEnd() {
+        this.history.initialized && this.history.setHistory(this.params.history.key, this.activeIndex);
+      } } }, { name: "hash-navigation", params: { hashNavigation: { enabled: !1, replaceState: !1, watchState: !1 } }, create: function create() {
+      var e = this;V.extend(e, { hashNavigation: { initialized: !1, init: _.init.bind(e), destroy: _.destroy.bind(e), setHash: _.setHash.bind(e), onHashCange: _.onHashCange.bind(e) } });
+    }, on: { init: function init() {
+        this.params.hashNavigation.enabled && this.hashNavigation.init();
+      }, destroy: function destroy() {
+        this.params.hashNavigation.enabled && this.hashNavigation.destroy();
+      }, transitionEnd: function transitionEnd() {
+        this.hashNavigation.initialized && this.hashNavigation.setHash();
+      } } }, { name: "autoplay", params: { autoplay: { enabled: !1, delay: 3e3, waitForTransition: !0, disableOnInteraction: !0, stopOnLastSlide: !1, reverseDirection: !1 } }, create: function create() {
+      var t = this;V.extend(t, { autoplay: { running: !1, paused: !1, run: Z.run.bind(t), start: Z.start.bind(t), stop: Z.stop.bind(t), pause: Z.pause.bind(t), onTransitionEnd: function onTransitionEnd(e) {
+            t && !t.destroyed && t.$wrapperEl && e.target === this && (t.$wrapperEl[0].removeEventListener("transitionend", t.autoplay.onTransitionEnd), t.$wrapperEl[0].removeEventListener("webkitTransitionEnd", t.autoplay.onTransitionEnd), t.autoplay.paused = !1, t.autoplay.running ? t.autoplay.run() : t.autoplay.stop());
+          } } });
+    }, on: { init: function init() {
+        this.params.autoplay.enabled && this.autoplay.start();
+      }, beforeTransitionStart: function beforeTransitionStart(e, t) {
+        this.autoplay.running && (t || !this.params.autoplay.disableOnInteraction ? this.autoplay.pause(e) : this.autoplay.stop());
+      }, sliderFirstMove: function sliderFirstMove() {
+        this.autoplay.running && (this.params.autoplay.disableOnInteraction ? this.autoplay.stop() : this.autoplay.pause());
+      }, destroy: function destroy() {
+        this.autoplay.running && this.autoplay.stop();
+      } } }, { name: "effect-fade", params: { fadeEffect: { crossFade: !1 } }, create: function create() {
+      V.extend(this, { fadeEffect: { setTranslate: Q.setTranslate.bind(this), setTransition: Q.setTransition.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this;if ("fade" === e.params.effect) {
+          e.classNames.push(e.params.containerModifierClass + "fade");var t = { slidesPerView: 1, slidesPerColumn: 1, slidesPerGroup: 1, watchSlidesProgress: !0, spaceBetween: 0, virtualTranslate: !0 };V.extend(e.params, t), V.extend(e.originalParams, t);
+        }
+      }, setTranslate: function setTranslate() {
+        "fade" === this.params.effect && this.fadeEffect.setTranslate();
+      }, setTransition: function setTransition(e) {
+        "fade" === this.params.effect && this.fadeEffect.setTransition(e);
+      } } }, { name: "effect-cube", params: { cubeEffect: { slideShadows: !0, shadow: !0, shadowOffset: 20, shadowScale: .94 } }, create: function create() {
+      V.extend(this, { cubeEffect: { setTranslate: J.setTranslate.bind(this), setTransition: J.setTransition.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this;if ("cube" === e.params.effect) {
+          e.classNames.push(e.params.containerModifierClass + "cube"), e.classNames.push(e.params.containerModifierClass + "3d");var t = { slidesPerView: 1, slidesPerColumn: 1, slidesPerGroup: 1, watchSlidesProgress: !0, resistanceRatio: 0, spaceBetween: 0, centeredSlides: !1, virtualTranslate: !0 };V.extend(e.params, t), V.extend(e.originalParams, t);
+        }
+      }, setTranslate: function setTranslate() {
+        "cube" === this.params.effect && this.cubeEffect.setTranslate();
+      }, setTransition: function setTransition(e) {
+        "cube" === this.params.effect && this.cubeEffect.setTransition(e);
+      } } }, { name: "effect-flip", params: { flipEffect: { slideShadows: !0, limitRotation: !0 } }, create: function create() {
+      V.extend(this, { flipEffect: { setTranslate: ee.setTranslate.bind(this), setTransition: ee.setTransition.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this;if ("flip" === e.params.effect) {
+          e.classNames.push(e.params.containerModifierClass + "flip"), e.classNames.push(e.params.containerModifierClass + "3d");var t = { slidesPerView: 1, slidesPerColumn: 1, slidesPerGroup: 1, watchSlidesProgress: !0, spaceBetween: 0, virtualTranslate: !0 };V.extend(e.params, t), V.extend(e.originalParams, t);
+        }
+      }, setTranslate: function setTranslate() {
+        "flip" === this.params.effect && this.flipEffect.setTranslate();
+      }, setTransition: function setTransition(e) {
+        "flip" === this.params.effect && this.flipEffect.setTransition(e);
+      } } }, { name: "effect-coverflow", params: { coverflowEffect: { rotate: 50, stretch: 0, depth: 100, modifier: 1, slideShadows: !0 } }, create: function create() {
+      V.extend(this, { coverflowEffect: { setTranslate: te.setTranslate.bind(this), setTransition: te.setTransition.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this;"coverflow" === e.params.effect && (e.classNames.push(e.params.containerModifierClass + "coverflow"), e.classNames.push(e.params.containerModifierClass + "3d"), e.params.watchSlidesProgress = !0, e.originalParams.watchSlidesProgress = !0);
+      }, setTranslate: function setTranslate() {
+        "coverflow" === this.params.effect && this.coverflowEffect.setTranslate();
+      }, setTransition: function setTransition(e) {
+        "coverflow" === this.params.effect && this.coverflowEffect.setTransition(e);
+      } } }, { name: "thumbs", params: { thumbs: { swiper: null, slideThumbActiveClass: "swiper-slide-thumb-active", thumbsContainerClass: "swiper-container-thumbs" } }, create: function create() {
+      V.extend(this, { thumbs: { swiper: null, init: ae.init.bind(this), update: ae.update.bind(this), onThumbClick: ae.onThumbClick.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this.params.thumbs;e && e.swiper && (this.thumbs.init(), this.thumbs.update(!0));
+      }, slideChange: function slideChange() {
+        this.thumbs.swiper && this.thumbs.update();
+      }, update: function update() {
+        this.thumbs.swiper && this.thumbs.update();
+      }, resize: function resize() {
+        this.thumbs.swiper && this.thumbs.update();
+      }, observerUpdate: function observerUpdate() {
+        this.thumbs.swiper && this.thumbs.update();
+      }, setTransition: function setTransition(e) {
+        var t = this.thumbs.swiper;t && t.setTransition(e);
+      }, beforeDestroy: function beforeDestroy() {
+        var e = this.thumbs.swiper;e && this.thumbs.swiperCreated && e && e.destroy();
+      } } }];return void 0 === S.use && (S.use = S.Class.use, S.installModule = S.Class.installModule), S.use(ie), S;
+});
+//# sourceMappingURL=swiper.min.js.map
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! VelocityJS.org (1.5.0). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
+
+/*************************
+ Velocity jQuery Shim
+ *************************/
+
+/*! VelocityJS.org jQuery Shim (1.0.1). (C) 2014 The jQuery Foundation. MIT @license: en.wikipedia.org/wiki/MIT_License. */
+
+/* This file contains the jQuery functions that Velocity relies on, thereby removing Velocity's dependency on a full copy of jQuery, and allowing it to work in any environment. */
+/* These shimmed functions are only used if jQuery isn't present. If both this shim and jQuery are loaded, Velocity defaults to jQuery proper. */
+
+
+(function (window) {
+	"use strict";
+	/***************
+  Setup
+  ***************/
+
+	/* If jQuery is already loaded, there's no point in loading this shim. */
+	if (window.jQuery) {
+		return;
+	}
+
+	/* jQuery base. */
+	var $ = function $(selector, context) {
+		return new $.fn.init(selector, context);
+	};
+
+	/********************
+  Private Methods
+  ********************/
+
+	/* jQuery */
+	$.isWindow = function (obj) {
+		/* jshint eqeqeq: false */
+		return obj && obj === obj.window;
+	};
+
+	/* jQuery */
+	$.type = function (obj) {
+		if (!obj) {
+			return obj + "";
+		}
+
+		return typeof obj === "object" || typeof obj === "function" ? class2type[toString.call(obj)] || "object" : typeof obj;
+	};
+
+	/* jQuery */
+	$.isArray = Array.isArray || function (obj) {
+		return $.type(obj) === "array";
+	};
+
+	/* jQuery */
+	function isArraylike(obj) {
+		var length = obj.length,
+		    type = $.type(obj);
+
+		if (type === "function" || $.isWindow(obj)) {
+			return false;
+		}
+
+		if (obj.nodeType === 1 && length) {
+			return true;
+		}
+
+		return type === "array" || length === 0 || typeof length === "number" && length > 0 && length - 1 in obj;
+	}
+
+	/***************
+  $ Methods
+  ***************/
+
+	/* jQuery: Support removed for IE<9. */
+	$.isPlainObject = function (obj) {
+		var key;
+
+		if (!obj || $.type(obj) !== "object" || obj.nodeType || $.isWindow(obj)) {
+			return false;
+		}
+
+		try {
+			if (obj.constructor && !hasOwn.call(obj, "constructor") && !hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
+				return false;
+			}
+		} catch (e) {
+			return false;
+		}
+
+		for (key in obj) {}
+
+		return key === undefined || hasOwn.call(obj, key);
+	};
+
+	/* jQuery */
+	$.each = function (obj, callback, args) {
+		var value,
+		    i = 0,
+		    length = obj.length,
+		    isArray = isArraylike(obj);
+
+		if (args) {
+			if (isArray) {
+				for (; i < length; i++) {
+					value = callback.apply(obj[i], args);
+
+					if (value === false) {
+						break;
+					}
+				}
+			} else {
+				for (i in obj) {
+					if (!obj.hasOwnProperty(i)) {
+						continue;
+					}
+					value = callback.apply(obj[i], args);
+
+					if (value === false) {
+						break;
+					}
+				}
+			}
+		} else {
+			if (isArray) {
+				for (; i < length; i++) {
+					value = callback.call(obj[i], i, obj[i]);
+
+					if (value === false) {
+						break;
+					}
+				}
+			} else {
+				for (i in obj) {
+					if (!obj.hasOwnProperty(i)) {
+						continue;
+					}
+					value = callback.call(obj[i], i, obj[i]);
+
+					if (value === false) {
+						break;
+					}
+				}
+			}
+		}
+
+		return obj;
+	};
+
+	/* Custom */
+	$.data = function (node, key, value) {
+		/* $.getData() */
+		if (value === undefined) {
+			var getId = node[$.expando],
+			    store = getId && cache[getId];
+
+			if (key === undefined) {
+				return store;
+			} else if (store) {
+				if (key in store) {
+					return store[key];
+				}
+			}
+			/* $.setData() */
+		} else if (key !== undefined) {
+				var setId = node[$.expando] || (node[$.expando] = ++$.uuid);
+
+				cache[setId] = cache[setId] || {};
+				cache[setId][key] = value;
+
+				return value;
+			}
+	};
+
+	/* Custom */
+	$.removeData = function (node, keys) {
+		var id = node[$.expando],
+		    store = id && cache[id];
+
+		if (store) {
+			// Cleanup the entire store if no keys are provided.
+			if (!keys) {
+				delete cache[id];
+			} else {
+				$.each(keys, function (_, key) {
+					delete store[key];
+				});
+			}
+		}
+	};
+
+	/* jQuery */
+	$.extend = function () {
+		var src,
+		    copyIsArray,
+		    copy,
+		    name,
+		    options,
+		    clone,
+		    target = arguments[0] || {},
+		    i = 1,
+		    length = arguments.length,
+		    deep = false;
+
+		if (typeof target === "boolean") {
+			deep = target;
+
+			target = arguments[i] || {};
+			i++;
+		}
+
+		if (typeof target !== "object" && $.type(target) !== "function") {
+			target = {};
+		}
+
+		if (i === length) {
+			target = this;
+			i--;
+		}
+
+		for (; i < length; i++) {
+			if (options = arguments[i]) {
+				for (name in options) {
+					if (!options.hasOwnProperty(name)) {
+						continue;
+					}
+					src = target[name];
+					copy = options[name];
+
+					if (target === copy) {
+						continue;
+					}
+
+					if (deep && copy && ($.isPlainObject(copy) || (copyIsArray = $.isArray(copy)))) {
+						if (copyIsArray) {
+							copyIsArray = false;
+							clone = src && $.isArray(src) ? src : [];
+						} else {
+							clone = src && $.isPlainObject(src) ? src : {};
+						}
+
+						target[name] = $.extend(deep, clone, copy);
+					} else if (copy !== undefined) {
+						target[name] = copy;
+					}
+				}
+			}
+		}
+
+		return target;
+	};
+
+	/* jQuery 1.4.3 */
+	$.queue = function (elem, type, data) {
+		function $makeArray(arr, results) {
+			var ret = results || [];
+
+			if (arr) {
+				if (isArraylike(Object(arr))) {
+					/* $.merge */
+					(function (first, second) {
+						var len = +second.length,
+						    j = 0,
+						    i = first.length;
+
+						while (j < len) {
+							first[i++] = second[j++];
+						}
+
+						if (len !== len) {
+							while (second[j] !== undefined) {
+								first[i++] = second[j++];
+							}
+						}
+
+						first.length = i;
+
+						return first;
+					})(ret, typeof arr === "string" ? [arr] : arr);
+				} else {
+					[].push.call(ret, arr);
+				}
+			}
+
+			return ret;
+		}
+
+		if (!elem) {
+			return;
+		}
+
+		type = (type || "fx") + "queue";
+
+		var q = $.data(elem, type);
+
+		if (!data) {
+			return q || [];
+		}
+
+		if (!q || $.isArray(data)) {
+			q = $.data(elem, type, $makeArray(data));
+		} else {
+			q.push(data);
+		}
+
+		return q;
+	};
+
+	/* jQuery 1.4.3 */
+	$.dequeue = function (elems, type) {
+		/* Custom: Embed element iteration. */
+		$.each(elems.nodeType ? [elems] : elems, function (i, elem) {
+			type = type || "fx";
+
+			var queue = $.queue(elem, type),
+			    fn = queue.shift();
+
+			if (fn === "inprogress") {
+				fn = queue.shift();
+			}
+
+			if (fn) {
+				if (type === "fx") {
+					queue.unshift("inprogress");
+				}
+
+				fn.call(elem, function () {
+					$.dequeue(elem, type);
+				});
+			}
+		});
+	};
+
+	/******************
+  $.fn Methods
+  ******************/
+
+	/* jQuery */
+	$.fn = $.prototype = {
+		init: function init(selector) {
+			/* Just return the element wrapped inside an array; don't proceed with the actual jQuery node wrapping process. */
+			if (selector.nodeType) {
+				this[0] = selector;
+
+				return this;
+			} else {
+				throw new Error("Not a DOM node.");
+			}
+		},
+		offset: function offset() {
+			/* jQuery altered code: Dropped disconnected DOM node checking. */
+			var box = this[0].getBoundingClientRect ? this[0].getBoundingClientRect() : { top: 0, left: 0 };
+
+			return {
+				top: box.top + (window.pageYOffset || document.scrollTop || 0) - (document.clientTop || 0),
+				left: box.left + (window.pageXOffset || document.scrollLeft || 0) - (document.clientLeft || 0)
+			};
+		},
+		position: function position() {
+			/* jQuery */
+			function offsetParentFn(elem) {
+				var offsetParent = elem.offsetParent;
+
+				while (offsetParent && offsetParent.nodeName.toLowerCase() !== "html" && offsetParent.style && offsetParent.style.position === "static") {
+					offsetParent = offsetParent.offsetParent;
+				}
+
+				return offsetParent || document;
+			}
+
+			/* Zepto */
+			var elem = this[0],
+			    offsetParent = offsetParentFn(elem),
+			    offset = this.offset(),
+			    parentOffset = /^(?:body|html)$/i.test(offsetParent.nodeName) ? { top: 0, left: 0 } : $(offsetParent).offset();
+
+			offset.top -= parseFloat(elem.style.marginTop) || 0;
+			offset.left -= parseFloat(elem.style.marginLeft) || 0;
+
+			if (offsetParent.style) {
+				parentOffset.top += parseFloat(offsetParent.style.borderTopWidth) || 0;
+				parentOffset.left += parseFloat(offsetParent.style.borderLeftWidth) || 0;
+			}
+
+			return {
+				top: offset.top - parentOffset.top,
+				left: offset.left - parentOffset.left
+			};
+		}
+	};
+
+	/**********************
+  Private Variables
+  **********************/
+
+	/* For $.data() */
+	var cache = {};
+	$.expando = "velocity" + new Date().getTime();
+	$.uuid = 0;
+
+	/* For $.queue() */
+	var class2type = {},
+	    hasOwn = class2type.hasOwnProperty,
+	    toString = class2type.toString;
+
+	var types = "Boolean Number String Function Array Date RegExp Object Error".split(" ");
+	for (var i = 0; i < types.length; i++) {
+		class2type["[object " + types[i] + "]"] = types[i].toLowerCase();
+	}
+
+	/* Makes $(node) possible, without having to call init. */
+	$.fn.init.prototype = $.fn;
+
+	/* Globalize Velocity onto the window, and assign its Utilities property. */
+	window.Velocity = { Utilities: $ };
+})(window);
+
+/******************
+ Velocity.js
+ ******************/
+
+(function (factory) {
+	"use strict";
+	/* CommonJS module. */
+	if (typeof module === "object" && typeof module.exports === "object") {
+		module.exports = factory();
+		/* AMD module. */
+	} else if (true) {
+			!(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+			/* Browser globals. */
+		} else {
+				factory();
+			}
+})(function () {
+	"use strict";
+	return (function (global, window, document, undefined) {
+
+		/***************
+   Summary
+   ***************/
+
+		/*
+   - CSS: CSS stack that works independently from the rest of Velocity.
+   - animate(): Core animation method that iterates over the targeted elements and queues the incoming call onto each element individually.
+   - Pre-Queueing: Prepare the element for animation by instantiating its data cache and processing the call's options.
+   - Queueing: The logic that runs once the call has reached its point of execution in the element's $.queue() stack.
+   Most logic is placed here to avoid risking it becoming stale (if the element's properties have changed).
+   - Pushing: Consolidation of the tween data followed by its push onto the global in-progress calls container.
+   - tick(): The single requestAnimationFrame loop responsible for tweening all in-progress calls.
+   - completeCall(): Handles the cleanup process for each Velocity call.
+   */
+
+		/*********************
+   Helper Functions
+   *********************/
+
+		/* IE detection. Gist: https://gist.github.com/julianshapiro/9098609 */
+		var IE = (function () {
+			if (document.documentMode) {
+				return document.documentMode;
+			} else {
+				for (var i = 7; i > 4; i--) {
+					var div = document.createElement("div");
+
+					div.innerHTML = "<!--[if IE " + i + "]><span></span><![endif]-->";
+
+					if (div.getElementsByTagName("span").length) {
+						div = null;
+
+						return i;
+					}
+				}
+			}
+
+			return undefined;
+		})();
+
+		/* rAF shim. Gist: https://gist.github.com/julianshapiro/9497513 */
+		var rAFShim = (function () {
+			var timeLast = 0;
+
+			return window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
+				var timeCurrent = new Date().getTime(),
+				    timeDelta;
+
+				/* Dynamically set delay on a per-tick basis to match 60fps. */
+				/* Technique by Erik Moller. MIT license: https://gist.github.com/paulirish/1579671 */
+				timeDelta = Math.max(0, 16 - (timeCurrent - timeLast));
+				timeLast = timeCurrent + timeDelta;
+
+				return setTimeout(function () {
+					callback(timeCurrent + timeDelta);
+				}, timeDelta);
+			};
+		})();
+
+		var performance = (function () {
+			var perf = window.performance || {};
+
+			if (typeof perf.now !== "function") {
+				var nowOffset = perf.timing && perf.timing.navigationStart ? perf.timing.navigationStart : new Date().getTime();
+
+				perf.now = function () {
+					return new Date().getTime() - nowOffset;
+				};
+			}
+			return perf;
+		})();
+
+		/* Array compacting. Copyright Lo-Dash. MIT License: https://github.com/lodash/lodash/blob/master/LICENSE.txt */
+		function compactSparseArray(array) {
+			var index = -1,
+			    length = array ? array.length : 0,
+			    result = [];
+
+			while (++index < length) {
+				var value = array[index];
+
+				if (value) {
+					result.push(value);
+				}
+			}
+
+			return result;
+		}
+
+		/**
+   * Shim for "fixing" IE's lack of support (IE < 9) for applying slice
+   * on host objects like NamedNodeMap, NodeList, and HTMLCollection
+   * (technically, since host objects have been implementation-dependent,
+   * at least before ES2015, IE hasn't needed to work this way).
+   * Also works on strings, fixes IE < 9 to allow an explicit undefined
+   * for the 2nd argument (as in Firefox), and prevents errors when
+   * called on other DOM objects.
+   */
+		var _slice = (function () {
+			var slice = Array.prototype.slice;
+
+			try {
+				// Can't be used with DOM elements in IE < 9
+				slice.call(document.documentElement);
+				return slice;
+			} catch (e) {
+				// Fails in IE < 9
+
+				// This will work for genuine arrays, array-like objects,
+				// NamedNodeMap (attributes, entities, notations),
+				// NodeList (e.g., getElementsByTagName), HTMLCollection (e.g., childNodes),
+
+				return function (begin, end) {
+					var len = this.length;
+
+					if (typeof begin !== "number") {
+						begin = 0;
+					}
+					// IE < 9 gets unhappy with an undefined end argument
+					if (typeof end !== "number") {
+						end = len;
+					}
+					// For native Array objects, we use the native slice function
+					if (this.slice) {
+						return slice.call(this, begin, end);
+					}
+					// For array like object we handle it ourselves.
+					var i,
+					    cloned = [],
+					   
+					// Handle negative value for "begin"
+					start = begin >= 0 ? begin : Math.max(0, len + begin),
+					   
+					// Handle negative value for "end"
+					upTo = end < 0 ? len + end : Math.min(end, len),
+					   
+					// Actual expected size of the slice
+					size = upTo - start;
+
+					if (size > 0) {
+						cloned = new Array(size);
+						if (this.charAt) {
+							for (i = 0; i < size; i++) {
+								cloned[i] = this.charAt(start + i);
+							}
+						} else {
+							for (i = 0; i < size; i++) {
+								cloned[i] = this[start + i];
+							}
+						}
+					}
+					return cloned;
+				};
+			}
+		})();
+
+		/* .indexOf doesn't exist in IE<9 */
+		var _inArray = function _inArray() {
+			if (Array.prototype.includes) {
+				return function (arr, val) {
+					return arr.includes(val);
+				};
+			}
+			if (Array.prototype.indexOf) {
+				return function (arr, val) {
+					return arr.indexOf(val) >= 0;
+				};
+			}
+			return function (arr, val) {
+				for (var i = 0; i < arr.length; i++) {
+					if (arr[i] === val) {
+						return true;
+					}
+				}
+				return false;
+			};
+		};
+
+		function sanitizeElements(elements) {
+			/* Unwrap jQuery/Zepto objects. */
+			if (Type.isWrapped(elements)) {
+				elements = _slice.call(elements);
+				/* Wrap a single element in an array so that $.each() can iterate with the element instead of its node's children. */
+			} else if (Type.isNode(elements)) {
+					elements = [elements];
+				}
+
+			return elements;
+		}
+
+		var Type = {
+			isNumber: function isNumber(variable) {
+				return typeof variable === "number";
+			},
+			isString: function isString(variable) {
+				return typeof variable === "string";
+			},
+			isArray: Array.isArray || function (variable) {
+				return Object.prototype.toString.call(variable) === "[object Array]";
+			},
+			isFunction: function isFunction(variable) {
+				return Object.prototype.toString.call(variable) === "[object Function]";
+			},
+			isNode: function isNode(variable) {
+				return variable && variable.nodeType;
+			},
+			/* Determine if variable is an array-like wrapped jQuery, Zepto or similar element, or even a NodeList etc. */
+			/* NOTE: HTMLFormElements also have a length. */
+			isWrapped: function isWrapped(variable) {
+				return variable && variable !== window && Type.isNumber(variable.length) && !Type.isString(variable) && !Type.isFunction(variable) && !Type.isNode(variable) && (variable.length === 0 || Type.isNode(variable[0]));
+			},
+			isSVG: function isSVG(variable) {
+				return window.SVGElement && variable instanceof window.SVGElement;
+			},
+			isEmptyObject: function isEmptyObject(variable) {
+				for (var name in variable) {
+					if (variable.hasOwnProperty(name)) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+		};
+
+		/*****************
+   Dependencies
+   *****************/
+
+		var $,
+		    isJQuery = false;
+
+		if (global.fn && global.fn.jquery) {
+			$ = global;
+			isJQuery = true;
+		} else {
+			$ = window.Velocity.Utilities;
+		}
+
+		if (IE <= 8 && !isJQuery) {
+			throw new Error("Velocity: IE8 and below require jQuery to be loaded before Velocity.");
+		} else if (IE <= 7) {
+			/* Revert to jQuery's $.animate(), and lose Velocity's extra features. */
+			jQuery.fn.velocity = jQuery.fn.animate;
+
+			/* Now that $.fn.velocity is aliased, abort this Velocity declaration. */
+			return;
+		}
+
+		/*****************
+   Constants
+   *****************/
+
+		var DURATION_DEFAULT = 400,
+		    EASING_DEFAULT = "swing";
+
+		/*************
+   State
+   *************/
+
+		var Velocity = {
+			/* Container for page-wide Velocity state data. */
+			State: {
+				/* Detect mobile devices to determine if mobileHA should be turned on. */
+				isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+				/* The mobileHA option's behavior changes on older Android devices (Gingerbread, versions 2.3.3-2.3.7). */
+				isAndroid: /Android/i.test(navigator.userAgent),
+				isGingerbread: /Android 2\.3\.[3-7]/i.test(navigator.userAgent),
+				isChrome: window.chrome,
+				isFirefox: /Firefox/i.test(navigator.userAgent),
+				/* Create a cached element for re-use when checking for CSS property prefixes. */
+				prefixElement: document.createElement("div"),
+				/* Cache every prefix match to avoid repeating lookups. */
+				prefixMatches: {},
+				/* Cache the anchor used for animating window scrolling. */
+				scrollAnchor: null,
+				/* Cache the browser-specific property names associated with the scroll anchor. */
+				scrollPropertyLeft: null,
+				scrollPropertyTop: null,
+				/* Keep track of whether our RAF tick is running. */
+				isTicking: false,
+				/* Container for every in-progress call to Velocity. */
+				calls: [],
+				delayedElements: {
+					count: 0
+				}
+			},
+			/* Velocity's custom CSS stack. Made global for unit testing. */
+			CSS: {/* Defined below. */},
+			/* A shim of the jQuery utility functions used by Velocity -- provided by Velocity's optional jQuery shim. */
+			Utilities: $,
+			/* Container for the user's custom animation redirects that are referenced by name in place of the properties map argument. */
+			Redirects: {/* Manually registered by the user. */},
+			Easings: {/* Defined below. */},
+			/* Attempt to use ES6 Promises by default. Users can override this with a third-party promises library. */
+			Promise: window.Promise,
+			/* Velocity option defaults, which can be overriden by the user. */
+			defaults: {
+				queue: "",
+				duration: DURATION_DEFAULT,
+				easing: EASING_DEFAULT,
+				begin: undefined,
+				complete: undefined,
+				progress: undefined,
+				display: undefined,
+				visibility: undefined,
+				loop: false,
+				delay: false,
+				mobileHA: true,
+				/* Advanced: Set to false to prevent property values from being cached between consecutive Velocity-initiated chain calls. */
+				_cacheValues: true,
+				/* Advanced: Set to false if the promise should always resolve on empty element lists. */
+				promiseRejectEmpty: true
+			},
+			/* A design goal of Velocity is to cache data wherever possible in order to avoid DOM requerying. Accordingly, each element has a data cache. */
+			init: function init(element) {
+				$.data(element, "velocity", {
+					/* Store whether this is an SVG element, since its properties are retrieved and updated differently than standard HTML elements. */
+					isSVG: Type.isSVG(element),
+					/* Keep track of whether the element is currently being animated by Velocity.
+      This is used to ensure that property values are not transferred between non-consecutive (stale) calls. */
+					isAnimating: false,
+					/* A reference to the element's live computedStyle object. Learn more here: https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle */
+					computedStyle: null,
+					/* Tween data is cached for each animation on the element so that data can be passed across calls --
+      in particular, end values are used as subsequent start values in consecutive Velocity calls. */
+					tweensContainer: null,
+					/* The full root property values of each CSS hook being animated on this element are cached so that:
+      1) Concurrently-animating hooks sharing the same root can have their root values' merged into one while tweening.
+      2) Post-hook-injection root values can be transferred over to consecutively chained Velocity calls as starting root values. */
+					rootPropertyValueCache: {},
+					/* A cache for transform updates, which must be manually flushed via CSS.flushTransformCache(). */
+					transformCache: {}
+				});
+			},
+			/* A parallel to jQuery's $.css(), used for getting/setting Velocity's hooked CSS properties. */
+			hook: null, /* Defined below. */
+			/* Velocity-wide animation time remapping for testing purposes. */
+			mock: false,
+			version: { major: 1, minor: 5, patch: 0 },
+			/* Set to 1 or 2 (most verbose) to output debug info to console. */
+			debug: false,
+			/* Use rAF high resolution timestamp when available */
+			timestamp: true,
+			/* Pause all animations */
+			pauseAll: function pauseAll(queueName) {
+				var currentTime = new Date().getTime();
+
+				$.each(Velocity.State.calls, function (i, activeCall) {
+
+					if (activeCall) {
+
+						/* If we have a queueName and this call is not on that queue, skip */
+						if (queueName !== undefined && (activeCall[2].queue !== queueName || activeCall[2].queue === false)) {
+							return true;
+						}
+
+						/* Set call to paused */
+						activeCall[5] = {
+							resume: false
+						};
+					}
+				});
+
+				/* Pause timers on any currently delayed calls */
+				$.each(Velocity.State.delayedElements, function (k, element) {
+					if (!element) {
+						return;
+					}
+					pauseDelayOnElement(element, currentTime);
+				});
+			},
+			/* Resume all animations */
+			resumeAll: function resumeAll(queueName) {
+				var currentTime = new Date().getTime();
+
+				$.each(Velocity.State.calls, function (i, activeCall) {
+
+					if (activeCall) {
+
+						/* If we have a queueName and this call is not on that queue, skip */
+						if (queueName !== undefined && (activeCall[2].queue !== queueName || activeCall[2].queue === false)) {
+							return true;
+						}
+
+						/* Set call to resumed if it was paused */
+						if (activeCall[5]) {
+							activeCall[5].resume = true;
+						}
+					}
+				});
+				/* Resume timers on any currently delayed calls */
+				$.each(Velocity.State.delayedElements, function (k, element) {
+					if (!element) {
+						return;
+					}
+					resumeDelayOnElement(element, currentTime);
+				});
+			}
+		};
+
+		/* Retrieve the appropriate scroll anchor and property name for the browser: https://developer.mozilla.org/en-US/docs/Web/API/Window.scrollY */
+		if (window.pageYOffset !== undefined) {
+			Velocity.State.scrollAnchor = window;
+			Velocity.State.scrollPropertyLeft = "pageXOffset";
+			Velocity.State.scrollPropertyTop = "pageYOffset";
+		} else {
+			Velocity.State.scrollAnchor = document.documentElement || document.body.parentNode || document.body;
+			Velocity.State.scrollPropertyLeft = "scrollLeft";
+			Velocity.State.scrollPropertyTop = "scrollTop";
+		}
+
+		/* Shorthand alias for jQuery's $.data() utility. */
+		function Data(element) {
+			/* Hardcode a reference to the plugin name. */
+			var response = $.data(element, "velocity");
+
+			/* jQuery <=1.4.2 returns null instead of undefined when no match is found. We normalize this behavior. */
+			return response === null ? undefined : response;
+		}
+
+		/**************
+   Delay Timer
+   **************/
+
+		function pauseDelayOnElement(element, currentTime) {
+			/* Check for any delay timers, and pause the set timeouts (while preserving time data)
+    to be resumed when the "resume" command is issued */
+			var data = Data(element);
+			if (data && data.delayTimer && !data.delayPaused) {
+				data.delayRemaining = data.delay - currentTime + data.delayBegin;
+				data.delayPaused = true;
+				clearTimeout(data.delayTimer.setTimeout);
+			}
+		}
+
+		function resumeDelayOnElement(element, currentTime) {
+			/* Check for any paused timers and resume */
+			var data = Data(element);
+			if (data && data.delayTimer && data.delayPaused) {
+				/* If the element was mid-delay, re initiate the timeout with the remaining delay */
+				data.delayPaused = false;
+				data.delayTimer.setTimeout = setTimeout(data.delayTimer.next, data.delayRemaining);
+			}
+		}
+
+		/**************
+   Easing
+   **************/
+
+		/* Step easing generator. */
+		function generateStep(steps) {
+			return function (p) {
+				return Math.round(p * steps) * (1 / steps);
+			};
+		}
+
+		/* Bezier curve function generator. Copyright Gaetan Renaudeau. MIT License: http://en.wikipedia.org/wiki/MIT_License */
+		function generateBezier(mX1, mY1, mX2, mY2) {
+			var NEWTON_ITERATIONS = 4,
+			    NEWTON_MIN_SLOPE = 0.001,
+			    SUBDIVISION_PRECISION = 0.0000001,
+			    SUBDIVISION_MAX_ITERATIONS = 10,
+			    kSplineTableSize = 11,
+			    kSampleStepSize = 1.0 / (kSplineTableSize - 1.0),
+			    float32ArraySupported = ("Float32Array" in window);
+
+			/* Must contain four arguments. */
+			if (arguments.length !== 4) {
+				return false;
+			}
+
+			/* Arguments must be numbers. */
+			for (var i = 0; i < 4; ++i) {
+				if (typeof arguments[i] !== "number" || isNaN(arguments[i]) || !isFinite(arguments[i])) {
+					return false;
+				}
+			}
+
+			/* X values must be in the [0, 1] range. */
+			mX1 = Math.min(mX1, 1);
+			mX2 = Math.min(mX2, 1);
+			mX1 = Math.max(mX1, 0);
+			mX2 = Math.max(mX2, 0);
+
+			var mSampleValues = float32ArraySupported ? new Float32Array(kSplineTableSize) : new Array(kSplineTableSize);
+
+			function A(aA1, aA2) {
+				return 1.0 - 3.0 * aA2 + 3.0 * aA1;
+			}
+			function B(aA1, aA2) {
+				return 3.0 * aA2 - 6.0 * aA1;
+			}
+			function C(aA1) {
+				return 3.0 * aA1;
+			}
+
+			function calcBezier(aT, aA1, aA2) {
+				return ((A(aA1, aA2) * aT + B(aA1, aA2)) * aT + C(aA1)) * aT;
+			}
+
+			function getSlope(aT, aA1, aA2) {
+				return 3.0 * A(aA1, aA2) * aT * aT + 2.0 * B(aA1, aA2) * aT + C(aA1);
+			}
+
+			function newtonRaphsonIterate(aX, aGuessT) {
+				for (var i = 0; i < NEWTON_ITERATIONS; ++i) {
+					var currentSlope = getSlope(aGuessT, mX1, mX2);
+
+					if (currentSlope === 0.0) {
+						return aGuessT;
+					}
+
+					var currentX = calcBezier(aGuessT, mX1, mX2) - aX;
+					aGuessT -= currentX / currentSlope;
+				}
+
+				return aGuessT;
+			}
+
+			function calcSampleValues() {
+				for (var i = 0; i < kSplineTableSize; ++i) {
+					mSampleValues[i] = calcBezier(i * kSampleStepSize, mX1, mX2);
+				}
+			}
+
+			function binarySubdivide(aX, aA, aB) {
+				var currentX,
+				    currentT,
+				    i = 0;
+
+				do {
+					currentT = aA + (aB - aA) / 2.0;
+					currentX = calcBezier(currentT, mX1, mX2) - aX;
+					if (currentX > 0.0) {
+						aB = currentT;
+					} else {
+						aA = currentT;
+					}
+				} while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
+
+				return currentT;
+			}
+
+			function getTForX(aX) {
+				var intervalStart = 0.0,
+				    currentSample = 1,
+				    lastSample = kSplineTableSize - 1;
+
+				for (; currentSample !== lastSample && mSampleValues[currentSample] <= aX; ++currentSample) {
+					intervalStart += kSampleStepSize;
+				}
+
+				--currentSample;
+
+				var dist = (aX - mSampleValues[currentSample]) / (mSampleValues[currentSample + 1] - mSampleValues[currentSample]),
+				    guessForT = intervalStart + dist * kSampleStepSize,
+				    initialSlope = getSlope(guessForT, mX1, mX2);
+
+				if (initialSlope >= NEWTON_MIN_SLOPE) {
+					return newtonRaphsonIterate(aX, guessForT);
+				} else if (initialSlope === 0.0) {
+					return guessForT;
+				} else {
+					return binarySubdivide(aX, intervalStart, intervalStart + kSampleStepSize);
+				}
+			}
+
+			var _precomputed = false;
+
+			function precompute() {
+				_precomputed = true;
+				if (mX1 !== mY1 || mX2 !== mY2) {
+					calcSampleValues();
+				}
+			}
+
+			var f = function f(aX) {
+				if (!_precomputed) {
+					precompute();
+				}
+				if (mX1 === mY1 && mX2 === mY2) {
+					return aX;
+				}
+				if (aX === 0) {
+					return 0;
+				}
+				if (aX === 1) {
+					return 1;
+				}
+
+				return calcBezier(getTForX(aX), mY1, mY2);
+			};
+
+			f.getControlPoints = function () {
+				return [{ x: mX1, y: mY1 }, { x: mX2, y: mY2 }];
+			};
+
+			var str = "generateBezier(" + [mX1, mY1, mX2, mY2] + ")";
+			f.toString = function () {
+				return str;
+			};
+
+			return f;
+		}
+
+		/* Runge-Kutta spring physics function generator. Adapted from Framer.js, copyright Koen Bok. MIT License: http://en.wikipedia.org/wiki/MIT_License */
+		/* Given a tension, friction, and duration, a simulation at 60FPS will first run without a defined duration in order to calculate the full path. A second pass
+   then adjusts the time delta -- using the relation between actual time and duration -- to calculate the path for the duration-constrained animation. */
+		var generateSpringRK4 = (function () {
+			function springAccelerationForState(state) {
+				return -state.tension * state.x - state.friction * state.v;
+			}
+
+			function springEvaluateStateWithDerivative(initialState, dt, derivative) {
+				var state = {
+					x: initialState.x + derivative.dx * dt,
+					v: initialState.v + derivative.dv * dt,
+					tension: initialState.tension,
+					friction: initialState.friction
+				};
+
+				return { dx: state.v, dv: springAccelerationForState(state) };
+			}
+
+			function springIntegrateState(state, dt) {
+				var a = {
+					dx: state.v,
+					dv: springAccelerationForState(state)
+				},
+				    b = springEvaluateStateWithDerivative(state, dt * 0.5, a),
+				    c = springEvaluateStateWithDerivative(state, dt * 0.5, b),
+				    d = springEvaluateStateWithDerivative(state, dt, c),
+				    dxdt = 1.0 / 6.0 * (a.dx + 2.0 * (b.dx + c.dx) + d.dx),
+				    dvdt = 1.0 / 6.0 * (a.dv + 2.0 * (b.dv + c.dv) + d.dv);
+
+				state.x = state.x + dxdt * dt;
+				state.v = state.v + dvdt * dt;
+
+				return state;
+			}
+
+			return function springRK4Factory(tension, friction, duration) {
+
+				var initState = {
+					x: -1,
+					v: 0,
+					tension: null,
+					friction: null
+				},
+				    path = [0],
+				    time_lapsed = 0,
+				    tolerance = 1 / 10000,
+				    DT = 16 / 1000,
+				    have_duration,
+				    dt,
+				    last_state;
+
+				tension = parseFloat(tension) || 500;
+				friction = parseFloat(friction) || 20;
+				duration = duration || null;
+
+				initState.tension = tension;
+				initState.friction = friction;
+
+				have_duration = duration !== null;
+
+				/* Calculate the actual time it takes for this animation to complete with the provided conditions. */
+				if (have_duration) {
+					/* Run the simulation without a duration. */
+					time_lapsed = springRK4Factory(tension, friction);
+					/* Compute the adjusted time delta. */
+					dt = time_lapsed / duration * DT;
+				} else {
+					dt = DT;
+				}
+
+				while (true) {
+					/* Next/step function .*/
+					last_state = springIntegrateState(last_state || initState, dt);
+					/* Store the position. */
+					path.push(1 + last_state.x);
+					time_lapsed += 16;
+					/* If the change threshold is reached, break. */
+					if (!(Math.abs(last_state.x) > tolerance && Math.abs(last_state.v) > tolerance)) {
+						break;
+					}
+				}
+
+				/* If duration is not defined, return the actual time required for completing this animation. Otherwise, return a closure that holds the
+     computed path and returns a snapshot of the position according to a given percentComplete. */
+				return !have_duration ? time_lapsed : function (percentComplete) {
+					return path[percentComplete * (path.length - 1) | 0];
+				};
+			};
+		})();
+
+		/* jQuery easings. */
+		Velocity.Easings = {
+			linear: function linear(p) {
+				return p;
+			},
+			swing: function swing(p) {
+				return 0.5 - Math.cos(p * Math.PI) / 2;
+			},
+			/* Bonus "spring" easing, which is a less exaggerated version of easeInOutElastic. */
+			spring: function spring(p) {
+				return 1 - Math.cos(p * 4.5 * Math.PI) * Math.exp(-p * 6);
+			}
+		};
+
+		/* CSS3 and Robert Penner easings. */
+		$.each([["ease", [0.25, 0.1, 0.25, 1.0]], ["ease-in", [0.42, 0.0, 1.00, 1.0]], ["ease-out", [0.00, 0.0, 0.58, 1.0]], ["ease-in-out", [0.42, 0.0, 0.58, 1.0]], ["easeInSine", [0.47, 0, 0.745, 0.715]], ["easeOutSine", [0.39, 0.575, 0.565, 1]], ["easeInOutSine", [0.445, 0.05, 0.55, 0.95]], ["easeInQuad", [0.55, 0.085, 0.68, 0.53]], ["easeOutQuad", [0.25, 0.46, 0.45, 0.94]], ["easeInOutQuad", [0.455, 0.03, 0.515, 0.955]], ["easeInCubic", [0.55, 0.055, 0.675, 0.19]], ["easeOutCubic", [0.215, 0.61, 0.355, 1]], ["easeInOutCubic", [0.645, 0.045, 0.355, 1]], ["easeInQuart", [0.895, 0.03, 0.685, 0.22]], ["easeOutQuart", [0.165, 0.84, 0.44, 1]], ["easeInOutQuart", [0.77, 0, 0.175, 1]], ["easeInQuint", [0.755, 0.05, 0.855, 0.06]], ["easeOutQuint", [0.23, 1, 0.32, 1]], ["easeInOutQuint", [0.86, 0, 0.07, 1]], ["easeInExpo", [0.95, 0.05, 0.795, 0.035]], ["easeOutExpo", [0.19, 1, 0.22, 1]], ["easeInOutExpo", [1, 0, 0, 1]], ["easeInCirc", [0.6, 0.04, 0.98, 0.335]], ["easeOutCirc", [0.075, 0.82, 0.165, 1]], ["easeInOutCirc", [0.785, 0.135, 0.15, 0.86]]], function (i, easingArray) {
+			Velocity.Easings[easingArray[0]] = generateBezier.apply(null, easingArray[1]);
+		});
+
+		/* Determine the appropriate easing type given an easing input. */
+		function getEasing(value, duration) {
+			var easing = value;
+
+			/* The easing option can either be a string that references a pre-registered easing,
+    or it can be a two-/four-item array of integers to be converted into a bezier/spring function. */
+			if (Type.isString(value)) {
+				/* Ensure that the easing has been assigned to jQuery's Velocity.Easings object. */
+				if (!Velocity.Easings[value]) {
+					easing = false;
+				}
+			} else if (Type.isArray(value) && value.length === 1) {
+				easing = generateStep.apply(null, value);
+			} else if (Type.isArray(value) && value.length === 2) {
+				/* springRK4 must be passed the animation's duration. */
+				/* Note: If the springRK4 array contains non-numbers, generateSpringRK4() returns an easing
+     function generated with default tension and friction values. */
+				easing = generateSpringRK4.apply(null, value.concat([duration]));
+			} else if (Type.isArray(value) && value.length === 4) {
+				/* Note: If the bezier array contains non-numbers, generateBezier() returns false. */
+				easing = generateBezier.apply(null, value);
+			} else {
+				easing = false;
+			}
+
+			/* Revert to the Velocity-wide default easing type, or fall back to "swing" (which is also jQuery's default)
+    if the Velocity-wide default has been incorrectly modified. */
+			if (easing === false) {
+				if (Velocity.Easings[Velocity.defaults.easing]) {
+					easing = Velocity.defaults.easing;
+				} else {
+					easing = EASING_DEFAULT;
+				}
+			}
+
+			return easing;
+		}
+
+		/*****************
+   CSS Stack
+   *****************/
+
+		/* The CSS object is a highly condensed and performant CSS stack that fully replaces jQuery's.
+   It handles the validation, getting, and setting of both standard CSS properties and CSS property hooks. */
+		/* Note: A "CSS" shorthand is aliased so that our code is easier to read. */
+		var CSS = Velocity.CSS = {
+			/*************
+    RegEx
+    *************/
+
+			RegEx: {
+				isHex: /^#([A-f\d]{3}){1,2}$/i,
+				/* Unwrap a property value's surrounding text, e.g. "rgba(4, 3, 2, 1)" ==> "4, 3, 2, 1" and "rect(4px 3px 2px 1px)" ==> "4px 3px 2px 1px". */
+				valueUnwrap: /^[A-z]+\((.*)\)$/i,
+				wrappedValueAlreadyExtracted: /[0-9.]+ [0-9.]+ [0-9.]+( [0-9.]+)?/,
+				/* Split a multi-value property into an array of subvalues, e.g. "rgba(4, 3, 2, 1) 4px 3px 2px 1px" ==> [ "rgba(4, 3, 2, 1)", "4px", "3px", "2px", "1px" ]. */
+				valueSplit: /([A-z]+\(.+\))|(([A-z0-9#-.]+?)(?=\s|$))/ig
+			},
+			/************
+    Lists
+    ************/
+
+			Lists: {
+				colors: ["fill", "stroke", "stopColor", "color", "backgroundColor", "borderColor", "borderTopColor", "borderRightColor", "borderBottomColor", "borderLeftColor", "outlineColor"],
+				transformsBase: ["translateX", "translateY", "scale", "scaleX", "scaleY", "skewX", "skewY", "rotateZ"],
+				transforms3D: ["transformPerspective", "translateZ", "scaleZ", "rotateX", "rotateY"],
+				units: ["%", // relative
+				"em", "ex", "ch", "rem", // font relative
+				"vw", "vh", "vmin", "vmax", // viewport relative
+				"cm", "mm", "Q", "in", "pc", "pt", "px", // absolute lengths
+				"deg", "grad", "rad", "turn", // angles
+				"s", "ms" // time
+				],
+				colorNames: {
+					"aliceblue": "240,248,255",
+					"antiquewhite": "250,235,215",
+					"aquamarine": "127,255,212",
+					"aqua": "0,255,255",
+					"azure": "240,255,255",
+					"beige": "245,245,220",
+					"bisque": "255,228,196",
+					"black": "0,0,0",
+					"blanchedalmond": "255,235,205",
+					"blueviolet": "138,43,226",
+					"blue": "0,0,255",
+					"brown": "165,42,42",
+					"burlywood": "222,184,135",
+					"cadetblue": "95,158,160",
+					"chartreuse": "127,255,0",
+					"chocolate": "210,105,30",
+					"coral": "255,127,80",
+					"cornflowerblue": "100,149,237",
+					"cornsilk": "255,248,220",
+					"crimson": "220,20,60",
+					"cyan": "0,255,255",
+					"darkblue": "0,0,139",
+					"darkcyan": "0,139,139",
+					"darkgoldenrod": "184,134,11",
+					"darkgray": "169,169,169",
+					"darkgrey": "169,169,169",
+					"darkgreen": "0,100,0",
+					"darkkhaki": "189,183,107",
+					"darkmagenta": "139,0,139",
+					"darkolivegreen": "85,107,47",
+					"darkorange": "255,140,0",
+					"darkorchid": "153,50,204",
+					"darkred": "139,0,0",
+					"darksalmon": "233,150,122",
+					"darkseagreen": "143,188,143",
+					"darkslateblue": "72,61,139",
+					"darkslategray": "47,79,79",
+					"darkturquoise": "0,206,209",
+					"darkviolet": "148,0,211",
+					"deeppink": "255,20,147",
+					"deepskyblue": "0,191,255",
+					"dimgray": "105,105,105",
+					"dimgrey": "105,105,105",
+					"dodgerblue": "30,144,255",
+					"firebrick": "178,34,34",
+					"floralwhite": "255,250,240",
+					"forestgreen": "34,139,34",
+					"fuchsia": "255,0,255",
+					"gainsboro": "220,220,220",
+					"ghostwhite": "248,248,255",
+					"gold": "255,215,0",
+					"goldenrod": "218,165,32",
+					"gray": "128,128,128",
+					"grey": "128,128,128",
+					"greenyellow": "173,255,47",
+					"green": "0,128,0",
+					"honeydew": "240,255,240",
+					"hotpink": "255,105,180",
+					"indianred": "205,92,92",
+					"indigo": "75,0,130",
+					"ivory": "255,255,240",
+					"khaki": "240,230,140",
+					"lavenderblush": "255,240,245",
+					"lavender": "230,230,250",
+					"lawngreen": "124,252,0",
+					"lemonchiffon": "255,250,205",
+					"lightblue": "173,216,230",
+					"lightcoral": "240,128,128",
+					"lightcyan": "224,255,255",
+					"lightgoldenrodyellow": "250,250,210",
+					"lightgray": "211,211,211",
+					"lightgrey": "211,211,211",
+					"lightgreen": "144,238,144",
+					"lightpink": "255,182,193",
+					"lightsalmon": "255,160,122",
+					"lightseagreen": "32,178,170",
+					"lightskyblue": "135,206,250",
+					"lightslategray": "119,136,153",
+					"lightsteelblue": "176,196,222",
+					"lightyellow": "255,255,224",
+					"limegreen": "50,205,50",
+					"lime": "0,255,0",
+					"linen": "250,240,230",
+					"magenta": "255,0,255",
+					"maroon": "128,0,0",
+					"mediumaquamarine": "102,205,170",
+					"mediumblue": "0,0,205",
+					"mediumorchid": "186,85,211",
+					"mediumpurple": "147,112,219",
+					"mediumseagreen": "60,179,113",
+					"mediumslateblue": "123,104,238",
+					"mediumspringgreen": "0,250,154",
+					"mediumturquoise": "72,209,204",
+					"mediumvioletred": "199,21,133",
+					"midnightblue": "25,25,112",
+					"mintcream": "245,255,250",
+					"mistyrose": "255,228,225",
+					"moccasin": "255,228,181",
+					"navajowhite": "255,222,173",
+					"navy": "0,0,128",
+					"oldlace": "253,245,230",
+					"olivedrab": "107,142,35",
+					"olive": "128,128,0",
+					"orangered": "255,69,0",
+					"orange": "255,165,0",
+					"orchid": "218,112,214",
+					"palegoldenrod": "238,232,170",
+					"palegreen": "152,251,152",
+					"paleturquoise": "175,238,238",
+					"palevioletred": "219,112,147",
+					"papayawhip": "255,239,213",
+					"peachpuff": "255,218,185",
+					"peru": "205,133,63",
+					"pink": "255,192,203",
+					"plum": "221,160,221",
+					"powderblue": "176,224,230",
+					"purple": "128,0,128",
+					"red": "255,0,0",
+					"rosybrown": "188,143,143",
+					"royalblue": "65,105,225",
+					"saddlebrown": "139,69,19",
+					"salmon": "250,128,114",
+					"sandybrown": "244,164,96",
+					"seagreen": "46,139,87",
+					"seashell": "255,245,238",
+					"sienna": "160,82,45",
+					"silver": "192,192,192",
+					"skyblue": "135,206,235",
+					"slateblue": "106,90,205",
+					"slategray": "112,128,144",
+					"snow": "255,250,250",
+					"springgreen": "0,255,127",
+					"steelblue": "70,130,180",
+					"tan": "210,180,140",
+					"teal": "0,128,128",
+					"thistle": "216,191,216",
+					"tomato": "255,99,71",
+					"turquoise": "64,224,208",
+					"violet": "238,130,238",
+					"wheat": "245,222,179",
+					"whitesmoke": "245,245,245",
+					"white": "255,255,255",
+					"yellowgreen": "154,205,50",
+					"yellow": "255,255,0"
+				}
+			},
+			/************
+    Hooks
+    ************/
+
+			/* Hooks allow a subproperty (e.g. "boxShadowBlur") of a compound-value CSS property
+    (e.g. "boxShadow: X Y Blur Spread Color") to be animated as if it were a discrete property. */
+			/* Note: Beyond enabling fine-grained property animation, hooking is necessary since Velocity only
+    tweens properties with single numeric values; unlike CSS transitions, Velocity does not interpolate compound-values. */
+			Hooks: {
+				/********************
+     Registration
+     ********************/
+
+				/* Templates are a concise way of indicating which subproperties must be individually registered for each compound-value CSS property. */
+				/* Each template consists of the compound-value's base name, its constituent subproperty names, and those subproperties' default values. */
+				templates: {
+					"textShadow": ["Color X Y Blur", "black 0px 0px 0px"],
+					"boxShadow": ["Color X Y Blur Spread", "black 0px 0px 0px 0px"],
+					"clip": ["Top Right Bottom Left", "0px 0px 0px 0px"],
+					"backgroundPosition": ["X Y", "0% 0%"],
+					"transformOrigin": ["X Y Z", "50% 50% 0px"],
+					"perspectiveOrigin": ["X Y", "50% 50%"]
+				},
+				/* A "registered" hook is one that has been converted from its template form into a live,
+     tweenable property. It contains data to associate it with its root property. */
+				registered: {
+					/* Note: A registered hook looks like this ==> textShadowBlur: [ "textShadow", 3 ],
+      which consists of the subproperty's name, the associated root property's name,
+      and the subproperty's position in the root's value. */
+				},
+				/* Convert the templates into individual hooks then append them to the registered object above. */
+				register: function register() {
+					/* Color hooks registration: Colors are defaulted to white -- as opposed to black -- since colors that are
+      currently set to "transparent" default to their respective template below when color-animated,
+      and white is typically a closer match to transparent than black is. An exception is made for text ("color"),
+      which is almost always set closer to black than white. */
+					for (var i = 0; i < CSS.Lists.colors.length; i++) {
+						var rgbComponents = CSS.Lists.colors[i] === "color" ? "0 0 0 1" : "255 255 255 1";
+						CSS.Hooks.templates[CSS.Lists.colors[i]] = ["Red Green Blue Alpha", rgbComponents];
+					}
+
+					var rootProperty, hookTemplate, hookNames;
+
+					/* In IE, color values inside compound-value properties are positioned at the end the value instead of at the beginning.
+      Thus, we re-arrange the templates accordingly. */
+					if (IE) {
+						for (rootProperty in CSS.Hooks.templates) {
+							if (!CSS.Hooks.templates.hasOwnProperty(rootProperty)) {
+								continue;
+							}
+							hookTemplate = CSS.Hooks.templates[rootProperty];
+							hookNames = hookTemplate[0].split(" ");
+
+							var defaultValues = hookTemplate[1].match(CSS.RegEx.valueSplit);
+
+							if (hookNames[0] === "Color") {
+								/* Reposition both the hook's name and its default value to the end of their respective strings. */
+								hookNames.push(hookNames.shift());
+								defaultValues.push(defaultValues.shift());
+
+								/* Replace the existing template for the hook's root property. */
+								CSS.Hooks.templates[rootProperty] = [hookNames.join(" "), defaultValues.join(" ")];
+							}
+						}
+					}
+
+					/* Hook registration. */
+					for (rootProperty in CSS.Hooks.templates) {
+						if (!CSS.Hooks.templates.hasOwnProperty(rootProperty)) {
+							continue;
+						}
+						hookTemplate = CSS.Hooks.templates[rootProperty];
+						hookNames = hookTemplate[0].split(" ");
+
+						for (var j in hookNames) {
+							if (!hookNames.hasOwnProperty(j)) {
+								continue;
+							}
+							var fullHookName = rootProperty + hookNames[j],
+							    hookPosition = j;
+
+							/* For each hook, register its full name (e.g. textShadowBlur) with its root property (e.g. textShadow)
+        and the hook's position in its template's default value string. */
+							CSS.Hooks.registered[fullHookName] = [rootProperty, hookPosition];
+						}
+					}
+				},
+				/*****************************
+     Injection and Extraction
+     *****************************/
+
+				/* Look up the root property associated with the hook (e.g. return "textShadow" for "textShadowBlur"). */
+				/* Since a hook cannot be set directly (the browser won't recognize it), style updating for hooks is routed through the hook's root property. */
+				getRoot: function getRoot(property) {
+					var hookData = CSS.Hooks.registered[property];
+
+					if (hookData) {
+						return hookData[0];
+					} else {
+						/* If there was no hook match, return the property name untouched. */
+						return property;
+					}
+				},
+				getUnit: function getUnit(str, start) {
+					var unit = (str.substr(start || 0, 5).match(/^[a-z%]+/) || [])[0] || "";
+
+					if (unit && _inArray(CSS.Lists.units, unit)) {
+						return unit;
+					}
+					return "";
+				},
+				fixColors: function fixColors(str) {
+					return str.replace(/(rgba?\(\s*)?(\b[a-z]+\b)/g, function ($0, $1, $2) {
+						if (CSS.Lists.colorNames.hasOwnProperty($2)) {
+							return ($1 ? $1 : "rgba(") + CSS.Lists.colorNames[$2] + ($1 ? "" : ",1)");
+						}
+						return $1 + $2;
+					});
+				},
+				/* Convert any rootPropertyValue, null or otherwise, into a space-delimited list of hook values so that
+     the targeted hook can be injected or extracted at its standard position. */
+				cleanRootPropertyValue: function cleanRootPropertyValue(rootProperty, rootPropertyValue) {
+					/* If the rootPropertyValue is wrapped with "rgb()", "clip()", etc., remove the wrapping to normalize the value before manipulation. */
+					if (CSS.RegEx.valueUnwrap.test(rootPropertyValue)) {
+						rootPropertyValue = rootPropertyValue.match(CSS.RegEx.valueUnwrap)[1];
+					}
+
+					/* If rootPropertyValue is a CSS null-value (from which there's inherently no hook value to extract),
+      default to the root's default value as defined in CSS.Hooks.templates. */
+					/* Note: CSS null-values include "none", "auto", and "transparent". They must be converted into their
+      zero-values (e.g. textShadow: "none" ==> textShadow: "0px 0px 0px black") for hook manipulation to proceed. */
+					if (CSS.Values.isCSSNullValue(rootPropertyValue)) {
+						rootPropertyValue = CSS.Hooks.templates[rootProperty][1];
+					}
+
+					return rootPropertyValue;
+				},
+				/* Extracted the hook's value from its root property's value. This is used to get the starting value of an animating hook. */
+				extractValue: function extractValue(fullHookName, rootPropertyValue) {
+					var hookData = CSS.Hooks.registered[fullHookName];
+
+					if (hookData) {
+						var hookRoot = hookData[0],
+						    hookPosition = hookData[1];
+
+						rootPropertyValue = CSS.Hooks.cleanRootPropertyValue(hookRoot, rootPropertyValue);
+
+						/* Split rootPropertyValue into its constituent hook values then grab the desired hook at its standard position. */
+						return rootPropertyValue.toString().match(CSS.RegEx.valueSplit)[hookPosition];
+					} else {
+						/* If the provided fullHookName isn't a registered hook, return the rootPropertyValue that was passed in. */
+						return rootPropertyValue;
+					}
+				},
+				/* Inject the hook's value into its root property's value. This is used to piece back together the root property
+     once Velocity has updated one of its individually hooked values through tweening. */
+				injectValue: function injectValue(fullHookName, hookValue, rootPropertyValue) {
+					var hookData = CSS.Hooks.registered[fullHookName];
+
+					if (hookData) {
+						var hookRoot = hookData[0],
+						    hookPosition = hookData[1],
+						    rootPropertyValueParts,
+						    rootPropertyValueUpdated;
+
+						rootPropertyValue = CSS.Hooks.cleanRootPropertyValue(hookRoot, rootPropertyValue);
+
+						/* Split rootPropertyValue into its individual hook values, replace the targeted value with hookValue,
+       then reconstruct the rootPropertyValue string. */
+						rootPropertyValueParts = rootPropertyValue.toString().match(CSS.RegEx.valueSplit);
+						rootPropertyValueParts[hookPosition] = hookValue;
+						rootPropertyValueUpdated = rootPropertyValueParts.join(" ");
+
+						return rootPropertyValueUpdated;
+					} else {
+						/* If the provided fullHookName isn't a registered hook, return the rootPropertyValue that was passed in. */
+						return rootPropertyValue;
+					}
+				}
+			},
+			/*******************
+    Normalizations
+    *******************/
+
+			/* Normalizations standardize CSS property manipulation by pollyfilling browser-specific implementations (e.g. opacity)
+    and reformatting special properties (e.g. clip, rgba) to look like standard ones. */
+			Normalizations: {
+				/* Normalizations are passed a normalization target (either the property's name, its extracted value, or its injected value),
+     the targeted element (which may need to be queried), and the targeted property value. */
+				registered: {
+					clip: function clip(type, element, propertyValue) {
+						switch (type) {
+							case "name":
+								return "clip";
+							/* Clip needs to be unwrapped and stripped of its commas during extraction. */
+							case "extract":
+								var extracted;
+
+								/* If Velocity also extracted this value, skip extraction. */
+								if (CSS.RegEx.wrappedValueAlreadyExtracted.test(propertyValue)) {
+									extracted = propertyValue;
+								} else {
+									/* Remove the "rect()" wrapper. */
+									extracted = propertyValue.toString().match(CSS.RegEx.valueUnwrap);
+
+									/* Strip off commas. */
+									extracted = extracted ? extracted[1].replace(/,(\s+)?/g, " ") : propertyValue;
+								}
+
+								return extracted;
+							/* Clip needs to be re-wrapped during injection. */
+							case "inject":
+								return "rect(" + propertyValue + ")";
+						}
+					},
+					blur: function blur(type, element, propertyValue) {
+						switch (type) {
+							case "name":
+								return Velocity.State.isFirefox ? "filter" : "-webkit-filter";
+							case "extract":
+								var extracted = parseFloat(propertyValue);
+
+								/* If extracted is NaN, meaning the value isn't already extracted. */
+								if (!(extracted || extracted === 0)) {
+									var blurComponent = propertyValue.toString().match(/blur\(([0-9]+[A-z]+)\)/i);
+
+									/* If the filter string had a blur component, return just the blur value and unit type. */
+									if (blurComponent) {
+										extracted = blurComponent[1];
+										/* If the component doesn't exist, default blur to 0. */
+									} else {
+											extracted = 0;
+										}
+								}
+
+								return extracted;
+							/* Blur needs to be re-wrapped during injection. */
+							case "inject":
+								/* For the blur effect to be fully de-applied, it needs to be set to "none" instead of 0. */
+								if (!parseFloat(propertyValue)) {
+									return "none";
+								} else {
+									return "blur(" + propertyValue + ")";
+								}
+						}
+					},
+					/* <=IE8 do not support the standard opacity property. They use filter:alpha(opacity=INT) instead. */
+					opacity: function opacity(type, element, propertyValue) {
+						if (IE <= 8) {
+							switch (type) {
+								case "name":
+									return "filter";
+								case "extract":
+									/* <=IE8 return a "filter" value of "alpha(opacity=\d{1,3})".
+          Extract the value and convert it to a decimal value to match the standard CSS opacity property's formatting. */
+									var extracted = propertyValue.toString().match(/alpha\(opacity=(.*)\)/i);
+
+									if (extracted) {
+										/* Convert to decimal value. */
+										propertyValue = extracted[1] / 100;
+									} else {
+										/* When extracting opacity, default to 1 since a null value means opacity hasn't been set. */
+										propertyValue = 1;
+									}
+
+									return propertyValue;
+								case "inject":
+									/* Opacified elements are required to have their zoom property set to a non-zero value. */
+									element.style.zoom = 1;
+
+									/* Setting the filter property on elements with certain font property combinations can result in a
+          highly unappealing ultra-bolding effect. There's no way to remedy this throughout a tween, but dropping the
+          value altogether (when opacity hits 1) at leasts ensures that the glitch is gone post-tweening. */
+									if (parseFloat(propertyValue) >= 1) {
+										return "";
+									} else {
+										/* As per the filter property's spec, convert the decimal value to a whole number and wrap the value. */
+										return "alpha(opacity=" + parseInt(parseFloat(propertyValue) * 100, 10) + ")";
+									}
+							}
+							/* With all other browsers, normalization is not required; return the same values that were passed in. */
+						} else {
+								switch (type) {
+									case "name":
+										return "opacity";
+									case "extract":
+										return propertyValue;
+									case "inject":
+										return propertyValue;
+								}
+							}
+					}
+				},
+				/*****************************
+     Batched Registrations
+     *****************************/
+
+				/* Note: Batched normalizations extend the CSS.Normalizations.registered object. */
+				register: function register() {
+
+					/*****************
+      Transforms
+      *****************/
+
+					/* Transforms are the subproperties contained by the CSS "transform" property. Transforms must undergo normalization
+      so that they can be referenced in a properties map by their individual names. */
+					/* Note: When transforms are "set", they are actually assigned to a per-element transformCache. When all transform
+      setting is complete complete, CSS.flushTransformCache() must be manually called to flush the values to the DOM.
+      Transform setting is batched in this way to improve performance: the transform style only needs to be updated
+      once when multiple transform subproperties are being animated simultaneously. */
+					/* Note: IE9 and Android Gingerbread have support for 2D -- but not 3D -- transforms. Since animating unsupported
+      transform properties results in the browser ignoring the *entire* transform string, we prevent these 3D values
+      from being normalized for these browsers so that tweening skips these properties altogether
+      (since it will ignore them as being unsupported by the browser.) */
+					if ((!IE || IE > 9) && !Velocity.State.isGingerbread) {
+						/* Note: Since the standalone CSS "perspective" property and the CSS transform "perspective" subproperty
+       share the same name, the latter is given a unique token within Velocity: "transformPerspective". */
+						CSS.Lists.transformsBase = CSS.Lists.transformsBase.concat(CSS.Lists.transforms3D);
+					}
+
+					for (var i = 0; i < CSS.Lists.transformsBase.length; i++) {
+						/* Wrap the dynamically generated normalization function in a new scope so that transformName's value is
+       paired with its respective function. (Otherwise, all functions would take the final for loop's transformName.) */
+						(function () {
+							var transformName = CSS.Lists.transformsBase[i];
+
+							CSS.Normalizations.registered[transformName] = function (type, element, propertyValue) {
+								switch (type) {
+									/* The normalized property name is the parent "transform" property -- the property that is actually set in CSS. */
+									case "name":
+										return "transform";
+									/* Transform values are cached onto a per-element transformCache object. */
+									case "extract":
+										/* If this transform has yet to be assigned a value, return its null value. */
+										if (Data(element) === undefined || Data(element).transformCache[transformName] === undefined) {
+											/* Scale CSS.Lists.transformsBase default to 1 whereas all other transform properties default to 0. */
+											return (/^scale/i.test(transformName) ? 1 : 0
+											);
+											/* When transform values are set, they are wrapped in parentheses as per the CSS spec.
+            Thus, when extracting their values (for tween calculations), we strip off the parentheses. */
+										}
+										return Data(element).transformCache[transformName].replace(/[()]/g, "");
+									case "inject":
+										var invalid = false;
+
+										/* If an individual transform property contains an unsupported unit type, the browser ignores the *entire* transform property.
+           Thus, protect users from themselves by skipping setting for transform values supplied with invalid unit types. */
+										/* Switch on the base transform type; ignore the axis by removing the last letter from the transform's name. */
+										switch (transformName.substr(0, transformName.length - 1)) {
+											/* Whitelist unit types for each transform. */
+											case "translate":
+												invalid = !/(%|px|em|rem|vw|vh|\d)$/i.test(propertyValue);
+												break;
+											/* Since an axis-free "scale" property is supported as well, a little hack is used here to detect it by chopping off its last letter. */
+											case "scal":
+											case "scale":
+												/* Chrome on Android has a bug in which scaled elements blur if their initial scale
+             value is below 1 (which can happen with forcefeeding). Thus, we detect a yet-unset scale property
+             and ensure that its first value is always 1. More info: http://stackoverflow.com/questions/10417890/css3-animations-with-transform-causes-blurred-elements-on-webkit/10417962#10417962 */
+												if (Velocity.State.isAndroid && Data(element).transformCache[transformName] === undefined && propertyValue < 1) {
+													propertyValue = 1;
+												}
+
+												invalid = !/(\d)$/i.test(propertyValue);
+												break;
+											case "skew":
+												invalid = !/(deg|\d)$/i.test(propertyValue);
+												break;
+											case "rotate":
+												invalid = !/(deg|\d)$/i.test(propertyValue);
+												break;
+										}
+
+										if (!invalid) {
+											/* As per the CSS spec, wrap the value in parentheses. */
+											Data(element).transformCache[transformName] = "(" + propertyValue + ")";
+										}
+
+										/* Although the value is set on the transformCache object, return the newly-updated value for the calling code to process as normal. */
+										return Data(element).transformCache[transformName];
+								}
+							};
+						})();
+					}
+
+					/*************
+      Colors
+      *************/
+
+					/* Since Velocity only animates a single numeric value per property, color animation is achieved by hooking the individual RGBA components of CSS color properties.
+      Accordingly, color values must be normalized (e.g. "#ff0000", "red", and "rgb(255, 0, 0)" ==> "255 0 0 1") so that their components can be injected/extracted by CSS.Hooks logic. */
+					for (var j = 0; j < CSS.Lists.colors.length; j++) {
+						/* Wrap the dynamically generated normalization function in a new scope so that colorName's value is paired with its respective function.
+       (Otherwise, all functions would take the final for loop's colorName.) */
+						(function () {
+							var colorName = CSS.Lists.colors[j];
+
+							/* Note: In IE<=8, which support rgb but not rgba, color properties are reverted to rgb by stripping off the alpha component. */
+							CSS.Normalizations.registered[colorName] = function (type, element, propertyValue) {
+								switch (type) {
+									case "name":
+										return colorName;
+									/* Convert all color values into the rgb format. (Old IE can return hex values and color names instead of rgb/rgba.) */
+									case "extract":
+										var extracted;
+
+										/* If the color is already in its hookable form (e.g. "255 255 255 1") due to having been previously extracted, skip extraction. */
+										if (CSS.RegEx.wrappedValueAlreadyExtracted.test(propertyValue)) {
+											extracted = propertyValue;
+										} else {
+											var converted,
+											    colorNames = {
+												black: "rgb(0, 0, 0)",
+												blue: "rgb(0, 0, 255)",
+												gray: "rgb(128, 128, 128)",
+												green: "rgb(0, 128, 0)",
+												red: "rgb(255, 0, 0)",
+												white: "rgb(255, 255, 255)"
+											};
+
+											/* Convert color names to rgb. */
+											if (/^[A-z]+$/i.test(propertyValue)) {
+												if (colorNames[propertyValue] !== undefined) {
+													converted = colorNames[propertyValue];
+												} else {
+													/* If an unmatched color name is provided, default to black. */
+													converted = colorNames.black;
+												}
+												/* Convert hex values to rgb. */
+											} else if (CSS.RegEx.isHex.test(propertyValue)) {
+													converted = "rgb(" + CSS.Values.hexToRgb(propertyValue).join(" ") + ")";
+													/* If the provided color doesn't match any of the accepted color formats, default to black. */
+												} else if (!/^rgba?\(/i.test(propertyValue)) {
+														converted = colorNames.black;
+													}
+
+											/* Remove the surrounding "rgb/rgba()" string then replace commas with spaces and strip
+            repeated spaces (in case the value included spaces to begin with). */
+											extracted = (converted || propertyValue).toString().match(CSS.RegEx.valueUnwrap)[1].replace(/,(\s+)?/g, " ");
+										}
+
+										/* So long as this isn't <=IE8, add a fourth (alpha) component if it's missing and default it to 1 (visible). */
+										if ((!IE || IE > 8) && extracted.split(" ").length === 3) {
+											extracted += " 1";
+										}
+
+										return extracted;
+									case "inject":
+										/* If we have a pattern then it might already have the right values */
+										if (/^rgb/.test(propertyValue)) {
+											return propertyValue;
+										}
+
+										/* If this is IE<=8 and an alpha component exists, strip it off. */
+										if (IE <= 8) {
+											if (propertyValue.split(" ").length === 4) {
+												propertyValue = propertyValue.split(/\s+/).slice(0, 3).join(" ");
+											}
+											/* Otherwise, add a fourth (alpha) component if it's missing and default it to 1 (visible). */
+										} else if (propertyValue.split(" ").length === 3) {
+												propertyValue += " 1";
+											}
+
+										/* Re-insert the browser-appropriate wrapper("rgb/rgba()"), insert commas, and strip off decimal units
+           on all values but the fourth (R, G, and B only accept whole numbers). */
+										return (IE <= 8 ? "rgb" : "rgba") + "(" + propertyValue.replace(/\s+/g, ",").replace(/\.(\d)+(?=,)/g, "") + ")";
+								}
+							};
+						})();
+					}
+
+					/**************
+      Dimensions
+      **************/
+					function augmentDimension(name, element, wantInner) {
+						var isBorderBox = CSS.getPropertyValue(element, "boxSizing").toString().toLowerCase() === "border-box";
+
+						if (isBorderBox === (wantInner || false)) {
+							/* in box-sizing mode, the CSS width / height accessors already give the outerWidth / outerHeight. */
+							var i,
+							    value,
+							    augment = 0,
+							    sides = name === "width" ? ["Left", "Right"] : ["Top", "Bottom"],
+							    fields = ["padding" + sides[0], "padding" + sides[1], "border" + sides[0] + "Width", "border" + sides[1] + "Width"];
+
+							for (i = 0; i < fields.length; i++) {
+								value = parseFloat(CSS.getPropertyValue(element, fields[i]));
+								if (!isNaN(value)) {
+									augment += value;
+								}
+							}
+							return wantInner ? -augment : augment;
+						}
+						return 0;
+					}
+					function getDimension(name, wantInner) {
+						return function (type, element, propertyValue) {
+							switch (type) {
+								case "name":
+									return name;
+								case "extract":
+									return parseFloat(propertyValue) + augmentDimension(name, element, wantInner);
+								case "inject":
+									return parseFloat(propertyValue) - augmentDimension(name, element, wantInner) + "px";
+							}
+						};
+					}
+					CSS.Normalizations.registered.innerWidth = getDimension("width", true);
+					CSS.Normalizations.registered.innerHeight = getDimension("height", true);
+					CSS.Normalizations.registered.outerWidth = getDimension("width");
+					CSS.Normalizations.registered.outerHeight = getDimension("height");
+				}
+			},
+			/************************
+    CSS Property Names
+    ************************/
+
+			Names: {
+				/* Camelcase a property name into its JavaScript notation (e.g. "background-color" ==> "backgroundColor").
+     Camelcasing is used to normalize property names between and across calls. */
+				camelCase: function camelCase(property) {
+					return property.replace(/-(\w)/g, function (match, subMatch) {
+						return subMatch.toUpperCase();
+					});
+				},
+				/* For SVG elements, some properties (namely, dimensional ones) are GET/SET via the element's HTML attributes (instead of via CSS styles). */
+				SVGAttribute: function SVGAttribute(property) {
+					var SVGAttributes = "width|height|x|y|cx|cy|r|rx|ry|x1|x2|y1|y2";
+
+					/* Certain browsers require an SVG transform to be applied as an attribute. (Otherwise, application via CSS is preferable due to 3D support.) */
+					if (IE || Velocity.State.isAndroid && !Velocity.State.isChrome) {
+						SVGAttributes += "|transform";
+					}
+
+					return new RegExp("^(" + SVGAttributes + ")$", "i").test(property);
+				},
+				/* Determine whether a property should be set with a vendor prefix. */
+				/* If a prefixed version of the property exists, return it. Otherwise, return the original property name.
+     If the property is not at all supported by the browser, return a false flag. */
+				prefixCheck: function prefixCheck(property) {
+					/* If this property has already been checked, return the cached value. */
+					if (Velocity.State.prefixMatches[property]) {
+						return [Velocity.State.prefixMatches[property], true];
+					} else {
+						var vendors = ["", "Webkit", "Moz", "ms", "O"];
+
+						for (var i = 0, vendorsLength = vendors.length; i < vendorsLength; i++) {
+							var propertyPrefixed;
+
+							if (i === 0) {
+								propertyPrefixed = property;
+							} else {
+								/* Capitalize the first letter of the property to conform to JavaScript vendor prefix notation (e.g. webkitFilter). */
+								propertyPrefixed = vendors[i] + property.replace(/^\w/, function (match) {
+									return match.toUpperCase();
+								});
+							}
+
+							/* Check if the browser supports this property as prefixed. */
+							if (Type.isString(Velocity.State.prefixElement.style[propertyPrefixed])) {
+								/* Cache the match. */
+								Velocity.State.prefixMatches[property] = propertyPrefixed;
+
+								return [propertyPrefixed, true];
+							}
+						}
+
+						/* If the browser doesn't support this property in any form, include a false flag so that the caller can decide how to proceed. */
+						return [property, false];
+					}
+				}
+			},
+			/************************
+    CSS Property Values
+    ************************/
+
+			Values: {
+				/* Hex to RGB conversion. Copyright Tim Down: http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb */
+				hexToRgb: function hexToRgb(hex) {
+					var shortformRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+					    longformRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i,
+					    rgbParts;
+
+					hex = hex.replace(shortformRegex, function (m, r, g, b) {
+						return r + r + g + g + b + b;
+					});
+
+					rgbParts = longformRegex.exec(hex);
+
+					return rgbParts ? [parseInt(rgbParts[1], 16), parseInt(rgbParts[2], 16), parseInt(rgbParts[3], 16)] : [0, 0, 0];
+				},
+				isCSSNullValue: function isCSSNullValue(value) {
+					/* The browser defaults CSS values that have not been set to either 0 or one of several possible null-value strings.
+      Thus, we check for both falsiness and these special strings. */
+					/* Null-value checking is performed to default the special strings to 0 (for the sake of tweening) or their hook
+      templates as defined as CSS.Hooks (for the sake of hook injection/extraction). */
+					/* Note: Chrome returns "rgba(0, 0, 0, 0)" for an undefined color whereas IE returns "transparent". */
+					return !value || /^(none|auto|transparent|(rgba\(0, ?0, ?0, ?0\)))$/i.test(value);
+				},
+				/* Retrieve a property's default unit type. Used for assigning a unit type when one is not supplied by the user. */
+				getUnitType: function getUnitType(property) {
+					if (/^(rotate|skew)/i.test(property)) {
+						return "deg";
+					} else if (/(^(scale|scaleX|scaleY|scaleZ|alpha|flexGrow|flexHeight|zIndex|fontWeight)$)|((opacity|red|green|blue|alpha)$)/i.test(property)) {
+						/* The above properties are unitless. */
+						return "";
+					} else {
+						/* Default to px for all other properties. */
+						return "px";
+					}
+				},
+				/* HTML elements default to an associated display type when they're not set to display:none. */
+				/* Note: This function is used for correctly setting the non-"none" display value in certain Velocity redirects, such as fadeIn/Out. */
+				getDisplayType: function getDisplayType(element) {
+					var tagName = element && element.tagName.toString().toLowerCase();
+
+					if (/^(b|big|i|small|tt|abbr|acronym|cite|code|dfn|em|kbd|strong|samp|var|a|bdo|br|img|map|object|q|script|span|sub|sup|button|input|label|select|textarea)$/i.test(tagName)) {
+						return "inline";
+					} else if (/^(li)$/i.test(tagName)) {
+						return "list-item";
+					} else if (/^(tr)$/i.test(tagName)) {
+						return "table-row";
+					} else if (/^(table)$/i.test(tagName)) {
+						return "table";
+					} else if (/^(tbody)$/i.test(tagName)) {
+						return "table-row-group";
+						/* Default to "block" when no match is found. */
+					} else {
+							return "block";
+						}
+				},
+				/* The class add/remove functions are used to temporarily apply a "velocity-animating" class to elements while they're animating. */
+				addClass: function addClass(element, className) {
+					if (element) {
+						if (element.classList) {
+							element.classList.add(className);
+						} else if (Type.isString(element.className)) {
+							// Element.className is around 15% faster then set/getAttribute
+							element.className += (element.className.length ? " " : "") + className;
+						} else {
+							// Work around for IE strict mode animating SVG - and anything else that doesn't behave correctly - the same way jQuery does it
+							var currentClass = element.getAttribute(IE <= 7 ? "className" : "class") || "";
+
+							element.setAttribute("class", currentClass + (currentClass ? " " : "") + className);
+						}
+					}
+				},
+				removeClass: function removeClass(element, className) {
+					if (element) {
+						if (element.classList) {
+							element.classList.remove(className);
+						} else if (Type.isString(element.className)) {
+							// Element.className is around 15% faster then set/getAttribute
+							// TODO: Need some jsperf tests on performance - can we get rid of the regex and maybe use split / array manipulation?
+							element.className = element.className.toString().replace(new RegExp("(^|\\s)" + className.split(" ").join("|") + "(\\s|$)", "gi"), " ");
+						} else {
+							// Work around for IE strict mode animating SVG - and anything else that doesn't behave correctly - the same way jQuery does it
+							var currentClass = element.getAttribute(IE <= 7 ? "className" : "class") || "";
+
+							element.setAttribute("class", currentClass.replace(new RegExp("(^|\s)" + className.split(" ").join("|") + "(\s|$)", "gi"), " "));
+						}
+					}
+				}
+			},
+			/****************************
+    Style Getting & Setting
+    ****************************/
+
+			/* The singular getPropertyValue, which routes the logic for all normalizations, hooks, and standard CSS properties. */
+			getPropertyValue: function getPropertyValue(element, property, rootPropertyValue, forceStyleLookup) {
+				/* Get an element's computed property value. */
+				/* Note: Retrieving the value of a CSS property cannot simply be performed by checking an element's
+     style attribute (which only reflects user-defined values). Instead, the browser must be queried for a property's
+     *computed* value. You can read more about getComputedStyle here: https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle */
+				function computePropertyValue(element, property) {
+					/* When box-sizing isn't set to border-box, height and width style values are incorrectly computed when an
+      element's scrollbars are visible (which expands the element's dimensions). Thus, we defer to the more accurate
+      offsetHeight/Width property, which includes the total dimensions for interior, border, padding, and scrollbar.
+      We subtract border and padding to get the sum of interior + scrollbar. */
+					var computedValue = 0;
+
+					/* IE<=8 doesn't support window.getComputedStyle, thus we defer to jQuery, which has an extensive array
+      of hacks to accurately retrieve IE8 property values. Re-implementing that logic here is not worth bloating the
+      codebase for a dying browser. The performance repercussions of using jQuery here are minimal since
+      Velocity is optimized to rarely (and sometimes never) query the DOM. Further, the $.css() codepath isn't that slow. */
+					if (IE <= 8) {
+						computedValue = $.css(element, property); /* GET */
+						/* All other browsers support getComputedStyle. The returned live object reference is cached onto its
+       associated element so that it does not need to be refetched upon every GET. */
+					} else {
+							/* Browsers do not return height and width values for elements that are set to display:"none". Thus, we temporarily
+        toggle display to the element type's default value. */
+							var toggleDisplay = false;
+
+							if (/^(width|height)$/.test(property) && CSS.getPropertyValue(element, "display") === 0) {
+								toggleDisplay = true;
+								CSS.setPropertyValue(element, "display", CSS.Values.getDisplayType(element));
+							}
+
+							var revertDisplay = function revertDisplay() {
+								if (toggleDisplay) {
+									CSS.setPropertyValue(element, "display", "none");
+								}
+							};
+
+							if (!forceStyleLookup) {
+								if (property === "height" && CSS.getPropertyValue(element, "boxSizing").toString().toLowerCase() !== "border-box") {
+									var contentBoxHeight = element.offsetHeight - (parseFloat(CSS.getPropertyValue(element, "borderTopWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "borderBottomWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingTop")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingBottom")) || 0);
+									revertDisplay();
+
+									return contentBoxHeight;
+								} else if (property === "width" && CSS.getPropertyValue(element, "boxSizing").toString().toLowerCase() !== "border-box") {
+									var contentBoxWidth = element.offsetWidth - (parseFloat(CSS.getPropertyValue(element, "borderLeftWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "borderRightWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingLeft")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingRight")) || 0);
+									revertDisplay();
+
+									return contentBoxWidth;
+								}
+							}
+
+							var computedStyle;
+
+							/* For elements that Velocity hasn't been called on directly (e.g. when Velocity queries the DOM on behalf
+        of a parent of an element its animating), perform a direct getComputedStyle lookup since the object isn't cached. */
+							if (Data(element) === undefined) {
+								computedStyle = window.getComputedStyle(element, null); /* GET */
+								/* If the computedStyle object has yet to be cached, do so now. */
+							} else if (!Data(element).computedStyle) {
+									computedStyle = Data(element).computedStyle = window.getComputedStyle(element, null); /* GET */
+									/* If computedStyle is cached, use it. */
+								} else {
+										computedStyle = Data(element).computedStyle;
+									}
+
+							/* IE and Firefox do not return a value for the generic borderColor -- they only return individual values for each border side's color.
+        Also, in all browsers, when border colors aren't all the same, a compound value is returned that Velocity isn't setup to parse.
+        So, as a polyfill for querying individual border side colors, we just return the top border's color and animate all borders from that value. */
+							if (property === "borderColor") {
+								property = "borderTopColor";
+							}
+
+							/* IE9 has a bug in which the "filter" property must be accessed from computedStyle using the getPropertyValue method
+        instead of a direct property lookup. The getPropertyValue method is slower than a direct lookup, which is why we avoid it by default. */
+							if (IE === 9 && property === "filter") {
+								computedValue = computedStyle.getPropertyValue(property); /* GET */
+							} else {
+									computedValue = computedStyle[property];
+								}
+
+							/* Fall back to the property's style value (if defined) when computedValue returns nothing,
+        which can happen when the element hasn't been painted. */
+							if (computedValue === "" || computedValue === null) {
+								computedValue = element.style[property];
+							}
+
+							revertDisplay();
+						}
+
+					/* For top, right, bottom, and left (TRBL) values that are set to "auto" on elements of "fixed" or "absolute" position,
+      defer to jQuery for converting "auto" to a numeric value. (For elements with a "static" or "relative" position, "auto" has the same
+      effect as being set to 0, so no conversion is necessary.) */
+					/* An example of why numeric conversion is necessary: When an element with "position:absolute" has an untouched "left"
+      property, which reverts to "auto", left's value is 0 relative to its parent element, but is often non-zero relative
+      to its *containing* (not parent) element, which is the nearest "position:relative" ancestor or the viewport (and always the viewport in the case of "position:fixed"). */
+					if (computedValue === "auto" && /^(top|right|bottom|left)$/i.test(property)) {
+						var position = computePropertyValue(element, "position"); /* GET */
+
+						/* For absolute positioning, jQuery's $.position() only returns values for top and left;
+       right and bottom will have their "auto" value reverted to 0. */
+						/* Note: A jQuery object must be created here since jQuery doesn't have a low-level alias for $.position().
+       Not a big deal since we're currently in a GET batch anyway. */
+						if (position === "fixed" || position === "absolute" && /top|left/i.test(property)) {
+							/* Note: jQuery strips the pixel unit from its returned values; we re-add it here to conform with computePropertyValue's behavior. */
+							computedValue = $(element).position()[property] + "px"; /* GET */
+						}
+					}
+
+					return computedValue;
+				}
+
+				var propertyValue;
+
+				/* If this is a hooked property (e.g. "clipLeft" instead of the root property of "clip"),
+     extract the hook's value from a normalized rootPropertyValue using CSS.Hooks.extractValue(). */
+				if (CSS.Hooks.registered[property]) {
+					var hook = property,
+					    hookRoot = CSS.Hooks.getRoot(hook);
+
+					/* If a cached rootPropertyValue wasn't passed in (which Velocity always attempts to do in order to avoid requerying the DOM),
+      query the DOM for the root property's value. */
+					if (rootPropertyValue === undefined) {
+						/* Since the browser is now being directly queried, use the official post-prefixing property name for this lookup. */
+						rootPropertyValue = CSS.getPropertyValue(element, CSS.Names.prefixCheck(hookRoot)[0]); /* GET */
+					}
+
+					/* If this root has a normalization registered, peform the associated normalization extraction. */
+					if (CSS.Normalizations.registered[hookRoot]) {
+						rootPropertyValue = CSS.Normalizations.registered[hookRoot]("extract", element, rootPropertyValue);
+					}
+
+					/* Extract the hook's value. */
+					propertyValue = CSS.Hooks.extractValue(hook, rootPropertyValue);
+
+					/* If this is a normalized property (e.g. "opacity" becomes "filter" in <=IE8) or "translateX" becomes "transform"),
+      normalize the property's name and value, and handle the special case of transforms. */
+					/* Note: Normalizing a property is mutually exclusive from hooking a property since hook-extracted values are strictly
+      numerical and therefore do not require normalization extraction. */
+				} else if (CSS.Normalizations.registered[property]) {
+						var normalizedPropertyName, normalizedPropertyValue;
+
+						normalizedPropertyName = CSS.Normalizations.registered[property]("name", element);
+
+						/* Transform values are calculated via normalization extraction (see below), which checks against the element's transformCache.
+       At no point do transform GETs ever actually query the DOM; initial stylesheet values are never processed.
+       This is because parsing 3D transform matrices is not always accurate and would bloat our codebase;
+       thus, normalization extraction defaults initial transform values to their zero-values (e.g. 1 for scaleX and 0 for translateX). */
+						if (normalizedPropertyName !== "transform") {
+							normalizedPropertyValue = computePropertyValue(element, CSS.Names.prefixCheck(normalizedPropertyName)[0]); /* GET */
+
+							/* If the value is a CSS null-value and this property has a hook template, use that zero-value template so that hooks can be extracted from it. */
+							if (CSS.Values.isCSSNullValue(normalizedPropertyValue) && CSS.Hooks.templates[property]) {
+								normalizedPropertyValue = CSS.Hooks.templates[property][1];
+							}
+						}
+
+						propertyValue = CSS.Normalizations.registered[property]("extract", element, normalizedPropertyValue);
+					}
+
+				/* If a (numeric) value wasn't produced via hook extraction or normalization, query the DOM. */
+				if (!/^[\d-]/.test(propertyValue)) {
+					/* For SVG elements, dimensional properties (which SVGAttribute() detects) are tweened via
+      their HTML attribute values instead of their CSS style values. */
+					var data = Data(element);
+
+					if (data && data.isSVG && CSS.Names.SVGAttribute(property)) {
+						/* Since the height/width attribute values must be set manually, they don't reflect computed values.
+       Thus, we use use getBBox() to ensure we always get values for elements with undefined height/width attributes. */
+						if (/^(height|width)$/i.test(property)) {
+							/* Firefox throws an error if .getBBox() is called on an SVG that isn't attached to the DOM. */
+							try {
+								propertyValue = element.getBBox()[property];
+							} catch (error) {
+								propertyValue = 0;
+							}
+							/* Otherwise, access the attribute value directly. */
+						} else {
+								propertyValue = element.getAttribute(property);
+							}
+					} else {
+						propertyValue = computePropertyValue(element, CSS.Names.prefixCheck(property)[0]); /* GET */
+					}
+				}
+
+				/* Since property lookups are for animation purposes (which entails computing the numeric delta between start and end values),
+     convert CSS null-values to an integer of value 0. */
+				if (CSS.Values.isCSSNullValue(propertyValue)) {
+					propertyValue = 0;
+				}
+
+				if (Velocity.debug >= 2) {
+					console.log("Get " + property + ": " + propertyValue);
+				}
+
+				return propertyValue;
+			},
+			/* The singular setPropertyValue, which routes the logic for all normalizations, hooks, and standard CSS properties. */
+			setPropertyValue: function setPropertyValue(element, property, propertyValue, rootPropertyValue, scrollData) {
+				var propertyName = property;
+
+				/* In order to be subjected to call options and element queueing, scroll animation is routed through Velocity as if it were a standard CSS property. */
+				if (property === "scroll") {
+					/* If a container option is present, scroll the container instead of the browser window. */
+					if (scrollData.container) {
+						scrollData.container["scroll" + scrollData.direction] = propertyValue;
+						/* Otherwise, Velocity defaults to scrolling the browser window. */
+					} else {
+							if (scrollData.direction === "Left") {
+								window.scrollTo(propertyValue, scrollData.alternateValue);
+							} else {
+								window.scrollTo(scrollData.alternateValue, propertyValue);
+							}
+						}
+				} else {
+					/* Transforms (translateX, rotateZ, etc.) are applied to a per-element transformCache object, which is manually flushed via flushTransformCache().
+      Thus, for now, we merely cache transforms being SET. */
+					if (CSS.Normalizations.registered[property] && CSS.Normalizations.registered[property]("name", element) === "transform") {
+						/* Perform a normalization injection. */
+						/* Note: The normalization logic handles the transformCache updating. */
+						CSS.Normalizations.registered[property]("inject", element, propertyValue);
+
+						propertyName = "transform";
+						propertyValue = Data(element).transformCache[property];
+					} else {
+						/* Inject hooks. */
+						if (CSS.Hooks.registered[property]) {
+							var hookName = property,
+							    hookRoot = CSS.Hooks.getRoot(property);
+
+							/* If a cached rootPropertyValue was not provided, query the DOM for the hookRoot's current value. */
+							rootPropertyValue = rootPropertyValue || CSS.getPropertyValue(element, hookRoot); /* GET */
+
+							propertyValue = CSS.Hooks.injectValue(hookName, propertyValue, rootPropertyValue);
+							property = hookRoot;
+						}
+
+						/* Normalize names and values. */
+						if (CSS.Normalizations.registered[property]) {
+							propertyValue = CSS.Normalizations.registered[property]("inject", element, propertyValue);
+							property = CSS.Normalizations.registered[property]("name", element);
+						}
+
+						/* Assign the appropriate vendor prefix before performing an official style update. */
+						propertyName = CSS.Names.prefixCheck(property)[0];
+
+						/* A try/catch is used for IE<=8, which throws an error when "invalid" CSS values are set, e.g. a negative width.
+       Try/catch is avoided for other browsers since it incurs a performance overhead. */
+						if (IE <= 8) {
+							try {
+								element.style[propertyName] = propertyValue;
+							} catch (error) {
+								if (Velocity.debug) {
+									console.log("Browser does not support [" + propertyValue + "] for [" + propertyName + "]");
+								}
+							}
+							/* SVG elements have their dimensional properties (width, height, x, y, cx, etc.) applied directly as attributes instead of as styles. */
+							/* Note: IE8 does not support SVG elements, so it's okay that we skip it for SVG animation. */
+						} else {
+								var data = Data(element);
+
+								if (data && data.isSVG && CSS.Names.SVGAttribute(property)) {
+									/* Note: For SVG attributes, vendor-prefixed property names are never used. */
+									/* Note: Not all CSS properties can be animated via attributes, but the browser won't throw an error for unsupported properties. */
+									element.setAttribute(property, propertyValue);
+								} else {
+									element.style[propertyName] = propertyValue;
+								}
+							}
+
+						if (Velocity.debug >= 2) {
+							console.log("Set " + property + " (" + propertyName + "): " + propertyValue);
+						}
+					}
+				}
+
+				/* Return the normalized property name and value in case the caller wants to know how these values were modified before being applied to the DOM. */
+				return [propertyName, propertyValue];
+			},
+			/* To increase performance by batching transform updates into a single SET, transforms are not directly applied to an element until flushTransformCache() is called. */
+			/* Note: Velocity applies transform properties in the same order that they are chronogically introduced to the element's CSS styles. */
+			flushTransformCache: function flushTransformCache(element) {
+				var transformString = "",
+				    data = Data(element);
+
+				/* Certain browsers require that SVG transforms be applied as an attribute. However, the SVG transform attribute takes a modified version of CSS's transform string
+     (units are dropped and, except for skewX/Y, subproperties are merged into their master property -- e.g. scaleX and scaleY are merged into scale(X Y). */
+				if ((IE || Velocity.State.isAndroid && !Velocity.State.isChrome) && data && data.isSVG) {
+					/* Since transform values are stored in their parentheses-wrapped form, we use a helper function to strip out their numeric values.
+      Further, SVG transform properties only take unitless (representing pixels) values, so it's okay that parseFloat() strips the unit suffixed to the float value. */
+					var getTransformFloat = function getTransformFloat(transformProperty) {
+						return parseFloat(CSS.getPropertyValue(element, transformProperty));
+					};
+
+					/* Create an object to organize all the transforms that we'll apply to the SVG element. To keep the logic simple,
+      we process *all* transform properties -- even those that may not be explicitly applied (since they default to their zero-values anyway). */
+					var SVGTransforms = {
+						translate: [getTransformFloat("translateX"), getTransformFloat("translateY")],
+						skewX: [getTransformFloat("skewX")], skewY: [getTransformFloat("skewY")],
+						/* If the scale property is set (non-1), use that value for the scaleX and scaleY values
+       (this behavior mimics the result of animating all these properties at once on HTML elements). */
+						scale: getTransformFloat("scale") !== 1 ? [getTransformFloat("scale"), getTransformFloat("scale")] : [getTransformFloat("scaleX"), getTransformFloat("scaleY")],
+						/* Note: SVG's rotate transform takes three values: rotation degrees followed by the X and Y values
+       defining the rotation's origin point. We ignore the origin values (default them to 0). */
+						rotate: [getTransformFloat("rotateZ"), 0, 0]
+					};
+
+					/* Iterate through the transform properties in the user-defined property map order.
+      (This mimics the behavior of non-SVG transform animation.) */
+					$.each(Data(element).transformCache, function (transformName) {
+						/* Except for with skewX/Y, revert the axis-specific transform subproperties to their axis-free master
+       properties so that they match up with SVG's accepted transform properties. */
+						if (/^translate/i.test(transformName)) {
+							transformName = "translate";
+						} else if (/^scale/i.test(transformName)) {
+							transformName = "scale";
+						} else if (/^rotate/i.test(transformName)) {
+							transformName = "rotate";
+						}
+
+						/* Check that we haven't yet deleted the property from the SVGTransforms container. */
+						if (SVGTransforms[transformName]) {
+							/* Append the transform property in the SVG-supported transform format. As per the spec, surround the space-delimited values in parentheses. */
+							transformString += transformName + "(" + SVGTransforms[transformName].join(" ") + ")" + " ";
+
+							/* After processing an SVG transform property, delete it from the SVGTransforms container so we don't
+        re-insert the same master property if we encounter another one of its axis-specific properties. */
+							delete SVGTransforms[transformName];
+						}
+					});
+				} else {
+					var transformValue, perspective;
+
+					/* Transform properties are stored as members of the transformCache object. Concatenate all the members into a string. */
+					$.each(Data(element).transformCache, function (transformName) {
+						transformValue = Data(element).transformCache[transformName];
+
+						/* Transform's perspective subproperty must be set first in order to take effect. Store it temporarily. */
+						if (transformName === "transformPerspective") {
+							perspective = transformValue;
+							return true;
+						}
+
+						/* IE9 only supports one rotation type, rotateZ, which it refers to as "rotate". */
+						if (IE === 9 && transformName === "rotateZ") {
+							transformName = "rotate";
+						}
+
+						transformString += transformName + transformValue + " ";
+					});
+
+					/* If present, set the perspective subproperty first. */
+					if (perspective) {
+						transformString = "perspective" + perspective + " " + transformString;
+					}
+				}
+
+				CSS.setPropertyValue(element, "transform", transformString);
+			}
+		};
+
+		/* Register hooks and normalizations. */
+		CSS.Hooks.register();
+		CSS.Normalizations.register();
+
+		/* Allow hook setting in the same fashion as jQuery's $.css(). */
+		Velocity.hook = function (elements, arg2, arg3) {
+			var value;
+
+			elements = sanitizeElements(elements);
+
+			$.each(elements, function (i, element) {
+				/* Initialize Velocity's per-element data cache if this element hasn't previously been animated. */
+				if (Data(element) === undefined) {
+					Velocity.init(element);
+				}
+
+				/* Get property value. If an element set was passed in, only return the value for the first element. */
+				if (arg3 === undefined) {
+					if (value === undefined) {
+						value = CSS.getPropertyValue(element, arg2);
+					}
+					/* Set property value. */
+				} else {
+						/* sPV returns an array of the normalized propertyName/propertyValue pair used to update the DOM. */
+						var adjustedSet = CSS.setPropertyValue(element, arg2, arg3);
+
+						/* Transform properties don't automatically set. They have to be flushed to the DOM. */
+						if (adjustedSet[0] === "transform") {
+							Velocity.CSS.flushTransformCache(element);
+						}
+
+						value = adjustedSet;
+					}
+			});
+
+			return value;
+		};
+
+		/*****************
+   Animation
+   *****************/
+
+		var animate = function animate() {
+			var opts;
+
+			/******************
+    Call Chain
+    ******************/
+
+			/* Logic for determining what to return to the call stack when exiting out of Velocity. */
+			function getChain() {
+				/* If we are using the utility function, attempt to return this call's promise. If no promise library was detected,
+     default to null instead of returning the targeted elements so that utility function's return value is standardized. */
+				if (isUtility) {
+					return promiseData.promise || null;
+					/* Otherwise, if we're using $.fn, return the jQuery-/Zepto-wrapped element set. */
+				} else {
+						return elementsWrapped;
+					}
+			}
+
+			/*************************
+    Arguments Assignment
+    *************************/
+
+			/* To allow for expressive CoffeeScript code, Velocity supports an alternative syntax in which "elements" (or "e"), "properties" (or "p"), and "options" (or "o")
+    objects are defined on a container object that's passed in as Velocity's sole argument. */
+			/* Note: Some browsers automatically populate arguments with a "properties" object. We detect it by checking for its default "names" property. */
+			var syntacticSugar = arguments[0] && (arguments[0].p || $.isPlainObject(arguments[0].properties) && !arguments[0].properties.names || Type.isString(arguments[0].properties)),
+			   
+			/* Whether Velocity was called via the utility function (as opposed to on a jQuery/Zepto object). */
+			isUtility,
+			   
+			/* When Velocity is called via the utility function ($.Velocity()/Velocity()), elements are explicitly
+    passed in as the first parameter. Thus, argument positioning varies. We normalize them here. */
+			elementsWrapped,
+			    argumentIndex;
+
+			var elements, propertiesMap, options;
+
+			/* Detect jQuery/Zepto elements being animated via the $.fn method. */
+			if (Type.isWrapped(this)) {
+				isUtility = false;
+
+				argumentIndex = 0;
+				elements = this;
+				elementsWrapped = this;
+				/* Otherwise, raw elements are being animated via the utility function. */
+			} else {
+					isUtility = true;
+
+					argumentIndex = 1;
+					elements = syntacticSugar ? arguments[0].elements || arguments[0].e : arguments[0];
+				}
+
+			/***************
+    Promises
+    ***************/
+
+			var promiseData = {
+				promise: null,
+				resolver: null,
+				rejecter: null
+			};
+
+			/* If this call was made via the utility function (which is the default method of invocation when jQuery/Zepto are not being used), and if
+    promise support was detected, create a promise object for this call and store references to its resolver and rejecter methods. The resolve
+    method is used when a call completes naturally or is prematurely stopped by the user. In both cases, completeCall() handles the associated
+    call cleanup and promise resolving logic. The reject method is used when an invalid set of arguments is passed into a Velocity call. */
+			/* Note: Velocity employs a call-based queueing architecture, which means that stopping an animating element actually stops the full call that
+    triggered it -- not that one element exclusively. Similarly, there is one promise per call, and all elements targeted by a Velocity call are
+    grouped together for the purposes of resolving and rejecting a promise. */
+			if (isUtility && Velocity.Promise) {
+				promiseData.promise = new Velocity.Promise(function (resolve, reject) {
+					promiseData.resolver = resolve;
+					promiseData.rejecter = reject;
+				});
+			}
+
+			if (syntacticSugar) {
+				propertiesMap = arguments[0].properties || arguments[0].p;
+				options = arguments[0].options || arguments[0].o;
+			} else {
+				propertiesMap = arguments[argumentIndex];
+				options = arguments[argumentIndex + 1];
+			}
+
+			elements = sanitizeElements(elements);
+
+			if (!elements) {
+				if (promiseData.promise) {
+					if (!propertiesMap || !options || options.promiseRejectEmpty !== false) {
+						promiseData.rejecter();
+					} else {
+						promiseData.resolver();
+					}
+				}
+				return;
+			}
+
+			/* The length of the element set (in the form of a nodeList or an array of elements) is defaulted to 1 in case a
+    single raw DOM element is passed in (which doesn't contain a length property). */
+			var elementsLength = elements.length,
+			    elementsIndex = 0;
+
+			/***************************
+    Argument Overloading
+    ***************************/
+
+			/* Support is included for jQuery's argument overloading: $.animate(propertyMap [, duration] [, easing] [, complete]).
+    Overloading is detected by checking for the absence of an object being passed into options. */
+			/* Note: The stop/finish/pause/resume actions do not accept animation options, and are therefore excluded from this check. */
+			if (!/^(stop|finish|finishAll|pause|resume)$/i.test(propertiesMap) && !$.isPlainObject(options)) {
+				/* The utility function shifts all arguments one position to the right, so we adjust for that offset. */
+				var startingArgumentPosition = argumentIndex + 1;
+
+				options = {};
+
+				/* Iterate through all options arguments */
+				for (var i = startingArgumentPosition; i < arguments.length; i++) {
+					/* Treat a number as a duration. Parse it out. */
+					/* Note: The following RegEx will return true if passed an array with a number as its first item.
+      Thus, arrays are skipped from this check. */
+					if (!Type.isArray(arguments[i]) && (/^(fast|normal|slow)$/i.test(arguments[i]) || /^\d/.test(arguments[i]))) {
+						options.duration = arguments[i];
+						/* Treat strings and arrays as easings. */
+					} else if (Type.isString(arguments[i]) || Type.isArray(arguments[i])) {
+							options.easing = arguments[i];
+							/* Treat a function as a complete callback. */
+						} else if (Type.isFunction(arguments[i])) {
+								options.complete = arguments[i];
+							}
+				}
+			}
+
+			/*********************
+    Action Detection
+    *********************/
+
+			/* Velocity's behavior is categorized into "actions": Elements can either be specially scrolled into view,
+    or they can be started, stopped, paused, resumed, or reversed . If a literal or referenced properties map is passed in as Velocity's
+    first argument, the associated action is "start". Alternatively, "scroll", "reverse", "pause", "resume" or "stop" can be passed in 
+    instead of a properties map. */
+			var action;
+
+			switch (propertiesMap) {
+				case "scroll":
+					action = "scroll";
+					break;
+
+				case "reverse":
+					action = "reverse";
+					break;
+
+				case "pause":
+
+					/*******************
+      Action: Pause
+      *******************/
+
+					var currentTime = new Date().getTime();
+
+					/* Handle delay timers */
+					$.each(elements, function (i, element) {
+						pauseDelayOnElement(element, currentTime);
+					});
+
+					/* Pause and Resume are call-wide (not on a per element basis). Thus, calling pause or resume on a 
+      single element will cause any calls that containt tweens for that element to be paused/resumed
+      as well. */
+
+					/* Iterate through all calls and pause any that contain any of our elements */
+					$.each(Velocity.State.calls, function (i, activeCall) {
+
+						var found = false;
+						/* Inactive calls are set to false by the logic inside completeCall(). Skip them. */
+						if (activeCall) {
+							/* Iterate through the active call's targeted elements. */
+							$.each(activeCall[1], function (k, activeElement) {
+								var queueName = options === undefined ? "" : options;
+
+								if (queueName !== true && activeCall[2].queue !== queueName && !(options === undefined && activeCall[2].queue === false)) {
+									return true;
+								}
+
+								/* Iterate through the calls targeted by the stop command. */
+								$.each(elements, function (l, element) {
+									/* Check that this call was applied to the target element. */
+									if (element === activeElement) {
+
+										/* Set call to paused */
+										activeCall[5] = {
+											resume: false
+										};
+
+										/* Once we match an element, we can bounce out to the next call entirely */
+										found = true;
+										return false;
+									}
+								});
+
+								/* Proceed to check next call if we have already matched */
+								if (found) {
+									return false;
+								}
+							});
+						}
+					});
+
+					/* Since pause creates no new tweens, exit out of Velocity. */
+					return getChain();
+
+				case "resume":
+
+					/*******************
+      Action: Resume
+      *******************/
+
+					/* Handle delay timers */
+					$.each(elements, function (i, element) {
+						resumeDelayOnElement(element, currentTime);
+					});
+
+					/* Pause and Resume are call-wide (not on a per elemnt basis). Thus, calling pause or resume on a 
+      single element will cause any calls that containt tweens for that element to be paused/resumed
+      as well. */
+
+					/* Iterate through all calls and pause any that contain any of our elements */
+					$.each(Velocity.State.calls, function (i, activeCall) {
+						var found = false;
+						/* Inactive calls are set to false by the logic inside completeCall(). Skip them. */
+						if (activeCall) {
+							/* Iterate through the active call's targeted elements. */
+							$.each(activeCall[1], function (k, activeElement) {
+								var queueName = options === undefined ? "" : options;
+
+								if (queueName !== true && activeCall[2].queue !== queueName && !(options === undefined && activeCall[2].queue === false)) {
+									return true;
+								}
+
+								/* Skip any calls that have never been paused */
+								if (!activeCall[5]) {
+									return true;
+								}
+
+								/* Iterate through the calls targeted by the stop command. */
+								$.each(elements, function (l, element) {
+									/* Check that this call was applied to the target element. */
+									if (element === activeElement) {
+
+										/* Flag a pause object to be resumed, which will occur during the next tick. In
+           addition, the pause object will at that time be deleted */
+										activeCall[5].resume = true;
+
+										/* Once we match an element, we can bounce out to the next call entirely */
+										found = true;
+										return false;
+									}
+								});
+
+								/* Proceed to check next call if we have already matched */
+								if (found) {
+									return false;
+								}
+							});
+						}
+					});
+
+					/* Since resume creates no new tweens, exit out of Velocity. */
+					return getChain();
+
+				case "finish":
+				case "finishAll":
+				case "stop":
+					/*******************
+      Action: Stop
+      *******************/
+
+					/* Clear the currently-active delay on each targeted element. */
+					$.each(elements, function (i, element) {
+						if (Data(element) && Data(element).delayTimer) {
+							/* Stop the timer from triggering its cached next() function. */
+							clearTimeout(Data(element).delayTimer.setTimeout);
+
+							/* Manually call the next() function so that the subsequent queue items can progress. */
+							if (Data(element).delayTimer.next) {
+								Data(element).delayTimer.next();
+							}
+
+							delete Data(element).delayTimer;
+						}
+
+						/* If we want to finish everything in the queue, we have to iterate through it
+       and call each function. This will make them active calls below, which will
+       cause them to be applied via the duration setting. */
+						if (propertiesMap === "finishAll" && (options === true || Type.isString(options))) {
+							/* Iterate through the items in the element's queue. */
+							$.each($.queue(element, Type.isString(options) ? options : ""), function (_, item) {
+								/* The queue array can contain an "inprogress" string, which we skip. */
+								if (Type.isFunction(item)) {
+									item();
+								}
+							});
+
+							/* Clearing the $.queue() array is achieved by resetting it to []. */
+							$.queue(element, Type.isString(options) ? options : "", []);
+						}
+					});
+
+					var callsToStop = [];
+
+					/* When the stop action is triggered, the elements' currently active call is immediately stopped. The active call might have
+      been applied to multiple elements, in which case all of the call's elements will be stopped. When an element
+      is stopped, the next item in its animation queue is immediately triggered. */
+					/* An additional argument may be passed in to clear an element's remaining queued calls. Either true (which defaults to the "fx" queue)
+      or a custom queue string can be passed in. */
+					/* Note: The stop command runs prior to Velocity's Queueing phase since its behavior is intended to take effect *immediately*,
+      regardless of the element's current queue state. */
+
+					/* Iterate through every active call. */
+					$.each(Velocity.State.calls, function (i, activeCall) {
+						/* Inactive calls are set to false by the logic inside completeCall(). Skip them. */
+						if (activeCall) {
+							/* Iterate through the active call's targeted elements. */
+							$.each(activeCall[1], function (k, activeElement) {
+								/* If true was passed in as a secondary argument, clear absolutely all calls on this element. Otherwise, only
+         clear calls associated with the relevant queue. */
+								/* Call stopping logic works as follows:
+         - options === true --> stop current default queue calls (and queue:false calls), including remaining queued ones.
+         - options === undefined --> stop current queue:"" call and all queue:false calls.
+         - options === false --> stop only queue:false calls.
+         - options === "custom" --> stop current queue:"custom" call, including remaining queued ones (there is no functionality to only clear the currently-running queue:"custom" call). */
+								var queueName = options === undefined ? "" : options;
+
+								if (queueName !== true && activeCall[2].queue !== queueName && !(options === undefined && activeCall[2].queue === false)) {
+									return true;
+								}
+
+								/* Iterate through the calls targeted by the stop command. */
+								$.each(elements, function (l, element) {
+									/* Check that this call was applied to the target element. */
+									if (element === activeElement) {
+										/* Optionally clear the remaining queued calls. If we're doing "finishAll" this won't find anything,
+           due to the queue-clearing above. */
+										if (options === true || Type.isString(options)) {
+											/* Iterate through the items in the element's queue. */
+											$.each($.queue(element, Type.isString(options) ? options : ""), function (_, item) {
+												/* The queue array can contain an "inprogress" string, which we skip. */
+												if (Type.isFunction(item)) {
+													/* Pass the item's callback a flag indicating that we want to abort from the queue call.
+              (Specifically, the queue will resolve the call's associated promise then abort.)  */
+													item(null, true);
+												}
+											});
+
+											/* Clearing the $.queue() array is achieved by resetting it to []. */
+											$.queue(element, Type.isString(options) ? options : "", []);
+										}
+
+										if (propertiesMap === "stop") {
+											/* Since "reverse" uses cached start values (the previous call's endValues), these values must be
+            changed to reflect the final value that the elements were actually tweened to. */
+											/* Note: If only queue:false animations are currently running on an element, it won't have a tweensContainer
+            object. Also, queue:false animations can't be reversed. */
+											var data = Data(element);
+											if (data && data.tweensContainer && queueName !== false) {
+												$.each(data.tweensContainer, function (m, activeTween) {
+													activeTween.endValue = activeTween.currentValue;
+												});
+											}
+
+											callsToStop.push(i);
+										} else if (propertiesMap === "finish" || propertiesMap === "finishAll") {
+											/* To get active tweens to finish immediately, we forcefully shorten their durations to 1ms so that
+            they finish upon the next rAf tick then proceed with normal call completion logic. */
+											activeCall[2].duration = 1;
+										}
+									}
+								});
+							});
+						}
+					});
+
+					/* Prematurely call completeCall() on each matched active call. Pass an additional flag for "stop" to indicate
+      that the complete callback and display:none setting should be skipped since we're completing prematurely. */
+					if (propertiesMap === "stop") {
+						$.each(callsToStop, function (i, j) {
+							completeCall(j, true);
+						});
+
+						if (promiseData.promise) {
+							/* Immediately resolve the promise associated with this stop call since stop runs synchronously. */
+							promiseData.resolver(elements);
+						}
+					}
+
+					/* Since we're stopping, and not proceeding with queueing, exit out of Velocity. */
+					return getChain();
+
+				default:
+					/* Treat a non-empty plain object as a literal properties map. */
+					if ($.isPlainObject(propertiesMap) && !Type.isEmptyObject(propertiesMap)) {
+						action = "start";
+
+						/****************
+       Redirects
+       ****************/
+
+						/* Check if a string matches a registered redirect (see Redirects above). */
+					} else if (Type.isString(propertiesMap) && Velocity.Redirects[propertiesMap]) {
+							opts = $.extend({}, options);
+
+							var durationOriginal = opts.duration,
+							    delayOriginal = opts.delay || 0;
+
+							/* If the backwards option was passed in, reverse the element set so that elements animate from the last to the first. */
+							if (opts.backwards === true) {
+								elements = $.extend(true, [], elements).reverse();
+							}
+
+							/* Individually trigger the redirect for each element in the set to prevent users from having to handle iteration logic in their redirect. */
+							$.each(elements, function (elementIndex, element) {
+								/* If the stagger option was passed in, successively delay each element by the stagger value (in ms). Retain the original delay value. */
+								if (parseFloat(opts.stagger)) {
+									opts.delay = delayOriginal + parseFloat(opts.stagger) * elementIndex;
+								} else if (Type.isFunction(opts.stagger)) {
+									opts.delay = delayOriginal + opts.stagger.call(element, elementIndex, elementsLength);
+								}
+
+								/* If the drag option was passed in, successively increase/decrease (depending on the presense of opts.backwards)
+         the duration of each element's animation, using floors to prevent producing very short durations. */
+								if (opts.drag) {
+									/* Default the duration of UI pack effects (callouts and transitions) to 1000ms instead of the usual default duration of 400ms. */
+									opts.duration = parseFloat(durationOriginal) || (/^(callout|transition)/.test(propertiesMap) ? 1000 : DURATION_DEFAULT);
+
+									/* For each element, take the greater duration of: A) animation completion percentage relative to the original duration,
+          B) 75% of the original duration, or C) a 200ms fallback (in case duration is already set to a low value).
+          The end result is a baseline of 75% of the redirect's duration that increases/decreases as the end of the element set is approached. */
+									opts.duration = Math.max(opts.duration * (opts.backwards ? 1 - elementIndex / elementsLength : (elementIndex + 1) / elementsLength), opts.duration * 0.75, 200);
+								}
+
+								/* Pass in the call's opts object so that the redirect can optionally extend it. It defaults to an empty object instead of null to
+         reduce the opts checking logic required inside the redirect. */
+								Velocity.Redirects[propertiesMap].call(element, element, opts || {}, elementIndex, elementsLength, elements, promiseData.promise ? promiseData : undefined);
+							});
+
+							/* Since the animation logic resides within the redirect's own code, abort the remainder of this call.
+        (The performance overhead up to this point is virtually non-existant.) */
+							/* Note: The jQuery call chain is kept intact by returning the complete element set. */
+							return getChain();
+						} else {
+							var abortError = "Velocity: First argument (" + propertiesMap + ") was not a property map, a known action, or a registered redirect. Aborting.";
+
+							if (promiseData.promise) {
+								promiseData.rejecter(new Error(abortError));
+							} else if (window.console) {
+								console.log(abortError);
+							}
+
+							return getChain();
+						}
+			}
+
+			/**************************
+    Call-Wide Variables
+    **************************/
+
+			/* A container for CSS unit conversion ratios (e.g. %, rem, and em ==> px) that is used to cache ratios across all elements
+    being animated in a single Velocity call. Calculating unit ratios necessitates DOM querying and updating, and is therefore
+    avoided (via caching) wherever possible. This container is call-wide instead of page-wide to avoid the risk of using stale
+    conversion metrics across Velocity animations that are not immediately consecutively chained. */
+			var callUnitConversionData = {
+				lastParent: null,
+				lastPosition: null,
+				lastFontSize: null,
+				lastPercentToPxWidth: null,
+				lastPercentToPxHeight: null,
+				lastEmToPx: null,
+				remToPx: null,
+				vwToPx: null,
+				vhToPx: null
+			};
+
+			/* A container for all the ensuing tween data and metadata associated with this call. This container gets pushed to the page-wide
+    Velocity.State.calls array that is processed during animation ticking. */
+			var call = [];
+
+			/************************
+    Element Processing
+    ************************/
+
+			/* Element processing consists of three parts -- data processing that cannot go stale and data processing that *can* go stale (i.e. third-party style modifications):
+    1) Pre-Queueing: Element-wide variables, including the element's data storage, are instantiated. Call options are prepared. If triggered, the Stop action is executed.
+    2) Queueing: The logic that runs once this call has reached its point of execution in the element's $.queue() stack. Most logic is placed here to avoid risking it becoming stale.
+    3) Pushing: Consolidation of the tween data followed by its push onto the global in-progress calls container.
+    `elementArrayIndex` allows passing index of the element in the original array to value functions.
+    If `elementsIndex` were used instead the index would be determined by the elements' per-element queue.
+    */
+			function processElement(element, elementArrayIndex) {
+
+				/*************************
+     Part I: Pre-Queueing
+     *************************/
+
+				/***************************
+     Element-Wide Variables
+     ***************************/
+
+				var /* The runtime opts object is the extension of the current call's options and Velocity's page-wide option defaults. */
+				opts = $.extend({}, Velocity.defaults, options),
+				   
+				/* A container for the processed data associated with each property in the propertyMap.
+     (Each property in the map produces its own "tween".) */
+				tweensContainer = {},
+				    elementUnitConversionData;
+
+				/******************
+     Element Init
+     ******************/
+
+				if (Data(element) === undefined) {
+					Velocity.init(element);
+				}
+
+				/******************
+     Option: Delay
+     ******************/
+
+				/* Since queue:false doesn't respect the item's existing queue, we avoid injecting its delay here (it's set later on). */
+				/* Note: Velocity rolls its own delay function since jQuery doesn't have a utility alias for $.fn.delay()
+     (and thus requires jQuery element creation, which we avoid since its overhead includes DOM querying). */
+				if (parseFloat(opts.delay) && opts.queue !== false) {
+					$.queue(element, opts.queue, function (next) {
+						/* This is a flag used to indicate to the upcoming completeCall() function that this queue entry was initiated by Velocity. See completeCall() for further details. */
+						Velocity.velocityQueueEntryFlag = true;
+
+						/* The ensuing queue item (which is assigned to the "next" argument that $.queue() automatically passes in) will be triggered after a setTimeout delay.
+       The setTimeout is stored so that it can be subjected to clearTimeout() if this animation is prematurely stopped via Velocity's "stop" command, and
+       delayBegin/delayTime is used to ensure we can "pause" and "resume" a tween that is still mid-delay. */
+
+						/* Temporarily store delayed elements to facilite access for global pause/resume */
+						var callIndex = Velocity.State.delayedElements.count++;
+						Velocity.State.delayedElements[callIndex] = element;
+
+						var delayComplete = (function (index) {
+							return function () {
+								/* Clear the temporary element */
+								Velocity.State.delayedElements[index] = false;
+
+								/* Finally, issue the call */
+								next();
+							};
+						})(callIndex);
+
+						Data(element).delayBegin = new Date().getTime();
+						Data(element).delay = parseFloat(opts.delay);
+						Data(element).delayTimer = {
+							setTimeout: setTimeout(next, parseFloat(opts.delay)),
+							next: delayComplete
+						};
+					});
+				}
+
+				/*********************
+     Option: Duration
+     *********************/
+
+				/* Support for jQuery's named durations. */
+				switch (opts.duration.toString().toLowerCase()) {
+					case "fast":
+						opts.duration = 200;
+						break;
+
+					case "normal":
+						opts.duration = DURATION_DEFAULT;
+						break;
+
+					case "slow":
+						opts.duration = 600;
+						break;
+
+					default:
+						/* Remove the potential "ms" suffix and default to 1 if the user is attempting to set a duration of 0 (in order to produce an immediate style change). */
+						opts.duration = parseFloat(opts.duration) || 1;
+				}
+
+				/************************
+     Global Option: Mock
+     ************************/
+
+				if (Velocity.mock !== false) {
+					/* In mock mode, all animations are forced to 1ms so that they occur immediately upon the next rAF tick.
+      Alternatively, a multiplier can be passed in to time remap all delays and durations. */
+					if (Velocity.mock === true) {
+						opts.duration = opts.delay = 1;
+					} else {
+						opts.duration *= parseFloat(Velocity.mock) || 1;
+						opts.delay *= parseFloat(Velocity.mock) || 1;
+					}
+				}
+
+				/*******************
+     Option: Easing
+     *******************/
+
+				opts.easing = getEasing(opts.easing, opts.duration);
+
+				/**********************
+     Option: Callbacks
+     **********************/
+
+				/* Callbacks must functions. Otherwise, default to null. */
+				if (opts.begin && !Type.isFunction(opts.begin)) {
+					opts.begin = null;
+				}
+
+				if (opts.progress && !Type.isFunction(opts.progress)) {
+					opts.progress = null;
+				}
+
+				if (opts.complete && !Type.isFunction(opts.complete)) {
+					opts.complete = null;
+				}
+
+				/*********************************
+     Option: Display & Visibility
+     *********************************/
+
+				/* Refer to Velocity's documentation (VelocityJS.org/#displayAndVisibility) for a description of the display and visibility options' behavior. */
+				/* Note: We strictly check for undefined instead of falsiness because display accepts an empty string value. */
+				if (opts.display !== undefined && opts.display !== null) {
+					opts.display = opts.display.toString().toLowerCase();
+
+					/* Users can pass in a special "auto" value to instruct Velocity to set the element to its default display value. */
+					if (opts.display === "auto") {
+						opts.display = Velocity.CSS.Values.getDisplayType(element);
+					}
+				}
+
+				if (opts.visibility !== undefined && opts.visibility !== null) {
+					opts.visibility = opts.visibility.toString().toLowerCase();
+				}
+
+				/**********************
+     Option: mobileHA
+     **********************/
+
+				/* When set to true, and if this is a mobile device, mobileHA automatically enables hardware acceleration (via a null transform hack)
+     on animating elements. HA is removed from the element at the completion of its animation. */
+				/* Note: Android Gingerbread doesn't support HA. If a null transform hack (mobileHA) is in fact set, it will prevent other tranform subproperties from taking effect. */
+				/* Note: You can read more about the use of mobileHA in Velocity's documentation: VelocityJS.org/#mobileHA. */
+				opts.mobileHA = opts.mobileHA && Velocity.State.isMobile && !Velocity.State.isGingerbread;
+
+				/***********************
+     Part II: Queueing
+     ***********************/
+
+				/* When a set of elements is targeted by a Velocity call, the set is broken up and each element has the current Velocity call individually queued onto it.
+     In this way, each element's existing queue is respected; some elements may already be animating and accordingly should not have this current Velocity call triggered immediately. */
+				/* In each queue, tween data is processed for each animating property then pushed onto the call-wide calls array. When the last element in the set has had its tweens processed,
+     the call array is pushed to Velocity.State.calls for live processing by the requestAnimationFrame tick. */
+				function buildQueue(next) {
+					var data, lastTweensContainer;
+
+					/*******************
+      Option: Begin
+      *******************/
+
+					/* The begin callback is fired once per call -- not once per elemenet -- and is passed the full raw DOM element set as both its context and its first argument. */
+					if (opts.begin && elementsIndex === 0) {
+						/* We throw callbacks in a setTimeout so that thrown errors don't halt the execution of Velocity itself. */
+						try {
+							opts.begin.call(elements, elements);
+						} catch (error) {
+							setTimeout(function () {
+								throw error;
+							}, 1);
+						}
+					}
+
+					/*****************************************
+      Tween Data Construction (for Scroll)
+      *****************************************/
+
+					/* Note: In order to be subjected to chaining and animation options, scroll's tweening is routed through Velocity as if it were a standard CSS property animation. */
+					if (action === "scroll") {
+						/* The scroll action uniquely takes an optional "offset" option -- specified in pixels -- that offsets the targeted scroll position. */
+						var scrollDirection = /^x$/i.test(opts.axis) ? "Left" : "Top",
+						    scrollOffset = parseFloat(opts.offset) || 0,
+						    scrollPositionCurrent,
+						    scrollPositionCurrentAlternate,
+						    scrollPositionEnd;
+
+						/* Scroll also uniquely takes an optional "container" option, which indicates the parent element that should be scrolled --
+       as opposed to the browser window itself. This is useful for scrolling toward an element that's inside an overflowing parent element. */
+						if (opts.container) {
+							/* Ensure that either a jQuery object or a raw DOM element was passed in. */
+							if (Type.isWrapped(opts.container) || Type.isNode(opts.container)) {
+								/* Extract the raw DOM element from the jQuery wrapper. */
+								opts.container = opts.container[0] || opts.container;
+								/* Note: Unlike other properties in Velocity, the browser's scroll position is never cached since it so frequently changes
+         (due to the user's natural interaction with the page). */
+								scrollPositionCurrent = opts.container["scroll" + scrollDirection]; /* GET */
+
+								/* $.position() values are relative to the container's currently viewable area (without taking into account the container's true dimensions
+         -- say, for example, if the container was not overflowing). Thus, the scroll end value is the sum of the child element's position *and*
+         the scroll container's current scroll position. */
+								scrollPositionEnd = scrollPositionCurrent + $(element).position()[scrollDirection.toLowerCase()] + scrollOffset; /* GET */
+								/* If a value other than a jQuery object or a raw DOM element was passed in, default to null so that this option is ignored. */
+							} else {
+									opts.container = null;
+								}
+						} else {
+							/* If the window itself is being scrolled -- not a containing element -- perform a live scroll position lookup using
+        the appropriate cached property names (which differ based on browser type). */
+							scrollPositionCurrent = Velocity.State.scrollAnchor[Velocity.State["scrollProperty" + scrollDirection]]; /* GET */
+							/* When scrolling the browser window, cache the alternate axis's current value since window.scrollTo() doesn't let us change only one value at a time. */
+							scrollPositionCurrentAlternate = Velocity.State.scrollAnchor[Velocity.State["scrollProperty" + (scrollDirection === "Left" ? "Top" : "Left")]]; /* GET */
+
+							/* Unlike $.position(), $.offset() values are relative to the browser window's true dimensions -- not merely its currently viewable area --
+        and therefore end values do not need to be compounded onto current values. */
+							scrollPositionEnd = $(element).offset()[scrollDirection.toLowerCase()] + scrollOffset; /* GET */
+						}
+
+						/* Since there's only one format that scroll's associated tweensContainer can take, we create it manually. */
+						tweensContainer = {
+							scroll: {
+								rootPropertyValue: false,
+								startValue: scrollPositionCurrent,
+								currentValue: scrollPositionCurrent,
+								endValue: scrollPositionEnd,
+								unitType: "",
+								easing: opts.easing,
+								scrollData: {
+									container: opts.container,
+									direction: scrollDirection,
+									alternateValue: scrollPositionCurrentAlternate
+								}
+							},
+							element: element
+						};
+
+						if (Velocity.debug) {
+							console.log("tweensContainer (scroll): ", tweensContainer.scroll, element);
+						}
+
+						/******************************************
+       Tween Data Construction (for Reverse)
+       ******************************************/
+
+						/* Reverse acts like a "start" action in that a property map is animated toward. The only difference is
+       that the property map used for reverse is the inverse of the map used in the previous call. Thus, we manipulate
+       the previous call to construct our new map: use the previous map's end values as our new map's start values. Copy over all other data. */
+						/* Note: Reverse can be directly called via the "reverse" parameter, or it can be indirectly triggered via the loop option. (Loops are composed of multiple reverses.) */
+						/* Note: Reverse calls do not need to be consecutively chained onto a currently-animating element in order to operate on cached values;
+       there is no harm to reverse being called on a potentially stale data cache since reverse's behavior is simply defined
+       as reverting to the element's values as they were prior to the previous *Velocity* call. */
+					} else if (action === "reverse") {
+							data = Data(element);
+
+							/* Abort if there is no prior animation data to reverse to. */
+							if (!data) {
+								return;
+							}
+
+							if (!data.tweensContainer) {
+								/* Dequeue the element so that this queue entry releases itself immediately, allowing subsequent queue entries to run. */
+								$.dequeue(element, opts.queue);
+
+								return;
+							} else {
+								/*********************
+         Options Parsing
+         *********************/
+
+								/* If the element was hidden via the display option in the previous call,
+         revert display to "auto" prior to reversal so that the element is visible again. */
+								if (data.opts.display === "none") {
+									data.opts.display = "auto";
+								}
+
+								if (data.opts.visibility === "hidden") {
+									data.opts.visibility = "visible";
+								}
+
+								/* If the loop option was set in the previous call, disable it so that "reverse" calls aren't recursively generated.
+         Further, remove the previous call's callback options; typically, users do not want these to be refired. */
+								data.opts.loop = false;
+								data.opts.begin = null;
+								data.opts.complete = null;
+
+								/* Since we're extending an opts object that has already been extended with the defaults options object,
+         we remove non-explicitly-defined properties that are auto-assigned values. */
+								if (!options.easing) {
+									delete opts.easing;
+								}
+
+								if (!options.duration) {
+									delete opts.duration;
+								}
+
+								/* The opts object used for reversal is an extension of the options object optionally passed into this
+         reverse call plus the options used in the previous Velocity call. */
+								opts = $.extend({}, data.opts, opts);
+
+								/*************************************
+         Tweens Container Reconstruction
+         *************************************/
+
+								/* Create a deepy copy (indicated via the true flag) of the previous call's tweensContainer. */
+								lastTweensContainer = $.extend(true, {}, data ? data.tweensContainer : null);
+
+								/* Manipulate the previous tweensContainer by replacing its end values and currentValues with its start values. */
+								for (var lastTween in lastTweensContainer) {
+									/* In addition to tween data, tweensContainers contain an element property that we ignore here. */
+									if (lastTweensContainer.hasOwnProperty(lastTween) && lastTween !== "element") {
+										var lastStartValue = lastTweensContainer[lastTween].startValue;
+
+										lastTweensContainer[lastTween].startValue = lastTweensContainer[lastTween].currentValue = lastTweensContainer[lastTween].endValue;
+										lastTweensContainer[lastTween].endValue = lastStartValue;
+
+										/* Easing is the only option that embeds into the individual tween data (since it can be defined on a per-property basis).
+           Accordingly, every property's easing value must be updated when an options object is passed in with a reverse call.
+           The side effect of this extensibility is that all per-property easing values are forcefully reset to the new value. */
+										if (!Type.isEmptyObject(options)) {
+											lastTweensContainer[lastTween].easing = opts.easing;
+										}
+
+										if (Velocity.debug) {
+											console.log("reverse tweensContainer (" + lastTween + "): " + JSON.stringify(lastTweensContainer[lastTween]), element);
+										}
+									}
+								}
+
+								tweensContainer = lastTweensContainer;
+							}
+
+							/*****************************************
+        Tween Data Construction (for Start)
+        *****************************************/
+						} else if (action === "start") {
+
+								/*************************
+         Value Transferring
+         *************************/
+
+								/* If this queue entry follows a previous Velocity-initiated queue entry *and* if this entry was created
+         while the element was in the process of being animated by Velocity, then this current call is safe to use
+         the end values from the prior call as its start values. Velocity attempts to perform this value transfer
+         process whenever possible in order to avoid requerying the DOM. */
+								/* If values aren't transferred from a prior call and start values were not forcefed by the user (more on this below),
+         then the DOM is queried for the element's current values as a last resort. */
+								/* Note: Conversely, animation reversal (and looping) *always* perform inter-call value transfers; they never requery the DOM. */
+
+								data = Data(element);
+
+								/* The per-element isAnimating flag is used to indicate whether it's safe (i.e. the data isn't stale)
+         to transfer over end values to use as start values. If it's set to true and there is a previous
+         Velocity call to pull values from, do so. */
+								if (data && data.tweensContainer && data.isAnimating === true) {
+									lastTweensContainer = data.tweensContainer;
+								}
+
+								/***************************
+         Tween Data Calculation
+         ***************************/
+
+								/* This function parses property data and defaults endValue, easing, and startValue as appropriate. */
+								/* Property map values can either take the form of 1) a single value representing the end value,
+         or 2) an array in the form of [ endValue, [, easing] [, startValue] ].
+         The optional third parameter is a forcefed startValue to be used instead of querying the DOM for
+         the element's current value. Read Velocity's docmentation to learn more about forcefeeding: VelocityJS.org/#forcefeeding */
+								var parsePropertyValue = function parsePropertyValue(valueData, skipResolvingEasing) {
+									var endValue, easing, startValue;
+
+									/* If we have a function as the main argument then resolve it first, in case it returns an array that needs to be split */
+									if (Type.isFunction(valueData)) {
+										valueData = valueData.call(element, elementArrayIndex, elementsLength);
+									}
+
+									/* Handle the array format, which can be structured as one of three potential overloads:
+          A) [ endValue, easing, startValue ], B) [ endValue, easing ], or C) [ endValue, startValue ] */
+									if (Type.isArray(valueData)) {
+										/* endValue is always the first item in the array. Don't bother validating endValue's value now
+           since the ensuing property cycling logic does that. */
+										endValue = valueData[0];
+
+										/* Two-item array format: If the second item is a number, function, or hex string, treat it as a
+           start value since easings can only be non-hex strings or arrays. */
+										if (!Type.isArray(valueData[1]) && /^[\d-]/.test(valueData[1]) || Type.isFunction(valueData[1]) || CSS.RegEx.isHex.test(valueData[1])) {
+											startValue = valueData[1];
+											/* Two or three-item array: If the second item is a non-hex string easing name or an array, treat it as an easing. */
+										} else if (Type.isString(valueData[1]) && !CSS.RegEx.isHex.test(valueData[1]) && Velocity.Easings[valueData[1]] || Type.isArray(valueData[1])) {
+												easing = skipResolvingEasing ? valueData[1] : getEasing(valueData[1], opts.duration);
+
+												/* Don't bother validating startValue's value now since the ensuing property cycling logic inherently does that. */
+												startValue = valueData[2];
+											} else {
+												startValue = valueData[1] || valueData[2];
+											}
+										/* Handle the single-value format. */
+									} else {
+											endValue = valueData;
+										}
+
+									/* Default to the call's easing if a per-property easing type was not defined. */
+									if (!skipResolvingEasing) {
+										easing = easing || opts.easing;
+									}
+
+									/* If functions were passed in as values, pass the function the current element as its context,
+          plus the element's index and the element set's size as arguments. Then, assign the returned value. */
+									if (Type.isFunction(endValue)) {
+										endValue = endValue.call(element, elementArrayIndex, elementsLength);
+									}
+
+									if (Type.isFunction(startValue)) {
+										startValue = startValue.call(element, elementArrayIndex, elementsLength);
+									}
+
+									/* Allow startValue to be left as undefined to indicate to the ensuing code that its value was not forcefed. */
+									return [endValue || 0, easing, startValue];
+								};
+
+								var fixPropertyValue = function fixPropertyValue(property, valueData) {
+									/* In case this property is a hook, there are circumstances where we will intend to work on the hook's root property and not the hooked subproperty. */
+									var rootProperty = CSS.Hooks.getRoot(property),
+									    rootPropertyValue = false,
+									   
+									/* Parse out endValue, easing, and startValue from the property's data. */
+									endValue = valueData[0],
+									    easing = valueData[1],
+									    startValue = valueData[2],
+									    pattern;
+
+									/**************************
+          Start Value Sourcing
+          **************************/
+
+									/* Other than for the dummy tween property, properties that are not supported by the browser (and do not have an associated normalization) will
+          inherently produce no style changes when set, so they are skipped in order to decrease animation tick overhead.
+          Property support is determined via prefixCheck(), which returns a false flag when no supported is detected. */
+									/* Note: Since SVG elements have some of their properties directly applied as HTML attributes,
+          there is no way to check for their explicit browser support, and so we skip skip this check for them. */
+									if ((!data || !data.isSVG) && rootProperty !== "tween" && CSS.Names.prefixCheck(rootProperty)[1] === false && CSS.Normalizations.registered[rootProperty] === undefined) {
+										if (Velocity.debug) {
+											console.log("Skipping [" + rootProperty + "] due to a lack of browser support.");
+										}
+										return;
+									}
+
+									/* If the display option is being set to a non-"none" (e.g. "block") and opacity (filter on IE<=8) is being
+          animated to an endValue of non-zero, the user's intention is to fade in from invisible, thus we forcefeed opacity
+          a startValue of 0 if its startValue hasn't already been sourced by value transferring or prior forcefeeding. */
+									if ((opts.display !== undefined && opts.display !== null && opts.display !== "none" || opts.visibility !== undefined && opts.visibility !== "hidden") && /opacity|filter/.test(property) && !startValue && endValue !== 0) {
+										startValue = 0;
+									}
+
+									/* If values have been transferred from the previous Velocity call, extract the endValue and rootPropertyValue
+          for all of the current call's properties that were *also* animated in the previous call. */
+									/* Note: Value transferring can optionally be disabled by the user via the _cacheValues option. */
+									if (opts._cacheValues && lastTweensContainer && lastTweensContainer[property]) {
+										if (startValue === undefined) {
+											startValue = lastTweensContainer[property].endValue + lastTweensContainer[property].unitType;
+										}
+
+										/* The previous call's rootPropertyValue is extracted from the element's data cache since that's the
+           instance of rootPropertyValue that gets freshly updated by the tweening process, whereas the rootPropertyValue
+           attached to the incoming lastTweensContainer is equal to the root property's value prior to any tweening. */
+										rootPropertyValue = data.rootPropertyValueCache[rootProperty];
+										/* If values were not transferred from a previous Velocity call, query the DOM as needed. */
+									} else {
+											/* Handle hooked properties. */
+											if (CSS.Hooks.registered[property]) {
+												if (startValue === undefined) {
+													rootPropertyValue = CSS.getPropertyValue(element, rootProperty); /* GET */
+													/* Note: The following getPropertyValue() call does not actually trigger a DOM query;
+              getPropertyValue() will extract the hook from rootPropertyValue. */
+													startValue = CSS.getPropertyValue(element, property, rootPropertyValue);
+													/* If startValue is already defined via forcefeeding, do not query the DOM for the root property's value;
+              just grab rootProperty's zero-value template from CSS.Hooks. This overwrites the element's actual
+              root property value (if one is set), but this is acceptable since the primary reason users forcefeed is
+              to avoid DOM queries, and thus we likewise avoid querying the DOM for the root property's value. */
+												} else {
+														/* Grab this hook's zero-value template, e.g. "0px 0px 0px black". */
+														rootPropertyValue = CSS.Hooks.templates[rootProperty][1];
+													}
+												/* Handle non-hooked properties that haven't already been defined via forcefeeding. */
+											} else if (startValue === undefined) {
+													startValue = CSS.getPropertyValue(element, property); /* GET */
+												}
+										}
+
+									/**************************
+          Value Data Extraction
+          **************************/
+
+									var separatedValue,
+									    endValueUnitType,
+									    startValueUnitType,
+									    operator = false;
+
+									/* Separates a property value into its numeric value and its unit type. */
+									var separateValue = function separateValue(property, value) {
+										var unitType, numericValue;
+
+										numericValue = (value || "0").toString().toLowerCase()
+										/* Match the unit type at the end of the value. */
+										.replace(/[%A-z]+$/, function (match) {
+											/* Grab the unit type. */
+											unitType = match;
+
+											/* Strip the unit type off of value. */
+											return "";
+										});
+
+										/* If no unit type was supplied, assign one that is appropriate for this property (e.g. "deg" for rotateZ or "px" for width). */
+										if (!unitType) {
+											unitType = CSS.Values.getUnitType(property);
+										}
+
+										return [numericValue, unitType];
+									};
+
+									if (startValue !== endValue && Type.isString(startValue) && Type.isString(endValue)) {
+										pattern = "";
+										var iStart = 0,
+										    // index in startValue
+										iEnd = 0,
+										    // index in endValue
+										aStart = [],
+										    // array of startValue numbers
+										aEnd = [],
+										    // array of endValue numbers
+										inCalc = 0,
+										    // Keep track of being inside a "calc()" so we don't duplicate it
+										inRGB = 0,
+										    // Keep track of being inside an RGB as we can't use fractional values
+										inRGBA = 0; // Keep track of being inside an RGBA as we must pass fractional for the alpha channel
+
+										startValue = CSS.Hooks.fixColors(startValue);
+										endValue = CSS.Hooks.fixColors(endValue);
+										while (iStart < startValue.length && iEnd < endValue.length) {
+											var cStart = startValue[iStart],
+											    cEnd = endValue[iEnd];
+
+											if (/[\d\.-]/.test(cStart) && /[\d\.-]/.test(cEnd)) {
+												var tStart = cStart,
+												    // temporary character buffer
+												tEnd = cEnd,
+												    // temporary character buffer
+												dotStart = ".",
+												    // Make sure we can only ever match a single dot in a decimal
+												dotEnd = "."; // Make sure we can only ever match a single dot in a decimal
+
+												while (++iStart < startValue.length) {
+													cStart = startValue[iStart];
+													if (cStart === dotStart) {
+														dotStart = ".."; // Can never match two characters
+													} else if (!/\d/.test(cStart)) {
+															break;
+														}
+													tStart += cStart;
+												}
+												while (++iEnd < endValue.length) {
+													cEnd = endValue[iEnd];
+													if (cEnd === dotEnd) {
+														dotEnd = ".."; // Can never match two characters
+													} else if (!/\d/.test(cEnd)) {
+															break;
+														}
+													tEnd += cEnd;
+												}
+												var uStart = CSS.Hooks.getUnit(startValue, iStart),
+												    // temporary unit type
+												uEnd = CSS.Hooks.getUnit(endValue, iEnd); // temporary unit type
+
+												iStart += uStart.length;
+												iEnd += uEnd.length;
+												if (uStart === uEnd) {
+													// Same units
+													if (tStart === tEnd) {
+														// Same numbers, so just copy over
+														pattern += tStart + uStart;
+													} else {
+														// Different numbers, so store them
+														pattern += "{" + aStart.length + (inRGB ? "!" : "") + "}" + uStart;
+														aStart.push(parseFloat(tStart));
+														aEnd.push(parseFloat(tEnd));
+													}
+												} else {
+													// Different units, so put into a "calc(from + to)" and animate each side to/from zero
+													var nStart = parseFloat(tStart),
+													    nEnd = parseFloat(tEnd);
+
+													pattern += (inCalc < 5 ? "calc" : "") + "(" + (nStart ? "{" + aStart.length + (inRGB ? "!" : "") + "}" : "0") + uStart + " + " + (nEnd ? "{" + (aStart.length + (nStart ? 1 : 0)) + (inRGB ? "!" : "") + "}" : "0") + uEnd + ")";
+													if (nStart) {
+														aStart.push(nStart);
+														aEnd.push(0);
+													}
+													if (nEnd) {
+														aStart.push(0);
+														aEnd.push(nEnd);
+													}
+												}
+											} else if (cStart === cEnd) {
+												pattern += cStart;
+												iStart++;
+												iEnd++;
+												// Keep track of being inside a calc()
+												if (inCalc === 0 && cStart === "c" || inCalc === 1 && cStart === "a" || inCalc === 2 && cStart === "l" || inCalc === 3 && cStart === "c" || inCalc >= 4 && cStart === "(") {
+													inCalc++;
+												} else if (inCalc && inCalc < 5 || inCalc >= 4 && cStart === ")" && --inCalc < 5) {
+													inCalc = 0;
+												}
+												// Keep track of being inside an rgb() / rgba()
+												if (inRGB === 0 && cStart === "r" || inRGB === 1 && cStart === "g" || inRGB === 2 && cStart === "b" || inRGB === 3 && cStart === "a" || inRGB >= 3 && cStart === "(") {
+													if (inRGB === 3 && cStart === "a") {
+														inRGBA = 1;
+													}
+													inRGB++;
+												} else if (inRGBA && cStart === ",") {
+													if (++inRGBA > 3) {
+														inRGB = inRGBA = 0;
+													}
+												} else if (inRGBA && inRGB < (inRGBA ? 5 : 4) || inRGB >= (inRGBA ? 4 : 3) && cStart === ")" && --inRGB < (inRGBA ? 5 : 4)) {
+													inRGB = inRGBA = 0;
+												}
+											} else {
+												inCalc = 0;
+												// TODO: changing units, fixing colours
+												break;
+											}
+										}
+										if (iStart !== startValue.length || iEnd !== endValue.length) {
+											if (Velocity.debug) {
+												console.error("Trying to pattern match mis-matched strings [\"" + endValue + "\", \"" + startValue + "\"]");
+											}
+											pattern = undefined;
+										}
+										if (pattern) {
+											if (aStart.length) {
+												if (Velocity.debug) {
+													console.log("Pattern found \"" + pattern + "\" -> ", aStart, aEnd, "[" + startValue + "," + endValue + "]");
+												}
+												startValue = aStart;
+												endValue = aEnd;
+												endValueUnitType = startValueUnitType = "";
+											} else {
+												pattern = undefined;
+											}
+										}
+									}
+
+									if (!pattern) {
+										/* Separate startValue. */
+										separatedValue = separateValue(property, startValue);
+										startValue = separatedValue[0];
+										startValueUnitType = separatedValue[1];
+
+										/* Separate endValue, and extract a value operator (e.g. "+=", "-=") if one exists. */
+										separatedValue = separateValue(property, endValue);
+										endValue = separatedValue[0].replace(/^([+-\/*])=/, function (match, subMatch) {
+											operator = subMatch;
+
+											/* Strip the operator off of the value. */
+											return "";
+										});
+										endValueUnitType = separatedValue[1];
+
+										/* Parse float values from endValue and startValue. Default to 0 if NaN is returned. */
+										startValue = parseFloat(startValue) || 0;
+										endValue = parseFloat(endValue) || 0;
+
+										/***************************************
+           Property-Specific Value Conversion
+           ***************************************/
+
+										/* Custom support for properties that don't actually accept the % unit type, but where pollyfilling is trivial and relatively foolproof. */
+										if (endValueUnitType === "%") {
+											/* A %-value fontSize/lineHeight is relative to the parent's fontSize (as opposed to the parent's dimensions),
+            which is identical to the em unit's behavior, so we piggyback off of that. */
+											if (/^(fontSize|lineHeight)$/.test(property)) {
+												/* Convert % into an em decimal value. */
+												endValue = endValue / 100;
+												endValueUnitType = "em";
+												/* For scaleX and scaleY, convert the value into its decimal format and strip off the unit type. */
+											} else if (/^scale/.test(property)) {
+													endValue = endValue / 100;
+													endValueUnitType = "";
+													/* For RGB components, take the defined percentage of 255 and strip off the unit type. */
+												} else if (/(Red|Green|Blue)$/i.test(property)) {
+														endValue = endValue / 100 * 255;
+														endValueUnitType = "";
+													}
+										}
+									}
+
+									/***************************
+          Unit Ratio Calculation
+          ***************************/
+
+									/* When queried, the browser returns (most) CSS property values in pixels. Therefore, if an endValue with a unit type of
+          %, em, or rem is animated toward, startValue must be converted from pixels into the same unit type as endValue in order
+          for value manipulation logic (increment/decrement) to proceed. Further, if the startValue was forcefed or transferred
+          from a previous call, startValue may also not be in pixels. Unit conversion logic therefore consists of two steps:
+          1) Calculating the ratio of %/em/rem/vh/vw relative to pixels
+          2) Converting startValue into the same unit of measurement as endValue based on these ratios. */
+									/* Unit conversion ratios are calculated by inserting a sibling node next to the target node, copying over its position property,
+          setting values with the target unit type then comparing the returned pixel value. */
+									/* Note: Even if only one of these unit types is being animated, all unit ratios are calculated at once since the overhead
+          of batching the SETs and GETs together upfront outweights the potential overhead
+          of layout thrashing caused by re-querying for uncalculated ratios for subsequently-processed properties. */
+									/* Todo: Shift this logic into the calls' first tick instance so that it's synced with RAF. */
+									var calculateUnitRatios = function calculateUnitRatios() {
+
+										/************************
+           Same Ratio Checks
+           ************************/
+
+										/* The properties below are used to determine whether the element differs sufficiently from this call's
+           previously iterated element to also differ in its unit conversion ratios. If the properties match up with those
+           of the prior element, the prior element's conversion ratios are used. Like most optimizations in Velocity,
+           this is done to minimize DOM querying. */
+										var sameRatioIndicators = {
+											myParent: element.parentNode || document.body, /* GET */
+											position: CSS.getPropertyValue(element, "position"), /* GET */
+											fontSize: CSS.getPropertyValue(element, "fontSize") /* GET */
+										},
+										   
+										/* Determine if the same % ratio can be used. % is based on the element's position value and its parent's width and height dimensions. */
+										samePercentRatio = sameRatioIndicators.position === callUnitConversionData.lastPosition && sameRatioIndicators.myParent === callUnitConversionData.lastParent,
+										   
+										/* Determine if the same em ratio can be used. em is relative to the element's fontSize. */
+										sameEmRatio = sameRatioIndicators.fontSize === callUnitConversionData.lastFontSize;
+
+										/* Store these ratio indicators call-wide for the next element to compare against. */
+										callUnitConversionData.lastParent = sameRatioIndicators.myParent;
+										callUnitConversionData.lastPosition = sameRatioIndicators.position;
+										callUnitConversionData.lastFontSize = sameRatioIndicators.fontSize;
+
+										/***************************
+           Element-Specific Units
+           ***************************/
+
+										/* Note: IE8 rounds to the nearest pixel when returning CSS values, thus we perform conversions using a measurement
+           of 100 (instead of 1) to give our ratios a precision of at least 2 decimal values. */
+										var measurement = 100,
+										    unitRatios = {};
+
+										if (!sameEmRatio || !samePercentRatio) {
+											var dummy = data && data.isSVG ? document.createElementNS("http://www.w3.org/2000/svg", "rect") : document.createElement("div");
+
+											Velocity.init(dummy);
+											sameRatioIndicators.myParent.appendChild(dummy);
+
+											/* To accurately and consistently calculate conversion ratios, the element's cascaded overflow and box-sizing are stripped.
+            Similarly, since width/height can be artificially constrained by their min-/max- equivalents, these are controlled for as well. */
+											/* Note: Overflow must be also be controlled for per-axis since the overflow property overwrites its per-axis values. */
+											$.each(["overflow", "overflowX", "overflowY"], function (i, property) {
+												Velocity.CSS.setPropertyValue(dummy, property, "hidden");
+											});
+											Velocity.CSS.setPropertyValue(dummy, "position", sameRatioIndicators.position);
+											Velocity.CSS.setPropertyValue(dummy, "fontSize", sameRatioIndicators.fontSize);
+											Velocity.CSS.setPropertyValue(dummy, "boxSizing", "content-box");
+
+											/* width and height act as our proxy properties for measuring the horizontal and vertical % ratios. */
+											$.each(["minWidth", "maxWidth", "width", "minHeight", "maxHeight", "height"], function (i, property) {
+												Velocity.CSS.setPropertyValue(dummy, property, measurement + "%");
+											});
+											/* paddingLeft arbitrarily acts as our proxy property for the em ratio. */
+											Velocity.CSS.setPropertyValue(dummy, "paddingLeft", measurement + "em");
+
+											/* Divide the returned value by the measurement to get the ratio between 1% and 1px. Default to 1 since working with 0 can produce Infinite. */
+											unitRatios.percentToPxWidth = callUnitConversionData.lastPercentToPxWidth = (parseFloat(CSS.getPropertyValue(dummy, "width", null, true)) || 1) / measurement; /* GET */
+											unitRatios.percentToPxHeight = callUnitConversionData.lastPercentToPxHeight = (parseFloat(CSS.getPropertyValue(dummy, "height", null, true)) || 1) / measurement; /* GET */
+											unitRatios.emToPx = callUnitConversionData.lastEmToPx = (parseFloat(CSS.getPropertyValue(dummy, "paddingLeft")) || 1) / measurement; /* GET */
+
+											sameRatioIndicators.myParent.removeChild(dummy);
+										} else {
+											unitRatios.emToPx = callUnitConversionData.lastEmToPx;
+											unitRatios.percentToPxWidth = callUnitConversionData.lastPercentToPxWidth;
+											unitRatios.percentToPxHeight = callUnitConversionData.lastPercentToPxHeight;
+										}
+
+										/***************************
+           Element-Agnostic Units
+           ***************************/
+
+										/* Whereas % and em ratios are determined on a per-element basis, the rem unit only needs to be checked
+           once per call since it's exclusively dependant upon document.body's fontSize. If this is the first time
+           that calculateUnitRatios() is being run during this call, remToPx will still be set to its default value of null,
+           so we calculate it now. */
+										if (callUnitConversionData.remToPx === null) {
+											/* Default to browsers' default fontSize of 16px in the case of 0. */
+											callUnitConversionData.remToPx = parseFloat(CSS.getPropertyValue(document.body, "fontSize")) || 16; /* GET */
+										}
+
+										/* Similarly, viewport units are %-relative to the window's inner dimensions. */
+										if (callUnitConversionData.vwToPx === null) {
+											callUnitConversionData.vwToPx = parseFloat(window.innerWidth) / 100; /* GET */
+											callUnitConversionData.vhToPx = parseFloat(window.innerHeight) / 100; /* GET */
+										}
+
+										unitRatios.remToPx = callUnitConversionData.remToPx;
+										unitRatios.vwToPx = callUnitConversionData.vwToPx;
+										unitRatios.vhToPx = callUnitConversionData.vhToPx;
+
+										if (Velocity.debug >= 1) {
+											console.log("Unit ratios: " + JSON.stringify(unitRatios), element);
+										}
+										return unitRatios;
+									};
+
+									/********************
+          Unit Conversion
+          ********************/
+
+									/* The * and / operators, which are not passed in with an associated unit, inherently use startValue's unit. Skip value and unit conversion. */
+									if (/[\/*]/.test(operator)) {
+										endValueUnitType = startValueUnitType;
+										/* If startValue and endValue differ in unit type, convert startValue into the same unit type as endValue so that if endValueUnitType
+           is a relative unit (%, em, rem), the values set during tweening will continue to be accurately relative even if the metrics they depend
+           on are dynamically changing during the course of the animation. Conversely, if we always normalized into px and used px for setting values, the px ratio
+           would become stale if the original unit being animated toward was relative and the underlying metrics change during the animation. */
+										/* Since 0 is 0 in any unit type, no conversion is necessary when startValue is 0 -- we just start at 0 with endValueUnitType. */
+									} else if (startValueUnitType !== endValueUnitType && startValue !== 0) {
+											/* Unit conversion is also skipped when endValue is 0, but *startValueUnitType* must be used for tween values to remain accurate. */
+											/* Note: Skipping unit conversion here means that if endValueUnitType was originally a relative unit, the animation won't relatively
+            match the underlying metrics if they change, but this is acceptable since we're animating toward invisibility instead of toward visibility,
+            which remains past the point of the animation's completion. */
+											if (endValue === 0) {
+												endValueUnitType = startValueUnitType;
+											} else {
+												/* By this point, we cannot avoid unit conversion (it's undesirable since it causes layout thrashing).
+             If we haven't already, we trigger calculateUnitRatios(), which runs once per element per call. */
+												elementUnitConversionData = elementUnitConversionData || calculateUnitRatios();
+
+												/* The following RegEx matches CSS properties that have their % values measured relative to the x-axis. */
+												/* Note: W3C spec mandates that all of margin and padding's properties (even top and bottom) are %-relative to the *width* of the parent element. */
+												var axis = /margin|padding|left|right|width|text|word|letter/i.test(property) || /X$/.test(property) || property === "x" ? "x" : "y";
+
+												/* In order to avoid generating n^2 bespoke conversion functions, unit conversion is a two-step process:
+             1) Convert startValue into pixels. 2) Convert this new pixel value into endValue's unit type. */
+												switch (startValueUnitType) {
+													case "%":
+														/* Note: translateX and translateY are the only properties that are %-relative to an element's own dimensions -- not its parent's dimensions.
+               Velocity does not include a special conversion process to account for this behavior. Therefore, animating translateX/Y from a % value
+               to a non-% value will produce an incorrect start value. Fortunately, this sort of cross-unit conversion is rarely done by users in practice. */
+														startValue *= axis === "x" ? elementUnitConversionData.percentToPxWidth : elementUnitConversionData.percentToPxHeight;
+														break;
+
+													case "px":
+														/* px acts as our midpoint in the unit conversion process; do nothing. */
+														break;
+
+													default:
+														startValue *= elementUnitConversionData[startValueUnitType + "ToPx"];
+												}
+
+												/* Invert the px ratios to convert into to the target unit. */
+												switch (endValueUnitType) {
+													case "%":
+														startValue *= 1 / (axis === "x" ? elementUnitConversionData.percentToPxWidth : elementUnitConversionData.percentToPxHeight);
+														break;
+
+													case "px":
+														/* startValue is already in px, do nothing; we're done. */
+														break;
+
+													default:
+														startValue *= 1 / elementUnitConversionData[endValueUnitType + "ToPx"];
+												}
+											}
+										}
+
+									/*********************
+          Relative Values
+          *********************/
+
+									/* Operator logic must be performed last since it requires unit-normalized start and end values. */
+									/* Note: Relative *percent values* do not behave how most people think; while one would expect "+=50%"
+          to increase the property 1.5x its current value, it in fact increases the percent units in absolute terms:
+          50 points is added on top of the current % value. */
+									switch (operator) {
+										case "+":
+											endValue = startValue + endValue;
+											break;
+
+										case "-":
+											endValue = startValue - endValue;
+											break;
+
+										case "*":
+											endValue = startValue * endValue;
+											break;
+
+										case "/":
+											endValue = startValue / endValue;
+											break;
+									}
+
+									/**************************
+          tweensContainer Push
+          **************************/
+
+									/* Construct the per-property tween object, and push it to the element's tweensContainer. */
+									tweensContainer[property] = {
+										rootPropertyValue: rootPropertyValue,
+										startValue: startValue,
+										currentValue: startValue,
+										endValue: endValue,
+										unitType: endValueUnitType,
+										easing: easing
+									};
+									if (pattern) {
+										tweensContainer[property].pattern = pattern;
+									}
+
+									if (Velocity.debug) {
+										console.log("tweensContainer (" + property + "): " + JSON.stringify(tweensContainer[property]), element);
+									}
+								};
+
+								/* Create a tween out of each property, and append its associated data to tweensContainer. */
+								for (var property in propertiesMap) {
+
+									if (!propertiesMap.hasOwnProperty(property)) {
+										continue;
+									}
+									/* The original property name's format must be used for the parsePropertyValue() lookup,
+          but we then use its camelCase styling to normalize it for manipulation. */
+									var propertyName = CSS.Names.camelCase(property),
+									    valueData = parsePropertyValue(propertiesMap[property]);
+
+									/* Find shorthand color properties that have been passed a hex string. */
+									/* Would be quicker to use CSS.Lists.colors.includes() if possible */
+									if (_inArray(CSS.Lists.colors, propertyName)) {
+										/* Parse the value data for each shorthand. */
+										var endValue = valueData[0],
+										    easing = valueData[1],
+										    startValue = valueData[2];
+
+										if (CSS.RegEx.isHex.test(endValue)) {
+											/* Convert the hex strings into their RGB component arrays. */
+											var colorComponents = ["Red", "Green", "Blue"],
+											    endValueRGB = CSS.Values.hexToRgb(endValue),
+											    startValueRGB = startValue ? CSS.Values.hexToRgb(startValue) : undefined;
+
+											/* Inject the RGB component tweens into propertiesMap. */
+											for (var i = 0; i < colorComponents.length; i++) {
+												var dataArray = [endValueRGB[i]];
+
+												if (easing) {
+													dataArray.push(easing);
+												}
+
+												if (startValueRGB !== undefined) {
+													dataArray.push(startValueRGB[i]);
+												}
+
+												fixPropertyValue(propertyName + colorComponents[i], dataArray);
+											}
+											/* If we have replaced a shortcut color value then don't update the standard property name */
+											continue;
+										}
+									}
+									fixPropertyValue(propertyName, valueData);
+								}
+
+								/* Along with its property data, store a reference to the element itself onto tweensContainer. */
+								tweensContainer.element = element;
+							}
+
+					/*****************
+      Call Push
+      *****************/
+
+					/* Note: tweensContainer can be empty if all of the properties in this call's property map were skipped due to not
+      being supported by the browser. The element property is used for checking that the tweensContainer has been appended to. */
+					if (tweensContainer.element) {
+						/* Apply the "velocity-animating" indicator class. */
+						CSS.Values.addClass(element, "velocity-animating");
+
+						/* The call array houses the tweensContainers for each element being animated in the current call. */
+						call.push(tweensContainer);
+
+						data = Data(element);
+
+						if (data) {
+							/* Store the tweensContainer and options if we're working on the default effects queue, so that they can be used by the reverse command. */
+							if (opts.queue === "") {
+
+								data.tweensContainer = tweensContainer;
+								data.opts = opts;
+							}
+
+							/* Switch on the element's animating flag. */
+							data.isAnimating = true;
+						}
+
+						/* Once the final element in this call's element set has been processed, push the call array onto
+       Velocity.State.calls for the animation tick to immediately begin processing. */
+						if (elementsIndex === elementsLength - 1) {
+							/* Add the current call plus its associated metadata (the element set and the call's options) onto the global call container.
+        Anything on this call container is subjected to tick() processing. */
+							Velocity.State.calls.push([call, elements, opts, null, promiseData.resolver, null, 0]);
+
+							/* If the animation tick isn't running, start it. (Velocity shuts it off when there are no active calls to process.) */
+							if (Velocity.State.isTicking === false) {
+								Velocity.State.isTicking = true;
+
+								/* Start the tick loop. */
+								tick();
+							}
+						} else {
+							elementsIndex++;
+						}
+					}
+				}
+
+				/* When the queue option is set to false, the call skips the element's queue and fires immediately. */
+				if (opts.queue === false) {
+					/* Since this buildQueue call doesn't respect the element's existing queue (which is where a delay option would have been appended),
+      we manually inject the delay property here with an explicit setTimeout. */
+					if (opts.delay) {
+
+						/* Temporarily store delayed elements to facilitate access for global pause/resume */
+						var callIndex = Velocity.State.delayedElements.count++;
+						Velocity.State.delayedElements[callIndex] = element;
+
+						var delayComplete = (function (index) {
+							return function () {
+								/* Clear the temporary element */
+								Velocity.State.delayedElements[index] = false;
+
+								/* Finally, issue the call */
+								buildQueue();
+							};
+						})(callIndex);
+
+						Data(element).delayBegin = new Date().getTime();
+						Data(element).delay = parseFloat(opts.delay);
+						Data(element).delayTimer = {
+							setTimeout: setTimeout(buildQueue, parseFloat(opts.delay)),
+							next: delayComplete
+						};
+					} else {
+						buildQueue();
+					}
+					/* Otherwise, the call undergoes element queueing as normal. */
+					/* Note: To interoperate with jQuery, Velocity uses jQuery's own $.queue() stack for queuing logic. */
+				} else {
+						$.queue(element, opts.queue, function (next, clearQueue) {
+							/* If the clearQueue flag was passed in by the stop command, resolve this call's promise. (Promises can only be resolved once,
+        so it's fine if this is repeatedly triggered for each element in the associated call.) */
+							if (clearQueue === true) {
+								if (promiseData.promise) {
+									promiseData.resolver(elements);
+								}
+
+								/* Do not continue with animation queueing. */
+								return true;
+							}
+
+							/* This flag indicates to the upcoming completeCall() function that this queue entry was initiated by Velocity.
+        See completeCall() for further details. */
+							Velocity.velocityQueueEntryFlag = true;
+
+							buildQueue(next);
+						});
+					}
+
+				/*********************
+     Auto-Dequeuing
+     *********************/
+
+				/* As per jQuery's $.queue() behavior, to fire the first non-custom-queue entry on an element, the element
+     must be dequeued if its queue stack consists *solely* of the current call. (This can be determined by checking
+     for the "inprogress" item that jQuery prepends to active queue stack arrays.) Regardless, whenever the element's
+     queue is further appended with additional items -- including $.delay()'s or even $.animate() calls, the queue's
+     first entry is automatically fired. This behavior contrasts that of custom queues, which never auto-fire. */
+				/* Note: When an element set is being subjected to a non-parallel Velocity call, the animation will not begin until
+     each one of the elements in the set has reached the end of its individually pre-existing queue chain. */
+				/* Note: Unfortunately, most people don't fully grasp jQuery's powerful, yet quirky, $.queue() function.
+     Lean more here: http://stackoverflow.com/questions/1058158/can-somebody-explain-jquery-queue-to-me */
+				if ((opts.queue === "" || opts.queue === "fx") && $.queue(element)[0] !== "inprogress") {
+					$.dequeue(element);
+				}
+			}
+
+			/**************************
+    Element Set Iteration
+    **************************/
+
+			/* If the "nodeType" property exists on the elements variable, we're animating a single element.
+    Place it in an array so that $.each() can iterate over it. */
+			$.each(elements, function (i, element) {
+				/* Ensure each element in a set has a nodeType (is a real element) to avoid throwing errors. */
+				if (Type.isNode(element)) {
+					processElement(element, i);
+				}
+			});
+
+			/******************
+    Option: Loop
+    ******************/
+
+			/* The loop option accepts an integer indicating how many times the element should loop between the values in the
+    current call's properties map and the element's property values prior to this call. */
+			/* Note: The loop option's logic is performed here -- after element processing -- because the current call needs
+    to undergo its queue insertion prior to the loop option generating its series of constituent "reverse" calls,
+    which chain after the current call. Two reverse calls (two "alternations") constitute one loop. */
+			opts = $.extend({}, Velocity.defaults, options);
+			opts.loop = parseInt(opts.loop, 10);
+			var reverseCallsCount = opts.loop * 2 - 1;
+
+			if (opts.loop) {
+				/* Double the loop count to convert it into its appropriate number of "reverse" calls.
+     Subtract 1 from the resulting value since the current call is included in the total alternation count. */
+				for (var x = 0; x < reverseCallsCount; x++) {
+					/* Since the logic for the reverse action occurs inside Queueing and therefore this call's options object
+      isn't parsed until then as well, the current call's delay option must be explicitly passed into the reverse
+      call so that the delay logic that occurs inside *Pre-Queueing* can process it. */
+					var reverseOptions = {
+						delay: opts.delay,
+						progress: opts.progress
+					};
+
+					/* If a complete callback was passed into this call, transfer it to the loop redirect's final "reverse" call
+      so that it's triggered when the entire redirect is complete (and not when the very first animation is complete). */
+					if (x === reverseCallsCount - 1) {
+						reverseOptions.display = opts.display;
+						reverseOptions.visibility = opts.visibility;
+						reverseOptions.complete = opts.complete;
+					}
+
+					animate(elements, "reverse", reverseOptions);
+				}
+			}
+
+			/***************
+    Chaining
+    ***************/
+
+			/* Return the elements back to the call chain, with wrapped elements taking precedence in case Velocity was called via the $.fn. extension. */
+			return getChain();
+		};
+
+		/* Turn Velocity into the animation function, extended with the pre-existing Velocity object. */
+		Velocity = $.extend(animate, Velocity);
+		/* For legacy support, also expose the literal animate method. */
+		Velocity.animate = animate;
+
+		/**************
+   Timing
+   **************/
+
+		/* Ticker function. */
+		var ticker = window.requestAnimationFrame || rAFShim;
+
+		/* Inactive browser tabs pause rAF, which results in all active animations immediately sprinting to their completion states when the tab refocuses.
+   To get around this, we dynamically switch rAF to setTimeout (which the browser *doesn't* pause) when the tab loses focus. We skip this for mobile
+   devices to avoid wasting battery power on inactive tabs. */
+		/* Note: Tab focus detection doesn't work on older versions of IE, but that's okay since they don't support rAF to begin with. */
+		if (!Velocity.State.isMobile && document.hidden !== undefined) {
+			var updateTicker = function updateTicker() {
+				/* Reassign the rAF function (which the global tick() function uses) based on the tab's focus state. */
+				if (document.hidden) {
+					ticker = function (callback) {
+						/* The tick function needs a truthy first argument in order to pass its internal timestamp check. */
+						return setTimeout(function () {
+							callback(true);
+						}, 16);
+					};
+
+					/* The rAF loop has been paused by the browser, so we manually restart the tick. */
+					tick();
+				} else {
+					ticker = window.requestAnimationFrame || rAFShim;
+				}
+			};
+
+			/* Page could be sitting in the background at this time (i.e. opened as new tab) so making sure we use correct ticker from the start */
+			updateTicker();
+
+			/* And then run check again every time visibility changes */
+			document.addEventListener("visibilitychange", updateTicker);
+		}
+
+		/************
+   Tick
+   ************/
+
+		/* Note: All calls to Velocity are pushed to the Velocity.State.calls array, which is fully iterated through upon each tick. */
+		function tick(timestamp) {
+			/* An empty timestamp argument indicates that this is the first tick occurence since ticking was turned on.
+    We leverage this metadata to fully ignore the first tick pass since RAF's initial pass is fired whenever
+    the browser's next tick sync time occurs, which results in the first elements subjected to Velocity
+    calls being animated out of sync with any elements animated immediately thereafter. In short, we ignore
+    the first RAF tick pass so that elements being immediately consecutively animated -- instead of simultaneously animated
+    by the same Velocity call -- are properly batched into the same initial RAF tick and consequently remain in sync thereafter. */
+			if (timestamp) {
+				/* We normally use RAF's high resolution timestamp but as it can be significantly offset when the browser is
+     under high stress we give the option for choppiness over allowing the browser to drop huge chunks of frames.
+     We use performance.now() and shim it if it doesn't exist for when the tab is hidden. */
+				var timeCurrent = Velocity.timestamp && timestamp !== true ? timestamp : performance.now();
+
+				/********************
+     Call Iteration
+     ********************/
+
+				var callsLength = Velocity.State.calls.length;
+
+				/* To speed up iterating over this array, it is compacted (falsey items -- calls that have completed -- are removed)
+     when its length has ballooned to a point that can impact tick performance. This only becomes necessary when animation
+     has been continuous with many elements over a long period of time; whenever all active calls are completed, completeCall() clears Velocity.State.calls. */
+				if (callsLength > 10000) {
+					Velocity.State.calls = compactSparseArray(Velocity.State.calls);
+					callsLength = Velocity.State.calls.length;
+				}
+
+				/* Iterate through each active call. */
+				for (var i = 0; i < callsLength; i++) {
+					/* When a Velocity call is completed, its Velocity.State.calls entry is set to false. Continue on to the next call. */
+					if (!Velocity.State.calls[i]) {
+						continue;
+					}
+
+					/************************
+      Call-Wide Variables
+      ************************/
+
+					var callContainer = Velocity.State.calls[i],
+					    call = callContainer[0],
+					    opts = callContainer[2],
+					    timeStart = callContainer[3],
+					    firstTick = !!timeStart,
+					    tweenDummyValue = null,
+					    pauseObject = callContainer[5],
+					    millisecondsEllapsed = callContainer[6];
+
+					/* If timeStart is undefined, then this is the first time that this call has been processed by tick().
+      We assign timeStart now so that its value is as close to the real animation start time as possible.
+      (Conversely, had timeStart been defined when this call was added to Velocity.State.calls, the delay
+      between that time and now would cause the first few frames of the tween to be skipped since
+      percentComplete is calculated relative to timeStart.) */
+					/* Further, subtract 16ms (the approximate resolution of RAF) from the current time value so that the
+      first tick iteration isn't wasted by animating at 0% tween completion, which would produce the
+      same style value as the element's current value. */
+					if (!timeStart) {
+						timeStart = Velocity.State.calls[i][3] = timeCurrent - 16;
+					}
+
+					/* If a pause object is present, skip processing unless it has been set to resume */
+					if (pauseObject) {
+						if (pauseObject.resume === true) {
+							/* Update the time start to accomodate the paused completion amount */
+							timeStart = callContainer[3] = Math.round(timeCurrent - millisecondsEllapsed - 16);
+
+							/* Remove pause object after processing */
+							callContainer[5] = null;
+						} else {
+							continue;
+						}
+					}
+
+					millisecondsEllapsed = callContainer[6] = timeCurrent - timeStart;
+
+					/* The tween's completion percentage is relative to the tween's start time, not the tween's start value
+      (which would result in unpredictable tween durations since JavaScript's timers are not particularly accurate).
+      Accordingly, we ensure that percentComplete does not exceed 1. */
+					var percentComplete = Math.min(millisecondsEllapsed / opts.duration, 1);
+
+					/**********************
+      Element Iteration
+      **********************/
+
+					/* For every call, iterate through each of the elements in its set. */
+					for (var j = 0, callLength = call.length; j < callLength; j++) {
+						var tweensContainer = call[j],
+						    element = tweensContainer.element;
+
+						/* Check to see if this element has been deleted midway through the animation by checking for the
+       continued existence of its data cache. If it's gone, or the element is currently paused, skip animating this element. */
+						if (!Data(element)) {
+							continue;
+						}
+
+						var transformPropertyExists = false;
+
+						/**********************************
+       Display & Visibility Toggling
+       **********************************/
+
+						/* If the display option is set to non-"none", set it upfront so that the element can become visible before tweening begins.
+       (Otherwise, display's "none" value is set in completeCall() once the animation has completed.) */
+						if (opts.display !== undefined && opts.display !== null && opts.display !== "none") {
+							if (opts.display === "flex") {
+								var flexValues = ["-webkit-box", "-moz-box", "-ms-flexbox", "-webkit-flex"];
+
+								$.each(flexValues, function (i, flexValue) {
+									CSS.setPropertyValue(element, "display", flexValue);
+								});
+							}
+
+							CSS.setPropertyValue(element, "display", opts.display);
+						}
+
+						/* Same goes with the visibility option, but its "none" equivalent is "hidden". */
+						if (opts.visibility !== undefined && opts.visibility !== "hidden") {
+							CSS.setPropertyValue(element, "visibility", opts.visibility);
+						}
+
+						/************************
+       Property Iteration
+       ************************/
+
+						/* For every element, iterate through each property. */
+						for (var property in tweensContainer) {
+							/* Note: In addition to property tween data, tweensContainer contains a reference to its associated element. */
+							if (tweensContainer.hasOwnProperty(property) && property !== "element") {
+								var tween = tweensContainer[property],
+								    currentValue,
+								   
+								/* Easing can either be a pre-genereated function or a string that references a pre-registered easing
+         on the Velocity.Easings object. In either case, return the appropriate easing *function*. */
+								easing = Type.isString(tween.easing) ? Velocity.Easings[tween.easing] : tween.easing;
+
+								/******************************
+         Current Value Calculation
+         ******************************/
+
+								if (Type.isString(tween.pattern)) {
+									var patternReplace = percentComplete === 1 ? function ($0, index, round) {
+										var result = tween.endValue[index];
+
+										return round ? Math.round(result) : result;
+									} : function ($0, index, round) {
+										var startValue = tween.startValue[index],
+										    tweenDelta = tween.endValue[index] - startValue,
+										    result = startValue + tweenDelta * easing(percentComplete, opts, tweenDelta);
+
+										return round ? Math.round(result) : result;
+									};
+
+									currentValue = tween.pattern.replace(/{(\d+)(!)?}/g, patternReplace);
+								} else if (percentComplete === 1) {
+									/* If this is the last tick pass (if we've reached 100% completion for this tween),
+          ensure that currentValue is explicitly set to its target endValue so that it's not subjected to any rounding. */
+									currentValue = tween.endValue;
+								} else {
+									/* Otherwise, calculate currentValue based on the current delta from startValue. */
+									var tweenDelta = tween.endValue - tween.startValue;
+
+									currentValue = tween.startValue + tweenDelta * easing(percentComplete, opts, tweenDelta);
+									/* If no value change is occurring, don't proceed with DOM updating. */
+								}
+								if (!firstTick && currentValue === tween.currentValue) {
+									continue;
+								}
+
+								tween.currentValue = currentValue;
+
+								/* If we're tweening a fake 'tween' property in order to log transition values, update the one-per-call variable so that
+         it can be passed into the progress callback. */
+								if (property === "tween") {
+									tweenDummyValue = currentValue;
+								} else {
+									/******************
+          Hooks: Part I
+          ******************/
+									var hookRoot;
+
+									/* For hooked properties, the newly-updated rootPropertyValueCache is cached onto the element so that it can be used
+          for subsequent hooks in this call that are associated with the same root property. If we didn't cache the updated
+          rootPropertyValue, each subsequent update to the root property in this tick pass would reset the previous hook's
+          updates to rootPropertyValue prior to injection. A nice performance byproduct of rootPropertyValue caching is that
+          subsequently chained animations using the same hookRoot but a different hook can use this cached rootPropertyValue. */
+									if (CSS.Hooks.registered[property]) {
+										hookRoot = CSS.Hooks.getRoot(property);
+
+										var rootPropertyValueCache = Data(element).rootPropertyValueCache[hookRoot];
+
+										if (rootPropertyValueCache) {
+											tween.rootPropertyValue = rootPropertyValueCache;
+										}
+									}
+
+									/*****************
+          DOM Update
+          *****************/
+
+									/* setPropertyValue() returns an array of the property name and property value post any normalization that may have been performed. */
+									/* Note: To solve an IE<=8 positioning bug, the unit type is dropped when setting a property value of 0. */
+									var adjustedSetData = CSS.setPropertyValue(element, /* SET */
+									property, tween.currentValue + (IE < 9 && parseFloat(currentValue) === 0 ? "" : tween.unitType), tween.rootPropertyValue, tween.scrollData);
+
+									/*******************
+          Hooks: Part II
+          *******************/
+
+									/* Now that we have the hook's updated rootPropertyValue (the post-processed value provided by adjustedSetData), cache it onto the element. */
+									if (CSS.Hooks.registered[property]) {
+										/* Since adjustedSetData contains normalized data ready for DOM updating, the rootPropertyValue needs to be re-extracted from its normalized form. ?? */
+										if (CSS.Normalizations.registered[hookRoot]) {
+											Data(element).rootPropertyValueCache[hookRoot] = CSS.Normalizations.registered[hookRoot]("extract", null, adjustedSetData[1]);
+										} else {
+											Data(element).rootPropertyValueCache[hookRoot] = adjustedSetData[1];
+										}
+									}
+
+									/***************
+          Transforms
+          ***************/
+
+									/* Flag whether a transform property is being animated so that flushTransformCache() can be triggered once this tick pass is complete. */
+									if (adjustedSetData[0] === "transform") {
+										transformPropertyExists = true;
+									}
+								}
+							}
+						}
+
+						/****************
+       mobileHA
+       ****************/
+
+						/* If mobileHA is enabled, set the translate3d transform to null to force hardware acceleration.
+       It's safe to override this property since Velocity doesn't actually support its animation (hooks are used in its place). */
+						if (opts.mobileHA) {
+							/* Don't set the null transform hack if we've already done so. */
+							if (Data(element).transformCache.translate3d === undefined) {
+								/* All entries on the transformCache object are later concatenated into a single transform string via flushTransformCache(). */
+								Data(element).transformCache.translate3d = "(0px, 0px, 0px)";
+
+								transformPropertyExists = true;
+							}
+						}
+
+						if (transformPropertyExists) {
+							CSS.flushTransformCache(element);
+						}
+					}
+
+					/* The non-"none" display value is only applied to an element once -- when its associated call is first ticked through.
+      Accordingly, it's set to false so that it isn't re-processed by this call in the next tick. */
+					if (opts.display !== undefined && opts.display !== "none") {
+						Velocity.State.calls[i][2].display = false;
+					}
+					if (opts.visibility !== undefined && opts.visibility !== "hidden") {
+						Velocity.State.calls[i][2].visibility = false;
+					}
+
+					/* Pass the elements and the timing data (percentComplete, msRemaining, timeStart, tweenDummyValue) into the progress callback. */
+					if (opts.progress) {
+						opts.progress.call(callContainer[1], callContainer[1], percentComplete, Math.max(0, timeStart + opts.duration - timeCurrent), timeStart, tweenDummyValue);
+					}
+
+					/* If this call has finished tweening, pass its index to completeCall() to handle call cleanup. */
+					if (percentComplete === 1) {
+						completeCall(i);
+					}
+				}
+			}
+
+			/* Note: completeCall() sets the isTicking flag to false when the last call on Velocity.State.calls has completed. */
+			if (Velocity.State.isTicking) {
+				ticker(tick);
+			}
+		}
+
+		/**********************
+   Call Completion
+   **********************/
+
+		/* Note: Unlike tick(), which processes all active calls at once, call completion is handled on a per-call basis. */
+		function completeCall(callIndex, isStopped) {
+			/* Ensure the call exists. */
+			if (!Velocity.State.calls[callIndex]) {
+				return false;
+			}
+
+			/* Pull the metadata from the call. */
+			var call = Velocity.State.calls[callIndex][0],
+			    elements = Velocity.State.calls[callIndex][1],
+			    opts = Velocity.State.calls[callIndex][2],
+			    resolver = Velocity.State.calls[callIndex][4];
+
+			var remainingCallsExist = false;
+
+			/*************************
+    Element Finalization
+    *************************/
+
+			for (var i = 0, callLength = call.length; i < callLength; i++) {
+				var element = call[i].element;
+
+				/* If the user set display to "none" (intending to hide the element), set it now that the animation has completed. */
+				/* Note: display:none isn't set when calls are manually stopped (via Velocity("stop"). */
+				/* Note: Display gets ignored with "reverse" calls and infinite loops, since this behavior would be undesirable. */
+				if (!isStopped && !opts.loop) {
+					if (opts.display === "none") {
+						CSS.setPropertyValue(element, "display", opts.display);
+					}
+
+					if (opts.visibility === "hidden") {
+						CSS.setPropertyValue(element, "visibility", opts.visibility);
+					}
+				}
+
+				/* If the element's queue is empty (if only the "inprogress" item is left at position 0) or if its queue is about to run
+     a non-Velocity-initiated entry, turn off the isAnimating flag. A non-Velocity-initiatied queue entry's logic might alter
+     an element's CSS values and thereby cause Velocity's cached value data to go stale. To detect if a queue entry was initiated by Velocity,
+     we check for the existence of our special Velocity.queueEntryFlag declaration, which minifiers won't rename since the flag
+     is assigned to jQuery's global $ object and thus exists out of Velocity's own scope. */
+				var data = Data(element);
+
+				if (opts.loop !== true && ($.queue(element)[1] === undefined || !/\.velocityQueueEntryFlag/i.test($.queue(element)[1]))) {
+					/* The element may have been deleted. Ensure that its data cache still exists before acting on it. */
+					if (data) {
+						data.isAnimating = false;
+						/* Clear the element's rootPropertyValueCache, which will become stale. */
+						data.rootPropertyValueCache = {};
+
+						var transformHAPropertyExists = false;
+						/* If any 3D transform subproperty is at its default value (regardless of unit type), remove it. */
+						$.each(CSS.Lists.transforms3D, function (i, transformName) {
+							var defaultValue = /^scale/.test(transformName) ? 1 : 0,
+							    currentValue = data.transformCache[transformName];
+
+							if (data.transformCache[transformName] !== undefined && new RegExp("^\\(" + defaultValue + "[^.]").test(currentValue)) {
+								transformHAPropertyExists = true;
+
+								delete data.transformCache[transformName];
+							}
+						});
+
+						/* Mobile devices have hardware acceleration removed at the end of the animation in order to avoid hogging the GPU's memory. */
+						if (opts.mobileHA) {
+							transformHAPropertyExists = true;
+							delete data.transformCache.translate3d;
+						}
+
+						/* Flush the subproperty removals to the DOM. */
+						if (transformHAPropertyExists) {
+							CSS.flushTransformCache(element);
+						}
+
+						/* Remove the "velocity-animating" indicator class. */
+						CSS.Values.removeClass(element, "velocity-animating");
+					}
+				}
+
+				/*********************
+     Option: Complete
+     *********************/
+
+				/* Complete is fired once per call (not once per element) and is passed the full raw DOM element set as both its context and its first argument. */
+				/* Note: Callbacks aren't fired when calls are manually stopped (via Velocity("stop"). */
+				if (!isStopped && opts.complete && !opts.loop && i === callLength - 1) {
+					/* We throw callbacks in a setTimeout so that thrown errors don't halt the execution of Velocity itself. */
+					try {
+						opts.complete.call(elements, elements);
+					} catch (error) {
+						setTimeout(function () {
+							throw error;
+						}, 1);
+					}
+				}
+
+				/**********************
+     Promise Resolving
+     **********************/
+
+				/* Note: Infinite loops don't return promises. */
+				if (resolver && opts.loop !== true) {
+					resolver(elements);
+				}
+
+				/****************************
+     Option: Loop (Infinite)
+     ****************************/
+
+				if (data && opts.loop === true && !isStopped) {
+					/* If a rotateX/Y/Z property is being animated by 360 deg with loop:true, swap tween start/end values to enable
+      continuous iterative rotation looping. (Otherise, the element would just rotate back and forth.) */
+					$.each(data.tweensContainer, function (propertyName, tweenContainer) {
+						if (/^rotate/.test(propertyName) && (parseFloat(tweenContainer.startValue) - parseFloat(tweenContainer.endValue)) % 360 === 0) {
+							var oldStartValue = tweenContainer.startValue;
+
+							tweenContainer.startValue = tweenContainer.endValue;
+							tweenContainer.endValue = oldStartValue;
+						}
+
+						if (/^backgroundPosition/.test(propertyName) && parseFloat(tweenContainer.endValue) === 100 && tweenContainer.unitType === "%") {
+							tweenContainer.endValue = 0;
+							tweenContainer.startValue = 100;
+						}
+					});
+
+					Velocity(element, "reverse", { loop: true, delay: opts.delay });
+				}
+
+				/***************
+     Dequeueing
+     ***************/
+
+				/* Fire the next call in the queue so long as this call's queue wasn't set to false (to trigger a parallel animation),
+     which would have already caused the next call to fire. Note: Even if the end of the animation queue has been reached,
+     $.dequeue() must still be called in order to completely clear jQuery's animation queue. */
+				if (opts.queue !== false) {
+					$.dequeue(element, opts.queue);
+				}
+			}
+
+			/************************
+    Calls Array Cleanup
+    ************************/
+
+			/* Since this call is complete, set it to false so that the rAF tick skips it. This array is later compacted via compactSparseArray().
+    (For performance reasons, the call is set to false instead of being deleted from the array: http://www.html5rocks.com/en/tutorials/speed/v8/) */
+			Velocity.State.calls[callIndex] = false;
+
+			/* Iterate through the calls array to determine if this was the final in-progress animation.
+    If so, set a flag to end ticking and clear the calls array. */
+			for (var j = 0, callsLength = Velocity.State.calls.length; j < callsLength; j++) {
+				if (Velocity.State.calls[j] !== false) {
+					remainingCallsExist = true;
+
+					break;
+				}
+			}
+
+			if (remainingCallsExist === false) {
+				/* tick() will detect this flag upon its next iteration and subsequently turn itself off. */
+				Velocity.State.isTicking = false;
+
+				/* Clear the calls array so that its length is reset. */
+				delete Velocity.State.calls;
+				Velocity.State.calls = [];
+			}
+		}
+
+		/******************
+   Frameworks
+   ******************/
+
+		/* Both jQuery and Zepto allow their $.fn object to be extended to allow wrapped elements to be subjected to plugin calls.
+   If either framework is loaded, register a "velocity" extension pointing to Velocity's core animate() method.  Velocity
+   also registers itself onto a global container (window.jQuery || window.Zepto || window) so that certain features are
+   accessible beyond just a per-element scope. This master object contains an .animate() method, which is later assigned to $.fn
+   (if jQuery or Zepto are present). Accordingly, Velocity can both act on wrapped DOM elements and stand alone for targeting raw DOM elements. */
+		global.Velocity = Velocity;
+
+		if (global !== window) {
+			/* Assign the element function to Velocity's core animate() method. */
+			global.fn.velocity = animate;
+			/* Assign the object function's defaults to Velocity's global defaults object. */
+			global.fn.velocity.defaults = Velocity.defaults;
+		}
+
+		/***********************
+   Packaged Redirects
+   ***********************/
+
+		/* slideUp, slideDown */
+		$.each(["Down", "Up"], function (i, direction) {
+			Velocity.Redirects["slide" + direction] = function (element, options, elementsIndex, elementsSize, elements, promiseData) {
+				var opts = $.extend({}, options),
+				    begin = opts.begin,
+				    complete = opts.complete,
+				    inlineValues = {},
+				    computedValues = { height: "", marginTop: "", marginBottom: "", paddingTop: "", paddingBottom: "" };
+
+				if (opts.display === undefined) {
+					/* Show the element before slideDown begins and hide the element after slideUp completes. */
+					/* Note: Inline elements cannot have dimensions animated, so they're reverted to inline-block. */
+					opts.display = direction === "Down" ? Velocity.CSS.Values.getDisplayType(element) === "inline" ? "inline-block" : "block" : "none";
+				}
+
+				opts.begin = function () {
+					/* If the user passed in a begin callback, fire it now. */
+					if (elementsIndex === 0 && begin) {
+						begin.call(elements, elements);
+					}
+
+					/* Cache the elements' original vertical dimensional property values so that we can animate back to them. */
+					for (var property in computedValues) {
+						if (!computedValues.hasOwnProperty(property)) {
+							continue;
+						}
+						inlineValues[property] = element.style[property];
+
+						/* For slideDown, use forcefeeding to animate all vertical properties from 0. For slideUp,
+       use forcefeeding to start from computed values and animate down to 0. */
+						var propertyValue = CSS.getPropertyValue(element, property);
+						computedValues[property] = direction === "Down" ? [propertyValue, 0] : [0, propertyValue];
+					}
+
+					/* Force vertical overflow content to clip so that sliding works as expected. */
+					inlineValues.overflow = element.style.overflow;
+					element.style.overflow = "hidden";
+				};
+
+				opts.complete = function () {
+					/* Reset element to its pre-slide inline values once its slide animation is complete. */
+					for (var property in inlineValues) {
+						if (inlineValues.hasOwnProperty(property)) {
+							element.style[property] = inlineValues[property];
+						}
+					}
+
+					/* If the user passed in a complete callback, fire it now. */
+					if (elementsIndex === elementsSize - 1) {
+						if (complete) {
+							complete.call(elements, elements);
+						}
+						if (promiseData) {
+							promiseData.resolver(elements);
+						}
+					}
+				};
+
+				Velocity(element, computedValues, opts);
+			};
+		});
+
+		/* fadeIn, fadeOut */
+		$.each(["In", "Out"], function (i, direction) {
+			Velocity.Redirects["fade" + direction] = function (element, options, elementsIndex, elementsSize, elements, promiseData) {
+				var opts = $.extend({}, options),
+				    complete = opts.complete,
+				    propertiesMap = { opacity: direction === "In" ? 1 : 0 };
+
+				/* Since redirects are triggered individually for each element in the animated set, avoid repeatedly triggering
+     callbacks by firing them only when the final element has been reached. */
+				if (elementsIndex !== 0) {
+					opts.begin = null;
+				}
+				if (elementsIndex !== elementsSize - 1) {
+					opts.complete = null;
+				} else {
+					opts.complete = function () {
+						if (complete) {
+							complete.call(elements, elements);
+						}
+						if (promiseData) {
+							promiseData.resolver(elements);
+						}
+					};
+				}
+
+				/* If a display was passed in, use it. Otherwise, default to "none" for fadeOut or the element-specific default for fadeIn. */
+				/* Note: We allow users to pass in "null" to skip display setting altogether. */
+				if (opts.display === undefined) {
+					opts.display = direction === "In" ? "auto" : "none";
+				}
+
+				Velocity(this, propertiesMap, opts);
+			};
+		});
+
+		return Velocity;
+	})(window.jQuery || window.Zepto || window, window, window ? window.document : undefined);
+});
+
+/******************
+ Known Issues
+ ******************/
+
+/* The CSS spec mandates that the translateX/Y/Z transforms are %-relative to the element itself -- not its parent.
+ Velocity, however, doesn't make this distinction. Thus, converting to or from the % unit with these subproperties
+ will produce an inaccurate conversion value. The same issue exists with the cx/cy attributes of SVG circles and ellipses. */
+/* Browser support: Using this shim instead of jQuery proper removes support for IE8. */ // and will not fail on other DOM objects (as do DOM elements in IE < 9)
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -845,7 +6804,7 @@ try {
 module.exports = g;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -875,33 +6834,42 @@ module.exports = g;
  */
 
 
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-__webpack_require__(26);
+__webpack_require__(4);
 
-__webpack_require__(21);
-
-__webpack_require__(23);
-
-__webpack_require__(20);
+//import Swiper from 'swiper/dist/js/swiper.min';
 
 __webpack_require__(19);
 
+__webpack_require__(12);
+
+__webpack_require__(29);
+
+__webpack_require__(24);
+
+__webpack_require__(26);
+
+__webpack_require__(23);
+
+__webpack_require__(22);
+
+__webpack_require__(10);
+
+__webpack_require__(16);
+
+__webpack_require__(20);
+
+__webpack_require__(21);
+
 __webpack_require__(9);
-
-__webpack_require__(14);
-
-__webpack_require__(17);
-
-__webpack_require__(18);
-
-__webpack_require__(8);
 
 var _componentsDropDown = __webpack_require__(2);
 
 var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
 
-var _componentsForm = __webpack_require__(11);
+var _componentsForm = __webpack_require__(13);
 
 var _componentsForm2 = _interopRequireDefault(_componentsForm);
 
@@ -909,11 +6877,11 @@ var _componentsProductMiniature = __webpack_require__(3);
 
 var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
 
-var _componentsProductSelect = __webpack_require__(12);
+var _componentsProductSelect = __webpack_require__(14);
 
 var _componentsProductSelect2 = _interopRequireDefault(_componentsProductSelect);
 
-var _componentsTopMenu = __webpack_require__(13);
+var _componentsTopMenu = __webpack_require__(15);
 
 var _componentsTopMenu2 = _interopRequireDefault(_componentsTopMenu);
 
@@ -921,15 +6889,15 @@ var _prestashop = __webpack_require__(1);
 
 var _prestashop2 = _interopRequireDefault(_prestashop);
 
-var _events = __webpack_require__(22);
+var _events = __webpack_require__(25);
 
 var _events2 = _interopRequireDefault(_events);
 
-__webpack_require__(15);
+__webpack_require__(17);
 
-__webpack_require__(16);
+__webpack_require__(18);
 
-__webpack_require__(10);
+__webpack_require__(11);
 
 // "inherit" EventEmitter
 for (var i in _events2['default'].prototype) {
@@ -952,13 +6920,13 @@ $(document).ready(function () {
 });
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1279,7 +7247,7 @@ var CheckUpdateQuantityOperations = {
 };
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1362,7 +7330,7 @@ function setUpCheckout() {
 });
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1426,7 +7394,61 @@ _prestashop2['default'].blockcart.showModal = function (html) {
 };
 
 /***/ }),
-/* 11 */
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _swiperDistJsSwiperMin = __webpack_require__(4);
+
+var _swiperDistJsSwiperMin2 = _interopRequireDefault(_swiperDistJsSwiperMin);
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+(0, _jquery2['default'])(document).ready(function () {
+     var swiper = new _swiperDistJsSwiperMin2['default']('.swiper-container', {
+          //       pagination: '.swiper-pagination',
+          //       paginationClickable: true,
+          slidesPerView: 4,
+          //       nextButton: '.swiper-button-next',
+          //       prevButton: '.swiper-button-prev',
+          navigation: {
+               nextEl: '.swiper-button-next',
+               prevEl: '.swiper-button-prev'
+          },
+          spaceBetween: 30,
+          breakpoints: {
+               1190: {
+                    slidesPerView: 3,
+                    spaceBetween: 40
+               },
+               1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 40
+               },
+               768: {
+                    slidesPerView: 2,
+                    spaceBetween: 30
+               },
+               640: {
+                    slidesPerView: 1,
+                    spaceBetween: 20
+               },
+               320: {
+                    slidesPerView: 1,
+                    spaceBetween: 10
+               }
+          }
+     });
+});
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1514,7 +7536,7 @@ exports['default'] = Form;
 module.exports = exports['default'];
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1558,7 +7580,7 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-__webpack_require__(4);
+__webpack_require__(5);
 
 var ProductSelect = (function () {
   function ProductSelect() {
@@ -1633,7 +7655,7 @@ exports['default'] = ProductSelect;
 module.exports = exports['default'];
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1757,7 +7779,7 @@ exports['default'] = TopMenu;
 module.exports = exports['default'];
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1811,7 +7833,7 @@ function setupCustomerScripts() {
 (0, _jquery2['default'])(document).ready(setupCustomerScripts);
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2033,7 +8055,7 @@ function setupCustomerScripts() {
 })(window.jQuery);
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2198,7 +8220,1798 @@ function setupCustomerScripts() {
 })(jQuery);
 
 /***/ }),
-/* 17 */
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/**
+ * Swiper 4.4.2
+ * Most modern mobile touch slider and framework with hardware accelerated transitions
+ * http://www.idangero.us/swiper/
+ *
+ * Copyright 2014-2018 Vladimir Kharlampidi
+ *
+ * Released under the MIT License
+ *
+ * Released on: November 1, 2018
+ */
+
+
+!(function (e, t) {
+   true ? module.exports = t() : "function" == typeof define && define.amd ? define(t) : e.Swiper = t();
+})(undefined, function () {
+  "use strict";var f = "undefined" == typeof document ? { body: {}, addEventListener: function addEventListener() {}, removeEventListener: function removeEventListener() {}, activeElement: { blur: function blur() {}, nodeName: "" }, querySelector: function querySelector() {
+      return null;
+    }, querySelectorAll: function querySelectorAll() {
+      return [];
+    }, getElementById: function getElementById() {
+      return null;
+    }, createEvent: function createEvent() {
+      return { initEvent: function initEvent() {} };
+    }, createElement: function createElement() {
+      return { children: [], childNodes: [], style: {}, setAttribute: function setAttribute() {}, getElementsByTagName: function getElementsByTagName() {
+          return [];
+        } };
+    }, location: { hash: "" } } : document,
+      Y = "undefined" == typeof window ? { document: f, navigator: { userAgent: "" }, location: {}, history: {}, CustomEvent: function CustomEvent() {
+      return this;
+    }, addEventListener: function addEventListener() {}, removeEventListener: function removeEventListener() {}, getComputedStyle: function getComputedStyle() {
+      return { getPropertyValue: function getPropertyValue() {
+          return "";
+        } };
+    }, Image: function Image() {}, Date: function Date() {}, screen: {}, setTimeout: function setTimeout() {}, clearTimeout: function clearTimeout() {} } : window,
+      l = function l(e) {
+    for (var t = 0; t < e.length; t += 1) this[t] = e[t];return this.length = e.length, this;
+  };function L(e, t) {
+    var a = [],
+        i = 0;if (e && !t && e instanceof l) return e;if (e) if ("string" == typeof e) {
+      var s,
+          r,
+          n = e.trim();if (0 <= n.indexOf("<") && 0 <= n.indexOf(">")) {
+        var o = "div";for (0 === n.indexOf("<li") && (o = "ul"), 0 === n.indexOf("<tr") && (o = "tbody"), 0 !== n.indexOf("<td") && 0 !== n.indexOf("<th") || (o = "tr"), 0 === n.indexOf("<tbody") && (o = "table"), 0 === n.indexOf("<option") && (o = "select"), (r = f.createElement(o)).innerHTML = n, i = 0; i < r.childNodes.length; i += 1) a.push(r.childNodes[i]);
+      } else for (s = t || "#" !== e[0] || e.match(/[ .<>:~]/) ? (t || f).querySelectorAll(e.trim()) : [f.getElementById(e.trim().split("#")[1])], i = 0; i < s.length; i += 1) s[i] && a.push(s[i]);
+    } else if (e.nodeType || e === Y || e === f) a.push(e);else if (0 < e.length && e[0].nodeType) for (i = 0; i < e.length; i += 1) a.push(e[i]);return new l(a);
+  }function r(e) {
+    for (var t = [], a = 0; a < e.length; a += 1) -1 === t.indexOf(e[a]) && t.push(e[a]);return t;
+  }L.fn = l.prototype, L.Class = l, L.Dom7 = l;var t = { addClass: function addClass(e) {
+      if (void 0 === e) return this;for (var t = e.split(" "), a = 0; a < t.length; a += 1) for (var i = 0; i < this.length; i += 1) void 0 !== this[i] && void 0 !== this[i].classList && this[i].classList.add(t[a]);return this;
+    }, removeClass: function removeClass(e) {
+      for (var t = e.split(" "), a = 0; a < t.length; a += 1) for (var i = 0; i < this.length; i += 1) void 0 !== this[i] && void 0 !== this[i].classList && this[i].classList.remove(t[a]);return this;
+    }, hasClass: function hasClass(e) {
+      return !!this[0] && this[0].classList.contains(e);
+    }, toggleClass: function toggleClass(e) {
+      for (var t = e.split(" "), a = 0; a < t.length; a += 1) for (var i = 0; i < this.length; i += 1) void 0 !== this[i] && void 0 !== this[i].classList && this[i].classList.toggle(t[a]);return this;
+    }, attr: function attr(e, t) {
+      var a = arguments;if (1 === arguments.length && "string" == typeof e) return this[0] ? this[0].getAttribute(e) : void 0;for (var i = 0; i < this.length; i += 1) if (2 === a.length) this[i].setAttribute(e, t);else for (var s in e) this[i][s] = e[s], this[i].setAttribute(s, e[s]);return this;
+    }, removeAttr: function removeAttr(e) {
+      for (var t = 0; t < this.length; t += 1) this[t].removeAttribute(e);return this;
+    }, data: function data(e, t) {
+      var a;if (void 0 !== t) {
+        for (var i = 0; i < this.length; i += 1) (a = this[i]).dom7ElementDataStorage || (a.dom7ElementDataStorage = {}), a.dom7ElementDataStorage[e] = t;return this;
+      }if (a = this[0]) {
+        if (a.dom7ElementDataStorage && e in a.dom7ElementDataStorage) return a.dom7ElementDataStorage[e];var s = a.getAttribute("data-" + e);return s || void 0;
+      }
+    }, transform: function transform(e) {
+      for (var t = 0; t < this.length; t += 1) {
+        var a = this[t].style;a.webkitTransform = e, a.transform = e;
+      }return this;
+    }, transition: function transition(e) {
+      "string" != typeof e && (e += "ms");for (var t = 0; t < this.length; t += 1) {
+        var a = this[t].style;a.webkitTransitionDuration = e, a.transitionDuration = e;
+      }return this;
+    }, on: function on() {
+      for (var e, t = [], a = arguments.length; a--;) t[a] = arguments[a];var i = t[0],
+          r = t[1],
+          n = t[2],
+          s = t[3];function o(e) {
+        var t = e.target;if (t) {
+          var a = e.target.dom7EventData || [];if ((a.indexOf(e) < 0 && a.unshift(e), L(t).is(r))) n.apply(t, a);else for (var i = L(t).parents(), s = 0; s < i.length; s += 1) L(i[s]).is(r) && n.apply(i[s], a);
+        }
+      }function l(e) {
+        var t = e && e.target && e.target.dom7EventData || [];t.indexOf(e) < 0 && t.unshift(e), n.apply(this, t);
+      }"function" == typeof t[1] && (i = (e = t)[0], n = e[1], s = e[2], r = void 0), s || (s = !1);for (var d, p = i.split(" "), c = 0; c < this.length; c += 1) {
+        var u = this[c];if (r) for (d = 0; d < p.length; d += 1) {
+          var h = p[d];u.dom7LiveListeners || (u.dom7LiveListeners = {}), u.dom7LiveListeners[h] || (u.dom7LiveListeners[h] = []), u.dom7LiveListeners[h].push({ listener: n, proxyListener: o }), u.addEventListener(h, o, s);
+        } else for (d = 0; d < p.length; d += 1) {
+          var v = p[d];u.dom7Listeners || (u.dom7Listeners = {}), u.dom7Listeners[v] || (u.dom7Listeners[v] = []), u.dom7Listeners[v].push({ listener: n, proxyListener: l }), u.addEventListener(v, l, s);
+        }
+      }return this;
+    }, off: function off() {
+      for (var e, t = [], a = arguments.length; a--;) t[a] = arguments[a];var i = t[0],
+          s = t[1],
+          r = t[2],
+          n = t[3];"function" == typeof t[1] && (i = (e = t)[0], r = e[1], n = e[2], s = void 0), n || (n = !1);for (var o = i.split(" "), l = 0; l < o.length; l += 1) for (var d = o[l], p = 0; p < this.length; p += 1) {
+        var c = this[p],
+            u = void 0;if ((!s && c.dom7Listeners ? u = c.dom7Listeners[d] : s && c.dom7LiveListeners && (u = c.dom7LiveListeners[d]), u && u.length)) for (var h = u.length - 1; 0 <= h; h -= 1) {
+          var v = u[h];r && v.listener === r ? (c.removeEventListener(d, v.proxyListener, n), u.splice(h, 1)) : r || (c.removeEventListener(d, v.proxyListener, n), u.splice(h, 1));
+        }
+      }return this;
+    }, trigger: function trigger() {
+      for (var e = [], t = arguments.length; t--;) e[t] = arguments[t];for (var a = e[0].split(" "), i = e[1], s = 0; s < a.length; s += 1) for (var r = a[s], n = 0; n < this.length; n += 1) {
+        var o = this[n],
+            l = void 0;try {
+          l = new Y.CustomEvent(r, { detail: i, bubbles: !0, cancelable: !0 });
+        } catch (e) {
+          (l = f.createEvent("Event")).initEvent(r, !0, !0), l.detail = i;
+        }o.dom7EventData = e.filter(function (e, t) {
+          return 0 < t;
+        }), o.dispatchEvent(l), o.dom7EventData = [], delete o.dom7EventData;
+      }return this;
+    }, transitionEnd: function transitionEnd(t) {
+      var a,
+          i = ["webkitTransitionEnd", "transitionend"],
+          s = this;function r(e) {
+        if (e.target === this) for (t.call(this, e), a = 0; a < i.length; a += 1) s.off(i[a], r);
+      }if (t) for (a = 0; a < i.length; a += 1) s.on(i[a], r);return this;
+    }, outerWidth: function outerWidth(e) {
+      if (0 < this.length) {
+        if (e) {
+          var t = this.styles();return this[0].offsetWidth + parseFloat(t.getPropertyValue("margin-right")) + parseFloat(t.getPropertyValue("margin-left"));
+        }return this[0].offsetWidth;
+      }return null;
+    }, outerHeight: function outerHeight(e) {
+      if (0 < this.length) {
+        if (e) {
+          var t = this.styles();return this[0].offsetHeight + parseFloat(t.getPropertyValue("margin-top")) + parseFloat(t.getPropertyValue("margin-bottom"));
+        }return this[0].offsetHeight;
+      }return null;
+    }, offset: function offset() {
+      if (0 < this.length) {
+        var e = this[0],
+            t = e.getBoundingClientRect(),
+            a = f.body,
+            i = e.clientTop || a.clientTop || 0,
+            s = e.clientLeft || a.clientLeft || 0,
+            r = e === Y ? Y.scrollY : e.scrollTop,
+            n = e === Y ? Y.scrollX : e.scrollLeft;return { top: t.top + r - i, left: t.left + n - s };
+      }return null;
+    }, css: function css(e, t) {
+      var a;if (1 === arguments.length) {
+        if ("string" != typeof e) {
+          for (a = 0; a < this.length; a += 1) for (var i in e) this[a].style[i] = e[i];return this;
+        }if (this[0]) return Y.getComputedStyle(this[0], null).getPropertyValue(e);
+      }if (2 === arguments.length && "string" == typeof e) {
+        for (a = 0; a < this.length; a += 1) this[a].style[e] = t;return this;
+      }return this;
+    }, each: function each(e) {
+      if (!e) return this;for (var t = 0; t < this.length; t += 1) if (!1 === e.call(this[t], t, this[t])) return this;return this;
+    }, html: function html(e) {
+      if (void 0 === e) return this[0] ? this[0].innerHTML : void 0;for (var t = 0; t < this.length; t += 1) this[t].innerHTML = e;return this;
+    }, text: function text(e) {
+      if (void 0 === e) return this[0] ? this[0].textContent.trim() : null;for (var t = 0; t < this.length; t += 1) this[t].textContent = e;return this;
+    }, is: function is(e) {
+      var t,
+          a,
+          i = this[0];if (!i || void 0 === e) return !1;if ("string" == typeof e) {
+        if (i.matches) return i.matches(e);if (i.webkitMatchesSelector) return i.webkitMatchesSelector(e);if (i.msMatchesSelector) return i.msMatchesSelector(e);for (t = L(e), a = 0; a < t.length; a += 1) if (t[a] === i) return !0;return !1;
+      }if (e === f) return i === f;if (e === Y) return i === Y;if (e.nodeType || e instanceof l) {
+        for (t = e.nodeType ? [e] : e, a = 0; a < t.length; a += 1) if (t[a] === i) return !0;return !1;
+      }return !1;
+    }, index: function index() {
+      var e,
+          t = this[0];if (t) {
+        for (e = 0; null !== (t = t.previousSibling);) 1 === t.nodeType && (e += 1);return e;
+      }
+    }, eq: function eq(e) {
+      if (void 0 === e) return this;var t,
+          a = this.length;return new l(a - 1 < e ? [] : e < 0 ? (t = a + e) < 0 ? [] : [this[t]] : [this[e]]);
+    }, append: function append() {
+      for (var e, t = [], a = arguments.length; a--;) t[a] = arguments[a];for (var i = 0; i < t.length; i += 1) {
+        e = t[i];for (var s = 0; s < this.length; s += 1) if ("string" == typeof e) {
+          var r = f.createElement("div");for (r.innerHTML = e; r.firstChild;) this[s].appendChild(r.firstChild);
+        } else if (e instanceof l) for (var n = 0; n < e.length; n += 1) this[s].appendChild(e[n]);else this[s].appendChild(e);
+      }return this;
+    }, prepend: function prepend(e) {
+      var t, a;for (t = 0; t < this.length; t += 1) if ("string" == typeof e) {
+        var i = f.createElement("div");for (i.innerHTML = e, a = i.childNodes.length - 1; 0 <= a; a -= 1) this[t].insertBefore(i.childNodes[a], this[t].childNodes[0]);
+      } else if (e instanceof l) for (a = 0; a < e.length; a += 1) this[t].insertBefore(e[a], this[t].childNodes[0]);else this[t].insertBefore(e, this[t].childNodes[0]);return this;
+    }, next: function next(e) {
+      return 0 < this.length ? e ? this[0].nextElementSibling && L(this[0].nextElementSibling).is(e) ? new l([this[0].nextElementSibling]) : new l([]) : this[0].nextElementSibling ? new l([this[0].nextElementSibling]) : new l([]) : new l([]);
+    }, nextAll: function nextAll(e) {
+      var t = [],
+          a = this[0];if (!a) return new l([]);for (; a.nextElementSibling;) {
+        var i = a.nextElementSibling;e ? L(i).is(e) && t.push(i) : t.push(i), a = i;
+      }return new l(t);
+    }, prev: function prev(e) {
+      if (0 < this.length) {
+        var t = this[0];return e ? t.previousElementSibling && L(t.previousElementSibling).is(e) ? new l([t.previousElementSibling]) : new l([]) : t.previousElementSibling ? new l([t.previousElementSibling]) : new l([]);
+      }return new l([]);
+    }, prevAll: function prevAll(e) {
+      var t = [],
+          a = this[0];if (!a) return new l([]);for (; a.previousElementSibling;) {
+        var i = a.previousElementSibling;e ? L(i).is(e) && t.push(i) : t.push(i), a = i;
+      }return new l(t);
+    }, parent: function parent(e) {
+      for (var t = [], a = 0; a < this.length; a += 1) null !== this[a].parentNode && (e ? L(this[a].parentNode).is(e) && t.push(this[a].parentNode) : t.push(this[a].parentNode));return L(r(t));
+    }, parents: function parents(e) {
+      for (var t = [], a = 0; a < this.length; a += 1) for (var i = this[a].parentNode; i;) e ? L(i).is(e) && t.push(i) : t.push(i), i = i.parentNode;return L(r(t));
+    }, closest: function closest(e) {
+      var t = this;return void 0 === e ? new l([]) : (t.is(e) || (t = t.parents(e).eq(0)), t);
+    }, find: function find(e) {
+      for (var t = [], a = 0; a < this.length; a += 1) for (var i = this[a].querySelectorAll(e), s = 0; s < i.length; s += 1) t.push(i[s]);return new l(t);
+    }, children: function children(e) {
+      for (var t = [], a = 0; a < this.length; a += 1) for (var i = this[a].childNodes, s = 0; s < i.length; s += 1) e ? 1 === i[s].nodeType && L(i[s]).is(e) && t.push(i[s]) : 1 === i[s].nodeType && t.push(i[s]);return new l(r(t));
+    }, remove: function remove() {
+      for (var e = 0; e < this.length; e += 1) this[e].parentNode && this[e].parentNode.removeChild(this[e]);return this;
+    }, add: function add() {
+      for (var e = [], t = arguments.length; t--;) e[t] = arguments[t];var a, i;for (a = 0; a < e.length; a += 1) {
+        var s = L(e[a]);for (i = 0; i < s.length; i += 1) this[this.length] = s[i], this.length += 1;
+      }return this;
+    }, styles: function styles() {
+      return this[0] ? Y.getComputedStyle(this[0], null) : {};
+    } };Object.keys(t).forEach(function (e) {
+    L.fn[e] = t[e];
+  });var e,
+      a,
+      i,
+      V = { deleteProps: function deleteProps(e) {
+      var t = e;Object.keys(t).forEach(function (e) {
+        try {
+          t[e] = null;
+        } catch (e) {}try {
+          delete t[e];
+        } catch (e) {}
+      });
+    }, nextTick: function nextTick(e, t) {
+      return void 0 === t && (t = 0), setTimeout(e, t);
+    }, now: function now() {
+      return Date.now();
+    }, getTranslate: function getTranslate(e, t) {
+      var a, i, s;void 0 === t && (t = "x");var r = Y.getComputedStyle(e, null);return Y.WebKitCSSMatrix ? (6 < (i = r.transform || r.webkitTransform).split(",").length && (i = i.split(", ").map(function (e) {
+        return e.replace(",", ".");
+      }).join(", ")), s = new Y.WebKitCSSMatrix("none" === i ? "" : i)) : a = (s = r.MozTransform || r.OTransform || r.MsTransform || r.msTransform || r.transform || r.getPropertyValue("transform").replace("translate(", "matrix(1, 0, 0, 1,")).toString().split(","), "x" === t && (i = Y.WebKitCSSMatrix ? s.m41 : 16 === a.length ? parseFloat(a[12]) : parseFloat(a[4])), "y" === t && (i = Y.WebKitCSSMatrix ? s.m42 : 16 === a.length ? parseFloat(a[13]) : parseFloat(a[5])), i || 0;
+    }, parseUrlQuery: function parseUrlQuery(e) {
+      var t,
+          a,
+          i,
+          s,
+          r = {},
+          n = e || Y.location.href;if ("string" == typeof n && n.length) for (s = (a = (n = -1 < n.indexOf("?") ? n.replace(/\S*\?/, "") : "").split("&").filter(function (e) {
+        return "" !== e;
+      })).length, t = 0; t < s; t += 1) i = a[t].replace(/#\S+/g, "").split("="), r[decodeURIComponent(i[0])] = void 0 === i[1] ? void 0 : decodeURIComponent(i[1]) || "";return r;
+    }, isObject: function isObject(e) {
+      return "object" == typeof e && null !== e && e.constructor && e.constructor === Object;
+    }, extend: function extend() {
+      for (var e = [], t = arguments.length; t--;) e[t] = arguments[t];for (var a = Object(e[0]), i = 1; i < e.length; i += 1) {
+        var s = e[i];if (null != s) for (var r = Object.keys(Object(s)), n = 0, o = r.length; n < o; n += 1) {
+          var l = r[n],
+              d = Object.getOwnPropertyDescriptor(s, l);void 0 !== d && d.enumerable && (V.isObject(a[l]) && V.isObject(s[l]) ? V.extend(a[l], s[l]) : !V.isObject(a[l]) && V.isObject(s[l]) ? (a[l] = {}, V.extend(a[l], s[l])) : a[l] = s[l]);
+        }
+      }return a;
+    } },
+      F = (i = f.createElement("div"), { touch: Y.Modernizr && !0 === Y.Modernizr.touch || !!("ontouchstart" in Y || Y.DocumentTouch && f instanceof Y.DocumentTouch), pointerEvents: !!(Y.navigator.pointerEnabled || Y.PointerEvent || "maxTouchPoints" in Y.navigator), prefixedPointerEvents: !!Y.navigator.msPointerEnabled, transition: (a = i.style, "transition" in a || "webkitTransition" in a || "MozTransition" in a), transforms3d: Y.Modernizr && !0 === Y.Modernizr.csstransforms3d || (e = i.style, "webkitPerspective" in e || "MozPerspective" in e || "OPerspective" in e || "MsPerspective" in e || "perspective" in e), flexbox: (function () {
+      for (var e = i.style, t = "alignItems webkitAlignItems webkitBoxAlign msFlexAlign mozBoxAlign webkitFlexDirection msFlexDirection mozBoxDirection mozBoxOrient webkitBoxDirection webkitBoxOrient".split(" "), a = 0; a < t.length; a += 1) if (t[a] in e) return !0;return !1;
+    })(), observer: "MutationObserver" in Y || "WebkitMutationObserver" in Y, passiveListener: (function () {
+      var e = !1;try {
+        var t = Object.defineProperty({}, "passive", { get: function get() {
+            e = !0;
+          } });Y.addEventListener("testPassiveListener", null, t);
+      } catch (e) {}return e;
+    })(), gestures: "ongesturestart" in Y }),
+      s = function s(e) {
+    void 0 === e && (e = {});var t = this;t.params = e, t.eventsListeners = {}, t.params && t.params.on && Object.keys(t.params.on).forEach(function (e) {
+      t.on(e, t.params.on[e]);
+    });
+  },
+      n = { components: { configurable: !0 } };s.prototype.on = function (e, t, a) {
+    var i = this;if ("function" != typeof t) return i;var s = a ? "unshift" : "push";return e.split(" ").forEach(function (e) {
+      i.eventsListeners[e] || (i.eventsListeners[e] = []), i.eventsListeners[e][s](t);
+    }), i;
+  }, s.prototype.once = function (i, s, e) {
+    var r = this;if ("function" != typeof s) return r;return r.on(i, function e() {
+      for (var t = [], a = arguments.length; a--;) t[a] = arguments[a];s.apply(r, t), r.off(i, e);
+    }, e);
+  }, s.prototype.off = function (e, i) {
+    var s = this;return s.eventsListeners && e.split(" ").forEach(function (a) {
+      void 0 === i ? s.eventsListeners[a] = [] : s.eventsListeners[a] && s.eventsListeners[a].length && s.eventsListeners[a].forEach(function (e, t) {
+        e === i && s.eventsListeners[a].splice(t, 1);
+      });
+    }), s;
+  }, s.prototype.emit = function () {
+    for (var e = [], t = arguments.length; t--;) e[t] = arguments[t];var a,
+        i,
+        s,
+        r = this;return r.eventsListeners && ("string" == typeof e[0] || Array.isArray(e[0]) ? (a = e[0], i = e.slice(1, e.length), s = r) : (a = e[0].events, i = e[0].data, s = e[0].context || r), (Array.isArray(a) ? a : a.split(" ")).forEach(function (e) {
+      if (r.eventsListeners && r.eventsListeners[e]) {
+        var t = [];r.eventsListeners[e].forEach(function (e) {
+          t.push(e);
+        }), t.forEach(function (e) {
+          e.apply(s, i);
+        });
+      }
+    })), r;
+  }, s.prototype.useModulesParams = function (a) {
+    var i = this;i.modules && Object.keys(i.modules).forEach(function (e) {
+      var t = i.modules[e];t.params && V.extend(a, t.params);
+    });
+  }, s.prototype.useModules = function (i) {
+    void 0 === i && (i = {});var s = this;s.modules && Object.keys(s.modules).forEach(function (e) {
+      var a = s.modules[e],
+          t = i[e] || {};a.instance && Object.keys(a.instance).forEach(function (e) {
+        var t = a.instance[e];s[e] = "function" == typeof t ? t.bind(s) : t;
+      }), a.on && s.on && Object.keys(a.on).forEach(function (e) {
+        s.on(e, a.on[e]);
+      }), a.create && a.create.bind(s)(t);
+    });
+  }, n.components.set = function (e) {
+    this.use && this.use(e);
+  }, s.installModule = function (t) {
+    for (var e = [], a = arguments.length - 1; 0 < a--;) e[a] = arguments[a + 1];var i = this;i.prototype.modules || (i.prototype.modules = {});var s = t.name || Object.keys(i.prototype.modules).length + "_" + V.now();return (i.prototype.modules[s] = t).proto && Object.keys(t.proto).forEach(function (e) {
+      i.prototype[e] = t.proto[e];
+    }), t["static"] && Object.keys(t["static"]).forEach(function (e) {
+      i[e] = t["static"][e];
+    }), t.install && t.install.apply(i, e), i;
+  }, s.use = function (e) {
+    for (var t = [], a = arguments.length - 1; 0 < a--;) t[a] = arguments[a + 1];var i = this;return Array.isArray(e) ? (e.forEach(function (e) {
+      return i.installModule(e);
+    }), i) : i.installModule.apply(i, [e].concat(t));
+  }, Object.defineProperties(s, n);var o = { updateSize: function updateSize() {
+      var e,
+          t,
+          a = this,
+          i = a.$el;e = void 0 !== a.params.width ? a.params.width : i[0].clientWidth, t = void 0 !== a.params.height ? a.params.height : i[0].clientHeight, 0 === e && a.isHorizontal() || 0 === t && a.isVertical() || (e = e - parseInt(i.css("padding-left"), 10) - parseInt(i.css("padding-right"), 10), t = t - parseInt(i.css("padding-top"), 10) - parseInt(i.css("padding-bottom"), 10), V.extend(a, { width: e, height: t, size: a.isHorizontal() ? e : t }));
+    }, updateSlides: function updateSlides() {
+      var e = this,
+          t = e.params,
+          a = e.$wrapperEl,
+          i = e.size,
+          s = e.rtlTranslate,
+          r = e.wrongRTL,
+          n = e.virtual && t.virtual.enabled,
+          o = n ? e.virtual.slides.length : e.slides.length,
+          l = a.children("." + e.params.slideClass),
+          d = n ? e.virtual.slides.length : l.length,
+          p = [],
+          c = [],
+          u = [],
+          h = t.slidesOffsetBefore;"function" == typeof h && (h = t.slidesOffsetBefore.call(e));var v = t.slidesOffsetAfter;"function" == typeof v && (v = t.slidesOffsetAfter.call(e));var f = e.snapGrid.length,
+          m = e.snapGrid.length,
+          g = t.spaceBetween,
+          b = -h,
+          w = 0,
+          y = 0;if (void 0 !== i) {
+        var x, T;"string" == typeof g && 0 <= g.indexOf("%") && (g = parseFloat(g.replace("%", "")) / 100 * i), e.virtualSize = -g, s ? l.css({ marginLeft: "", marginTop: "" }) : l.css({ marginRight: "", marginBottom: "" }), 1 < t.slidesPerColumn && (x = Math.floor(d / t.slidesPerColumn) === d / e.params.slidesPerColumn ? d : Math.ceil(d / t.slidesPerColumn) * t.slidesPerColumn, "auto" !== t.slidesPerView && "row" === t.slidesPerColumnFill && (x = Math.max(x, t.slidesPerView * t.slidesPerColumn)));for (var E, S = t.slidesPerColumn, C = x / S, M = C - (t.slidesPerColumn * C - d), k = 0; k < d; k += 1) {
+          T = 0;var P = l.eq(k);if (1 < t.slidesPerColumn) {
+            var z = void 0,
+                $ = void 0,
+                L = void 0;"column" === t.slidesPerColumnFill ? (L = k - ($ = Math.floor(k / S)) * S, (M < $ || $ === M && L === S - 1) && S <= (L += 1) && (L = 0, $ += 1), z = $ + L * x / S, P.css({ "-webkit-box-ordinal-group": z, "-moz-box-ordinal-group": z, "-ms-flex-order": z, "-webkit-order": z, order: z })) : $ = k - (L = Math.floor(k / C)) * C, P.css("margin-" + (e.isHorizontal() ? "top" : "left"), 0 !== L && t.spaceBetween && t.spaceBetween + "px").attr("data-swiper-column", $).attr("data-swiper-row", L);
+          }if ("none" !== P.css("display")) {
+            if ("auto" === t.slidesPerView) {
+              var I = Y.getComputedStyle(P[0], null),
+                  D = P[0].style.transform,
+                  O = P[0].style.webkitTransform;D && (P[0].style.transform = "none"), O && (P[0].style.webkitTransform = "none"), T = t.roundLengths ? e.isHorizontal() ? P.outerWidth(!0) : P.outerHeight(!0) : e.isHorizontal() ? parseFloat(I.getPropertyValue("width")) + parseFloat(I.getPropertyValue("margin-left")) + parseFloat(I.getPropertyValue("margin-right")) : parseFloat(I.getPropertyValue("height")) + parseFloat(I.getPropertyValue("margin-top")) + parseFloat(I.getPropertyValue("margin-bottom")), D && (P[0].style.transform = D), O && (P[0].style.webkitTransform = O), t.roundLengths && (T = Math.floor(T));
+            } else T = (i - (t.slidesPerView - 1) * g) / t.slidesPerView, t.roundLengths && (T = Math.floor(T)), l[k] && (e.isHorizontal() ? l[k].style.width = T + "px" : l[k].style.height = T + "px");l[k] && (l[k].swiperSlideSize = T), u.push(T), t.centeredSlides ? (b = b + T / 2 + w / 2 + g, 0 === w && 0 !== k && (b = b - i / 2 - g), 0 === k && (b = b - i / 2 - g), Math.abs(b) < .001 && (b = 0), t.roundLengths && (b = Math.floor(b)), y % t.slidesPerGroup == 0 && p.push(b), c.push(b)) : (t.roundLengths && (b = Math.floor(b)), y % t.slidesPerGroup == 0 && p.push(b), c.push(b), b = b + T + g), e.virtualSize += T + g, w = T, y += 1;
+          }
+        }if ((e.virtualSize = Math.max(e.virtualSize, i) + v, s && r && ("slide" === t.effect || "coverflow" === t.effect) && a.css({ width: e.virtualSize + t.spaceBetween + "px" }), F.flexbox && !t.setWrapperSize || (e.isHorizontal() ? a.css({ width: e.virtualSize + t.spaceBetween + "px" }) : a.css({ height: e.virtualSize + t.spaceBetween + "px" })), 1 < t.slidesPerColumn && (e.virtualSize = (T + t.spaceBetween) * x, e.virtualSize = Math.ceil(e.virtualSize / t.slidesPerColumn) - t.spaceBetween, e.isHorizontal() ? a.css({ width: e.virtualSize + t.spaceBetween + "px" }) : a.css({ height: e.virtualSize + t.spaceBetween + "px" }), t.centeredSlides))) {
+          E = [];for (var A = 0; A < p.length; A += 1) {
+            var N = p[A];t.roundLengths && (N = Math.floor(N)), p[A] < e.virtualSize + p[0] && E.push(N);
+          }p = E;
+        }if (!t.centeredSlides) {
+          E = [];for (var H = 0; H < p.length; H += 1) {
+            var G = p[H];t.roundLengths && (G = Math.floor(G)), p[H] <= e.virtualSize - i && E.push(G);
+          }p = E, 1 < Math.floor(e.virtualSize - i) - Math.floor(p[p.length - 1]) && p.push(e.virtualSize - i);
+        }if ((0 === p.length && (p = [0]), 0 !== t.spaceBetween && (e.isHorizontal() ? s ? l.css({ marginLeft: g + "px" }) : l.css({ marginRight: g + "px" }) : l.css({ marginBottom: g + "px" })), t.centerInsufficientSlides)) {
+          var B = 0;if ((u.forEach(function (e) {
+            B += e + (t.spaceBetween ? t.spaceBetween : 0);
+          }), (B -= t.spaceBetween) < i)) {
+            var X = (i - B) / 2;p.forEach(function (e, t) {
+              p[t] = e - X;
+            }), c.forEach(function (e, t) {
+              c[t] = e + X;
+            });
+          }
+        }V.extend(e, { slides: l, snapGrid: p, slidesGrid: c, slidesSizesGrid: u }), d !== o && e.emit("slidesLengthChange"), p.length !== f && (e.params.watchOverflow && e.checkOverflow(), e.emit("snapGridLengthChange")), c.length !== m && e.emit("slidesGridLengthChange"), (t.watchSlidesProgress || t.watchSlidesVisibility) && e.updateSlidesOffset();
+      }
+    }, updateAutoHeight: function updateAutoHeight(e) {
+      var t,
+          a = this,
+          i = [],
+          s = 0;if (("number" == typeof e ? a.setTransition(e) : !0 === e && a.setTransition(a.params.speed), "auto" !== a.params.slidesPerView && 1 < a.params.slidesPerView)) for (t = 0; t < Math.ceil(a.params.slidesPerView); t += 1) {
+        var r = a.activeIndex + t;if (r > a.slides.length) break;i.push(a.slides.eq(r)[0]);
+      } else i.push(a.slides.eq(a.activeIndex)[0]);for (t = 0; t < i.length; t += 1) if (void 0 !== i[t]) {
+        var n = i[t].offsetHeight;s = s < n ? n : s;
+      }s && a.$wrapperEl.css("height", s + "px");
+    }, updateSlidesOffset: function updateSlidesOffset() {
+      for (var e = this.slides, t = 0; t < e.length; t += 1) e[t].swiperSlideOffset = this.isHorizontal() ? e[t].offsetLeft : e[t].offsetTop;
+    }, updateSlidesProgress: function updateSlidesProgress(e) {
+      void 0 === e && (e = this && this.translate || 0);var t = this,
+          a = t.params,
+          i = t.slides,
+          s = t.rtlTranslate;if (0 !== i.length) {
+        void 0 === i[0].swiperSlideOffset && t.updateSlidesOffset();var r = -e;s && (r = e), i.removeClass(a.slideVisibleClass), t.visibleSlidesIndexes = [], t.visibleSlides = [];for (var n = 0; n < i.length; n += 1) {
+          var o = i[n],
+              l = (r + (a.centeredSlides ? t.minTranslate() : 0) - o.swiperSlideOffset) / (o.swiperSlideSize + a.spaceBetween);if (a.watchSlidesVisibility) {
+            var d = -(r - o.swiperSlideOffset),
+                p = d + t.slidesSizesGrid[n];(0 <= d && d < t.size || 0 < p && p <= t.size || d <= 0 && p >= t.size) && (t.visibleSlides.push(o), t.visibleSlidesIndexes.push(n), i.eq(n).addClass(a.slideVisibleClass));
+          }o.progress = s ? -l : l;
+        }t.visibleSlides = L(t.visibleSlides);
+      }
+    }, updateProgress: function updateProgress(e) {
+      void 0 === e && (e = this && this.translate || 0);var t = this,
+          a = t.params,
+          i = t.maxTranslate() - t.minTranslate(),
+          s = t.progress,
+          r = t.isBeginning,
+          n = t.isEnd,
+          o = r,
+          l = n;0 === i ? n = r = !(s = 0) : (r = (s = (e - t.minTranslate()) / i) <= 0, n = 1 <= s), V.extend(t, { progress: s, isBeginning: r, isEnd: n }), (a.watchSlidesProgress || a.watchSlidesVisibility) && t.updateSlidesProgress(e), r && !o && t.emit("reachBeginning toEdge"), n && !l && t.emit("reachEnd toEdge"), (o && !r || l && !n) && t.emit("fromEdge"), t.emit("progress", s);
+    }, updateSlidesClasses: function updateSlidesClasses() {
+      var e,
+          t = this,
+          a = t.slides,
+          i = t.params,
+          s = t.$wrapperEl,
+          r = t.activeIndex,
+          n = t.realIndex,
+          o = t.virtual && i.virtual.enabled;a.removeClass(i.slideActiveClass + " " + i.slideNextClass + " " + i.slidePrevClass + " " + i.slideDuplicateActiveClass + " " + i.slideDuplicateNextClass + " " + i.slideDuplicatePrevClass), (e = o ? t.$wrapperEl.find("." + i.slideClass + '[data-swiper-slide-index="' + r + '"]') : a.eq(r)).addClass(i.slideActiveClass), i.loop && (e.hasClass(i.slideDuplicateClass) ? s.children("." + i.slideClass + ":not(." + i.slideDuplicateClass + ')[data-swiper-slide-index="' + n + '"]').addClass(i.slideDuplicateActiveClass) : s.children("." + i.slideClass + "." + i.slideDuplicateClass + '[data-swiper-slide-index="' + n + '"]').addClass(i.slideDuplicateActiveClass));var l = e.nextAll("." + i.slideClass).eq(0).addClass(i.slideNextClass);i.loop && 0 === l.length && (l = a.eq(0)).addClass(i.slideNextClass);var d = e.prevAll("." + i.slideClass).eq(0).addClass(i.slidePrevClass);i.loop && 0 === d.length && (d = a.eq(-1)).addClass(i.slidePrevClass), i.loop && (l.hasClass(i.slideDuplicateClass) ? s.children("." + i.slideClass + ":not(." + i.slideDuplicateClass + ')[data-swiper-slide-index="' + l.attr("data-swiper-slide-index") + '"]').addClass(i.slideDuplicateNextClass) : s.children("." + i.slideClass + "." + i.slideDuplicateClass + '[data-swiper-slide-index="' + l.attr("data-swiper-slide-index") + '"]').addClass(i.slideDuplicateNextClass), d.hasClass(i.slideDuplicateClass) ? s.children("." + i.slideClass + ":not(." + i.slideDuplicateClass + ')[data-swiper-slide-index="' + d.attr("data-swiper-slide-index") + '"]').addClass(i.slideDuplicatePrevClass) : s.children("." + i.slideClass + "." + i.slideDuplicateClass + '[data-swiper-slide-index="' + d.attr("data-swiper-slide-index") + '"]').addClass(i.slideDuplicatePrevClass));
+    }, updateActiveIndex: function updateActiveIndex(e) {
+      var t,
+          a = this,
+          i = a.rtlTranslate ? a.translate : -a.translate,
+          s = a.slidesGrid,
+          r = a.snapGrid,
+          n = a.params,
+          o = a.activeIndex,
+          l = a.realIndex,
+          d = a.snapIndex,
+          p = e;if (void 0 === p) {
+        for (var c = 0; c < s.length; c += 1) void 0 !== s[c + 1] ? i >= s[c] && i < s[c + 1] - (s[c + 1] - s[c]) / 2 ? p = c : i >= s[c] && i < s[c + 1] && (p = c + 1) : i >= s[c] && (p = c);n.normalizeSlideIndex && (p < 0 || void 0 === p) && (p = 0);
+      }if (((t = 0 <= r.indexOf(i) ? r.indexOf(i) : Math.floor(p / n.slidesPerGroup)) >= r.length && (t = r.length - 1), p !== o)) {
+        var u = parseInt(a.slides.eq(p).attr("data-swiper-slide-index") || p, 10);V.extend(a, { snapIndex: t, realIndex: u, previousIndex: o, activeIndex: p }), a.emit("activeIndexChange"), a.emit("snapIndexChange"), l !== u && a.emit("realIndexChange"), a.emit("slideChange");
+      } else t !== d && (a.snapIndex = t, a.emit("snapIndexChange"));
+    }, updateClickedSlide: function updateClickedSlide(e) {
+      var t = this,
+          a = t.params,
+          i = L(e.target).closest("." + a.slideClass)[0],
+          s = !1;if (i) for (var r = 0; r < t.slides.length; r += 1) t.slides[r] === i && (s = !0);if (!i || !s) return t.clickedSlide = void 0, void (t.clickedIndex = void 0);t.clickedSlide = i, t.virtual && t.params.virtual.enabled ? t.clickedIndex = parseInt(L(i).attr("data-swiper-slide-index"), 10) : t.clickedIndex = L(i).index(), a.slideToClickedSlide && void 0 !== t.clickedIndex && t.clickedIndex !== t.activeIndex && t.slideToClickedSlide();
+    } };var d = { getTranslate: function getTranslate(e) {
+      void 0 === e && (e = this.isHorizontal() ? "x" : "y");var t = this.params,
+          a = this.rtlTranslate,
+          i = this.translate,
+          s = this.$wrapperEl;if (t.virtualTranslate) return a ? -i : i;var r = V.getTranslate(s[0], e);return a && (r = -r), r || 0;
+    }, setTranslate: function setTranslate(e, t) {
+      var a = this,
+          i = a.rtlTranslate,
+          s = a.params,
+          r = a.$wrapperEl,
+          n = a.progress,
+          o = 0,
+          l = 0;a.isHorizontal() ? o = i ? -e : e : l = e, s.roundLengths && (o = Math.floor(o), l = Math.floor(l)), s.virtualTranslate || (F.transforms3d ? r.transform("translate3d(" + o + "px, " + l + "px, 0px)") : r.transform("translate(" + o + "px, " + l + "px)")), a.previousTranslate = a.translate, a.translate = a.isHorizontal() ? o : l;var d = a.maxTranslate() - a.minTranslate();(0 === d ? 0 : (e - a.minTranslate()) / d) !== n && a.updateProgress(e), a.emit("setTranslate", a.translate, t);
+    }, minTranslate: function minTranslate() {
+      return -this.snapGrid[0];
+    }, maxTranslate: function maxTranslate() {
+      return -this.snapGrid[this.snapGrid.length - 1];
+    } };var p = { setTransition: function setTransition(e, t) {
+      this.$wrapperEl.transition(e), this.emit("setTransition", e, t);
+    }, transitionStart: function transitionStart(e, t) {
+      void 0 === e && (e = !0);var a = this,
+          i = a.activeIndex,
+          s = a.params,
+          r = a.previousIndex;s.autoHeight && a.updateAutoHeight();var n = t;if ((n || (n = r < i ? "next" : i < r ? "prev" : "reset"), a.emit("transitionStart"), e && i !== r)) {
+        if ("reset" === n) return void a.emit("slideResetTransitionStart");a.emit("slideChangeTransitionStart"), "next" === n ? a.emit("slideNextTransitionStart") : a.emit("slidePrevTransitionStart");
+      }
+    }, transitionEnd: function transitionEnd(e, t) {
+      void 0 === e && (e = !0);var a = this,
+          i = a.activeIndex,
+          s = a.previousIndex;a.animating = !1, a.setTransition(0);var r = t;if ((r || (r = s < i ? "next" : i < s ? "prev" : "reset"), a.emit("transitionEnd"), e && i !== s)) {
+        if ("reset" === r) return void a.emit("slideResetTransitionEnd");a.emit("slideChangeTransitionEnd"), "next" === r ? a.emit("slideNextTransitionEnd") : a.emit("slidePrevTransitionEnd");
+      }
+    } };var c = { slideTo: function slideTo(e, t, a, i) {
+      void 0 === e && (e = 0), void 0 === t && (t = this.params.speed), void 0 === a && (a = !0);var s = this,
+          r = e;r < 0 && (r = 0);var n = s.params,
+          o = s.snapGrid,
+          l = s.slidesGrid,
+          d = s.previousIndex,
+          p = s.activeIndex,
+          c = s.rtlTranslate;if (s.animating && n.preventInteractionOnTransition) return !1;var u = Math.floor(r / n.slidesPerGroup);u >= o.length && (u = o.length - 1), (p || n.initialSlide || 0) === (d || 0) && a && s.emit("beforeSlideChangeStart");var h,
+          v = -o[u];if ((s.updateProgress(v), n.normalizeSlideIndex)) for (var f = 0; f < l.length; f += 1) -Math.floor(100 * v) >= Math.floor(100 * l[f]) && (r = f);if (s.initialized && r !== p) {
+        if (!s.allowSlideNext && v < s.translate && v < s.minTranslate()) return !1;if (!s.allowSlidePrev && v > s.translate && v > s.maxTranslate() && (p || 0) !== r) return !1;
+      }return h = p < r ? "next" : r < p ? "prev" : "reset", c && -v === s.translate || !c && v === s.translate ? (s.updateActiveIndex(r), n.autoHeight && s.updateAutoHeight(), s.updateSlidesClasses(), "slide" !== n.effect && s.setTranslate(v), "reset" !== h && (s.transitionStart(a, h), s.transitionEnd(a, h)), !1) : (0 !== t && F.transition ? (s.setTransition(t), s.setTranslate(v), s.updateActiveIndex(r), s.updateSlidesClasses(), s.emit("beforeTransitionStart", t, i), s.transitionStart(a, h), s.animating || (s.animating = !0, s.onSlideToWrapperTransitionEnd || (s.onSlideToWrapperTransitionEnd = function (e) {
+        s && !s.destroyed && e.target === this && (s.$wrapperEl[0].removeEventListener("transitionend", s.onSlideToWrapperTransitionEnd), s.$wrapperEl[0].removeEventListener("webkitTransitionEnd", s.onSlideToWrapperTransitionEnd), s.onSlideToWrapperTransitionEnd = null, delete s.onSlideToWrapperTransitionEnd, s.transitionEnd(a, h));
+      }), s.$wrapperEl[0].addEventListener("transitionend", s.onSlideToWrapperTransitionEnd), s.$wrapperEl[0].addEventListener("webkitTransitionEnd", s.onSlideToWrapperTransitionEnd))) : (s.setTransition(0), s.setTranslate(v), s.updateActiveIndex(r), s.updateSlidesClasses(), s.emit("beforeTransitionStart", t, i), s.transitionStart(a, h), s.transitionEnd(a, h)), !0);
+    }, slideToLoop: function slideToLoop(e, t, a, i) {
+      void 0 === e && (e = 0), void 0 === t && (t = this.params.speed), void 0 === a && (a = !0);var s = e;return this.params.loop && (s += this.loopedSlides), this.slideTo(s, t, a, i);
+    }, slideNext: function slideNext(e, t, a) {
+      void 0 === e && (e = this.params.speed), void 0 === t && (t = !0);var i = this,
+          s = i.params,
+          r = i.animating;return s.loop ? !r && (i.loopFix(), i._clientLeft = i.$wrapperEl[0].clientLeft, i.slideTo(i.activeIndex + s.slidesPerGroup, e, t, a)) : i.slideTo(i.activeIndex + s.slidesPerGroup, e, t, a);
+    }, slidePrev: function slidePrev(e, t, a) {
+      void 0 === e && (e = this.params.speed), void 0 === t && (t = !0);var i = this,
+          s = i.params,
+          r = i.animating,
+          n = i.snapGrid,
+          o = i.slidesGrid,
+          l = i.rtlTranslate;if (s.loop) {
+        if (r) return !1;i.loopFix(), i._clientLeft = i.$wrapperEl[0].clientLeft;
+      }function d(e) {
+        return e < 0 ? -Math.floor(Math.abs(e)) : Math.floor(e);
+      }var p,
+          c = d(l ? i.translate : -i.translate),
+          u = n.map(function (e) {
+        return d(e);
+      }),
+          h = (o.map(function (e) {
+        return d(e);
+      }), n[u.indexOf(c)], n[u.indexOf(c) - 1]);return void 0 !== h && (p = o.indexOf(h)) < 0 && (p = i.activeIndex - 1), i.slideTo(p, e, t, a);
+    }, slideReset: function slideReset(e, t, a) {
+      return void 0 === e && (e = this.params.speed), void 0 === t && (t = !0), this.slideTo(this.activeIndex, e, t, a);
+    }, slideToClosest: function slideToClosest(e, t, a) {
+      void 0 === e && (e = this.params.speed), void 0 === t && (t = !0);var i = this,
+          s = i.activeIndex,
+          r = Math.floor(s / i.params.slidesPerGroup);if (r < i.snapGrid.length - 1) {
+        var n = i.rtlTranslate ? i.translate : -i.translate,
+            o = i.snapGrid[r];(i.snapGrid[r + 1] - o) / 2 < n - o && (s = i.params.slidesPerGroup);
+      }return i.slideTo(s, e, t, a);
+    }, slideToClickedSlide: function slideToClickedSlide() {
+      var e,
+          t = this,
+          a = t.params,
+          i = t.$wrapperEl,
+          s = "auto" === a.slidesPerView ? t.slidesPerViewDynamic() : a.slidesPerView,
+          r = t.clickedIndex;if (a.loop) {
+        if (t.animating) return;e = parseInt(L(t.clickedSlide).attr("data-swiper-slide-index"), 10), a.centeredSlides ? r < t.loopedSlides - s / 2 || r > t.slides.length - t.loopedSlides + s / 2 ? (t.loopFix(), r = i.children("." + a.slideClass + '[data-swiper-slide-index="' + e + '"]:not(.' + a.slideDuplicateClass + ")").eq(0).index(), V.nextTick(function () {
+          t.slideTo(r);
+        })) : t.slideTo(r) : r > t.slides.length - s ? (t.loopFix(), r = i.children("." + a.slideClass + '[data-swiper-slide-index="' + e + '"]:not(.' + a.slideDuplicateClass + ")").eq(0).index(), V.nextTick(function () {
+          t.slideTo(r);
+        })) : t.slideTo(r);
+      } else t.slideTo(r);
+    } };var u = { loopCreate: function loopCreate() {
+      var i = this,
+          e = i.params,
+          t = i.$wrapperEl;t.children("." + e.slideClass + "." + e.slideDuplicateClass).remove();var s = t.children("." + e.slideClass);if (e.loopFillGroupWithBlank) {
+        var a = e.slidesPerGroup - s.length % e.slidesPerGroup;if (a !== e.slidesPerGroup) {
+          for (var r = 0; r < a; r += 1) {
+            var n = L(f.createElement("div")).addClass(e.slideClass + " " + e.slideBlankClass);t.append(n);
+          }s = t.children("." + e.slideClass);
+        }
+      }"auto" !== e.slidesPerView || e.loopedSlides || (e.loopedSlides = s.length), i.loopedSlides = parseInt(e.loopedSlides || e.slidesPerView, 10), i.loopedSlides += e.loopAdditionalSlides, i.loopedSlides > s.length && (i.loopedSlides = s.length);var o = [],
+          l = [];s.each(function (e, t) {
+        var a = L(t);e < i.loopedSlides && l.push(t), e < s.length && e >= s.length - i.loopedSlides && o.push(t), a.attr("data-swiper-slide-index", e);
+      });for (var d = 0; d < l.length; d += 1) t.append(L(l[d].cloneNode(!0)).addClass(e.slideDuplicateClass));for (var p = o.length - 1; 0 <= p; p -= 1) t.prepend(L(o[p].cloneNode(!0)).addClass(e.slideDuplicateClass));
+    }, loopFix: function loopFix() {
+      var e,
+          t = this,
+          a = t.params,
+          i = t.activeIndex,
+          s = t.slides,
+          r = t.loopedSlides,
+          n = t.allowSlidePrev,
+          o = t.allowSlideNext,
+          l = t.snapGrid,
+          d = t.rtlTranslate;t.allowSlidePrev = !0, t.allowSlideNext = !0;var p = -l[i] - t.getTranslate();i < r ? (e = s.length - 3 * r + i, e += r, t.slideTo(e, 0, !1, !0) && 0 !== p && t.setTranslate((d ? -t.translate : t.translate) - p)) : ("auto" === a.slidesPerView && 2 * r <= i || i >= s.length - r) && (e = -s.length + i + r, e += r, t.slideTo(e, 0, !1, !0) && 0 !== p && t.setTranslate((d ? -t.translate : t.translate) - p));t.allowSlidePrev = n, t.allowSlideNext = o;
+    }, loopDestroy: function loopDestroy() {
+      var e = this.$wrapperEl,
+          t = this.params,
+          a = this.slides;e.children("." + t.slideClass + "." + t.slideDuplicateClass).remove(), a.removeAttr("data-swiper-slide-index");
+    } };var h = { setGrabCursor: function setGrabCursor(e) {
+      if (!(F.touch || !this.params.simulateTouch || this.params.watchOverflow && this.isLocked)) {
+        var t = this.el;t.style.cursor = "move", t.style.cursor = e ? "-webkit-grabbing" : "-webkit-grab", t.style.cursor = e ? "-moz-grabbin" : "-moz-grab", t.style.cursor = e ? "grabbing" : "grab";
+      }
+    }, unsetGrabCursor: function unsetGrabCursor() {
+      F.touch || this.params.watchOverflow && this.isLocked || (this.el.style.cursor = "");
+    } };var v = { appendSlide: function appendSlide(e) {
+      var t = this,
+          a = t.$wrapperEl,
+          i = t.params;if ((i.loop && t.loopDestroy(), "object" == typeof e && "length" in e)) for (var s = 0; s < e.length; s += 1) e[s] && a.append(e[s]);else a.append(e);i.loop && t.loopCreate(), i.observer && F.observer || t.update();
+    }, prependSlide: function prependSlide(e) {
+      var t = this,
+          a = t.params,
+          i = t.$wrapperEl,
+          s = t.activeIndex;a.loop && t.loopDestroy();var r = s + 1;if ("object" == typeof e && "length" in e) {
+        for (var n = 0; n < e.length; n += 1) e[n] && i.prepend(e[n]);r = s + e.length;
+      } else i.prepend(e);a.loop && t.loopCreate(), a.observer && F.observer || t.update(), t.slideTo(r, 0, !1);
+    }, addSlide: function addSlide(e, t) {
+      var a = this,
+          i = a.$wrapperEl,
+          s = a.params,
+          r = a.activeIndex;s.loop && (r -= a.loopedSlides, a.loopDestroy(), a.slides = i.children("." + s.slideClass));var n = a.slides.length;if (e <= 0) a.prependSlide(t);else if (n <= e) a.appendSlide(t);else {
+        for (var o = e < r ? r + 1 : r, l = [], d = n - 1; e <= d; d -= 1) {
+          var p = a.slides.eq(d);p.remove(), l.unshift(p);
+        }if ("object" == typeof t && "length" in t) {
+          for (var c = 0; c < t.length; c += 1) t[c] && i.append(t[c]);o = e < r ? r + t.length : r;
+        } else i.append(t);for (var u = 0; u < l.length; u += 1) i.append(l[u]);s.loop && a.loopCreate(), s.observer && F.observer || a.update(), s.loop ? a.slideTo(o + a.loopedSlides, 0, !1) : a.slideTo(o, 0, !1);
+      }
+    }, removeSlide: function removeSlide(e) {
+      var t = this,
+          a = t.params,
+          i = t.$wrapperEl,
+          s = t.activeIndex;a.loop && (s -= t.loopedSlides, t.loopDestroy(), t.slides = i.children("." + a.slideClass));var r,
+          n = s;if ("object" == typeof e && "length" in e) {
+        for (var o = 0; o < e.length; o += 1) r = e[o], t.slides[r] && t.slides.eq(r).remove(), r < n && (n -= 1);n = Math.max(n, 0);
+      } else r = e, t.slides[r] && t.slides.eq(r).remove(), r < n && (n -= 1), n = Math.max(n, 0);a.loop && t.loopCreate(), a.observer && F.observer || t.update(), a.loop ? t.slideTo(n + t.loopedSlides, 0, !1) : t.slideTo(n, 0, !1);
+    }, removeAllSlides: function removeAllSlides() {
+      for (var e = [], t = 0; t < this.slides.length; t += 1) e.push(t);this.removeSlide(e);
+    } },
+      m = (function () {
+    var e = Y.navigator.userAgent,
+        t = { ios: !1, android: !1, androidChrome: !1, desktop: !1, windows: !1, iphone: !1, ipod: !1, ipad: !1, cordova: Y.cordova || Y.phonegap, phonegap: Y.cordova || Y.phonegap },
+        a = e.match(/(Windows Phone);?[\s\/]+([\d.]+)?/),
+        i = e.match(/(Android);?[\s\/]+([\d.]+)?/),
+        s = e.match(/(iPad).*OS\s([\d_]+)/),
+        r = e.match(/(iPod)(.*OS\s([\d_]+))?/),
+        n = !s && e.match(/(iPhone\sOS|iOS)\s([\d_]+)/);if ((a && (t.os = "windows", t.osVersion = a[2], t.windows = !0), i && !a && (t.os = "android", t.osVersion = i[2], t.android = !0, t.androidChrome = 0 <= e.toLowerCase().indexOf("chrome")), (s || n || r) && (t.os = "ios", t.ios = !0), n && !r && (t.osVersion = n[2].replace(/_/g, "."), t.iphone = !0), s && (t.osVersion = s[2].replace(/_/g, "."), t.ipad = !0), r && (t.osVersion = r[3] ? r[3].replace(/_/g, ".") : null, t.iphone = !0), t.ios && t.osVersion && 0 <= e.indexOf("Version/") && "10" === t.osVersion.split(".")[0] && (t.osVersion = e.toLowerCase().split("version/")[1].split(" ")[0]), t.desktop = !(t.os || t.android || t.webView), t.webView = (n || s || r) && e.match(/.*AppleWebKit(?!.*Safari)/i), t.os && "ios" === t.os)) {
+      var o = t.osVersion.split("."),
+          l = f.querySelector('meta[name="viewport"]');t.minimalUi = !t.webView && (r || n) && (1 * o[0] == 7 ? 1 <= 1 * o[1] : 7 < 1 * o[0]) && l && 0 <= l.getAttribute("content").indexOf("minimal-ui");
+    }return t.pixelRatio = Y.devicePixelRatio || 1, t;
+  })();function g() {
+    var e = this,
+        t = e.params,
+        a = e.el;if (!a || 0 !== a.offsetWidth) {
+      t.breakpoints && e.setBreakpoint();var i = e.allowSlideNext,
+          s = e.allowSlidePrev,
+          r = e.snapGrid;if ((e.allowSlideNext = !0, e.allowSlidePrev = !0, e.updateSize(), e.updateSlides(), t.freeMode)) {
+        var n = Math.min(Math.max(e.translate, e.maxTranslate()), e.minTranslate());e.setTranslate(n), e.updateActiveIndex(), e.updateSlidesClasses(), t.autoHeight && e.updateAutoHeight();
+      } else e.updateSlidesClasses(), ("auto" === t.slidesPerView || 1 < t.slidesPerView) && e.isEnd && !e.params.centeredSlides ? e.slideTo(e.slides.length - 1, 0, !1, !0) : e.slideTo(e.activeIndex, 0, !1, !0);e.allowSlidePrev = s, e.allowSlideNext = i, e.params.watchOverflow && r !== e.snapGrid && e.checkOverflow();
+    }
+  }var b = { attachEvents: function attachEvents() {
+      var e = this,
+          t = e.params,
+          a = e.touchEvents,
+          i = e.el,
+          s = e.wrapperEl;e.onTouchStart = (function (e) {
+        var t = this,
+            a = t.touchEventsData,
+            i = t.params,
+            s = t.touches;if (!t.animating || !i.preventInteractionOnTransition) {
+          var r = e;if ((r.originalEvent && (r = r.originalEvent), a.isTouchEvent = "touchstart" === r.type, (a.isTouchEvent || !("which" in r) || 3 !== r.which) && !(!a.isTouchEvent && "button" in r && 0 < r.button || a.isTouched && a.isMoved))) if (i.noSwiping && L(r.target).closest(i.noSwipingSelector ? i.noSwipingSelector : "." + i.noSwipingClass)[0]) t.allowClick = !0;else if (!i.swipeHandler || L(r).closest(i.swipeHandler)[0]) {
+            s.currentX = "touchstart" === r.type ? r.targetTouches[0].pageX : r.pageX, s.currentY = "touchstart" === r.type ? r.targetTouches[0].pageY : r.pageY;var n = s.currentX,
+                o = s.currentY,
+                l = i.edgeSwipeDetection || i.iOSEdgeSwipeDetection,
+                d = i.edgeSwipeThreshold || i.iOSEdgeSwipeThreshold;if (!l || !(n <= d || n >= Y.screen.width - d)) {
+              if ((V.extend(a, { isTouched: !0, isMoved: !1, allowTouchCallbacks: !0, isScrolling: void 0, startMoving: void 0 }), s.startX = n, s.startY = o, a.touchStartTime = V.now(), t.allowClick = !0, t.updateSize(), t.swipeDirection = void 0, 0 < i.threshold && (a.allowThresholdMove = !1), "touchstart" !== r.type)) {
+                var p = !0;L(r.target).is(a.formElements) && (p = !1), f.activeElement && L(f.activeElement).is(a.formElements) && f.activeElement !== r.target && f.activeElement.blur();var c = p && t.allowTouchMove && i.touchStartPreventDefault;(i.touchStartForcePreventDefault || c) && r.preventDefault();
+              }t.emit("touchStart", r);
+            }
+          }
+        }
+      }).bind(e), e.onTouchMove = (function (e) {
+        var t = this,
+            a = t.touchEventsData,
+            i = t.params,
+            s = t.touches,
+            r = t.rtlTranslate,
+            n = e;if ((n.originalEvent && (n = n.originalEvent), a.isTouched)) {
+          if (!a.isTouchEvent || "mousemove" !== n.type) {
+            var o = "touchmove" === n.type ? n.targetTouches[0].pageX : n.pageX,
+                l = "touchmove" === n.type ? n.targetTouches[0].pageY : n.pageY;if (n.preventedByNestedSwiper) return s.startX = o, void (s.startY = l);if (!t.allowTouchMove) return t.allowClick = !1, void (a.isTouched && (V.extend(s, { startX: o, startY: l, currentX: o, currentY: l }), a.touchStartTime = V.now()));if (a.isTouchEvent && i.touchReleaseOnEdges && !i.loop) if (t.isVertical()) {
+              if (l < s.startY && t.translate <= t.maxTranslate() || l > s.startY && t.translate >= t.minTranslate()) return a.isTouched = !1, void (a.isMoved = !1);
+            } else if (o < s.startX && t.translate <= t.maxTranslate() || o > s.startX && t.translate >= t.minTranslate()) return;if (a.isTouchEvent && f.activeElement && n.target === f.activeElement && L(n.target).is(a.formElements)) return a.isMoved = !0, void (t.allowClick = !1);if ((a.allowTouchCallbacks && t.emit("touchMove", n), !(n.targetTouches && 1 < n.targetTouches.length))) {
+              s.currentX = o, s.currentY = l;var d,
+                  p = s.currentX - s.startX,
+                  c = s.currentY - s.startY;if (!(t.params.threshold && Math.sqrt(Math.pow(p, 2) + Math.pow(c, 2)) < t.params.threshold)) if ((void 0 === a.isScrolling && (t.isHorizontal() && s.currentY === s.startY || t.isVertical() && s.currentX === s.startX ? a.isScrolling = !1 : 25 <= p * p + c * c && (d = 180 * Math.atan2(Math.abs(c), Math.abs(p)) / Math.PI, a.isScrolling = t.isHorizontal() ? d > i.touchAngle : 90 - d > i.touchAngle)), a.isScrolling && t.emit("touchMoveOpposite", n), void 0 === a.startMoving && (s.currentX === s.startX && s.currentY === s.startY || (a.startMoving = !0)), a.isScrolling)) a.isTouched = !1;else if (a.startMoving) {
+                t.allowClick = !1, n.preventDefault(), i.touchMoveStopPropagation && !i.nested && n.stopPropagation(), a.isMoved || (i.loop && t.loopFix(), a.startTranslate = t.getTranslate(), t.setTransition(0), t.animating && t.$wrapperEl.trigger("webkitTransitionEnd transitionend"), a.allowMomentumBounce = !1, !i.grabCursor || !0 !== t.allowSlideNext && !0 !== t.allowSlidePrev || t.setGrabCursor(!0), t.emit("sliderFirstMove", n)), t.emit("sliderMove", n), a.isMoved = !0;var u = t.isHorizontal() ? p : c;s.diff = u, u *= i.touchRatio, r && (u = -u), t.swipeDirection = 0 < u ? "prev" : "next", a.currentTranslate = u + a.startTranslate;var h = !0,
+                    v = i.resistanceRatio;if ((i.touchReleaseOnEdges && (v = 0), 0 < u && a.currentTranslate > t.minTranslate() ? (h = !1, i.resistance && (a.currentTranslate = t.minTranslate() - 1 + Math.pow(-t.minTranslate() + a.startTranslate + u, v))) : u < 0 && a.currentTranslate < t.maxTranslate() && (h = !1, i.resistance && (a.currentTranslate = t.maxTranslate() + 1 - Math.pow(t.maxTranslate() - a.startTranslate - u, v))), h && (n.preventedByNestedSwiper = !0), !t.allowSlideNext && "next" === t.swipeDirection && a.currentTranslate < a.startTranslate && (a.currentTranslate = a.startTranslate), !t.allowSlidePrev && "prev" === t.swipeDirection && a.currentTranslate > a.startTranslate && (a.currentTranslate = a.startTranslate), 0 < i.threshold)) {
+                  if (!(Math.abs(u) > i.threshold || a.allowThresholdMove)) return void (a.currentTranslate = a.startTranslate);if (!a.allowThresholdMove) return a.allowThresholdMove = !0, s.startX = s.currentX, s.startY = s.currentY, a.currentTranslate = a.startTranslate, void (s.diff = t.isHorizontal() ? s.currentX - s.startX : s.currentY - s.startY);
+                }i.followFinger && ((i.freeMode || i.watchSlidesProgress || i.watchSlidesVisibility) && (t.updateActiveIndex(), t.updateSlidesClasses()), i.freeMode && (0 === a.velocities.length && a.velocities.push({ position: s[t.isHorizontal() ? "startX" : "startY"], time: a.touchStartTime }), a.velocities.push({ position: s[t.isHorizontal() ? "currentX" : "currentY"], time: V.now() })), t.updateProgress(a.currentTranslate), t.setTranslate(a.currentTranslate));
+              }
+            }
+          }
+        } else a.startMoving && a.isScrolling && t.emit("touchMoveOpposite", n);
+      }).bind(e), e.onTouchEnd = (function (e) {
+        var t = this,
+            a = t.touchEventsData,
+            i = t.params,
+            s = t.touches,
+            r = t.rtlTranslate,
+            n = t.$wrapperEl,
+            o = t.slidesGrid,
+            l = t.snapGrid,
+            d = e;if ((d.originalEvent && (d = d.originalEvent), a.allowTouchCallbacks && t.emit("touchEnd", d), a.allowTouchCallbacks = !1, !a.isTouched)) return a.isMoved && i.grabCursor && t.setGrabCursor(!1), a.isMoved = !1, void (a.startMoving = !1);i.grabCursor && a.isMoved && a.isTouched && (!0 === t.allowSlideNext || !0 === t.allowSlidePrev) && t.setGrabCursor(!1);var p,
+            c = V.now(),
+            u = c - a.touchStartTime;if ((t.allowClick && (t.updateClickedSlide(d), t.emit("tap", d), u < 300 && 300 < c - a.lastClickTime && (a.clickTimeout && clearTimeout(a.clickTimeout), a.clickTimeout = V.nextTick(function () {
+          t && !t.destroyed && t.emit("click", d);
+        }, 300)), u < 300 && c - a.lastClickTime < 300 && (a.clickTimeout && clearTimeout(a.clickTimeout), t.emit("doubleTap", d))), a.lastClickTime = V.now(), V.nextTick(function () {
+          t.destroyed || (t.allowClick = !0);
+        }), !a.isTouched || !a.isMoved || !t.swipeDirection || 0 === s.diff || a.currentTranslate === a.startTranslate)) return a.isTouched = !1, a.isMoved = !1, void (a.startMoving = !1);if ((a.isTouched = !1, a.isMoved = !1, a.startMoving = !1, p = i.followFinger ? r ? t.translate : -t.translate : -a.currentTranslate, i.freeMode)) {
+          if (p < -t.minTranslate()) return void t.slideTo(t.activeIndex);if (p > -t.maxTranslate()) return void (t.slides.length < l.length ? t.slideTo(l.length - 1) : t.slideTo(t.slides.length - 1));if (i.freeModeMomentum) {
+            if (1 < a.velocities.length) {
+              var h = a.velocities.pop(),
+                  v = a.velocities.pop(),
+                  f = h.position - v.position,
+                  m = h.time - v.time;t.velocity = f / m, t.velocity /= 2, Math.abs(t.velocity) < i.freeModeMinimumVelocity && (t.velocity = 0), (150 < m || 300 < V.now() - h.time) && (t.velocity = 0);
+            } else t.velocity = 0;t.velocity *= i.freeModeMomentumVelocityRatio, a.velocities.length = 0;var g = 1e3 * i.freeModeMomentumRatio,
+                b = t.velocity * g,
+                w = t.translate + b;r && (w = -w);var y,
+                x,
+                T = !1,
+                E = 20 * Math.abs(t.velocity) * i.freeModeMomentumBounceRatio;if (w < t.maxTranslate()) i.freeModeMomentumBounce ? (w + t.maxTranslate() < -E && (w = t.maxTranslate() - E), y = t.maxTranslate(), T = !0, a.allowMomentumBounce = !0) : w = t.maxTranslate(), i.loop && i.centeredSlides && (x = !0);else if (w > t.minTranslate()) i.freeModeMomentumBounce ? (w - t.minTranslate() > E && (w = t.minTranslate() + E), y = t.minTranslate(), T = !0, a.allowMomentumBounce = !0) : w = t.minTranslate(), i.loop && i.centeredSlides && (x = !0);else if (i.freeModeSticky) {
+              for (var S, C = 0; C < l.length; C += 1) if (l[C] > -w) {
+                S = C;break;
+              }w = -(w = Math.abs(l[S] - w) < Math.abs(l[S - 1] - w) || "next" === t.swipeDirection ? l[S] : l[S - 1]);
+            }if ((x && t.once("transitionEnd", function () {
+              t.loopFix();
+            }), 0 !== t.velocity)) g = r ? Math.abs((-w - t.translate) / t.velocity) : Math.abs((w - t.translate) / t.velocity);else if (i.freeModeSticky) return void t.slideToClosest();i.freeModeMomentumBounce && T ? (t.updateProgress(y), t.setTransition(g), t.setTranslate(w), t.transitionStart(!0, t.swipeDirection), t.animating = !0, n.transitionEnd(function () {
+              t && !t.destroyed && a.allowMomentumBounce && (t.emit("momentumBounce"), t.setTransition(i.speed), t.setTranslate(y), n.transitionEnd(function () {
+                t && !t.destroyed && t.transitionEnd();
+              }));
+            })) : t.velocity ? (t.updateProgress(w), t.setTransition(g), t.setTranslate(w), t.transitionStart(!0, t.swipeDirection), t.animating || (t.animating = !0, n.transitionEnd(function () {
+              t && !t.destroyed && t.transitionEnd();
+            }))) : t.updateProgress(w), t.updateActiveIndex(), t.updateSlidesClasses();
+          } else if (i.freeModeSticky) return void t.slideToClosest();(!i.freeModeMomentum || u >= i.longSwipesMs) && (t.updateProgress(), t.updateActiveIndex(), t.updateSlidesClasses());
+        } else {
+          for (var M = 0, k = t.slidesSizesGrid[0], P = 0; P < o.length; P += i.slidesPerGroup) void 0 !== o[P + i.slidesPerGroup] ? p >= o[P] && p < o[P + i.slidesPerGroup] && (k = o[(M = P) + i.slidesPerGroup] - o[P]) : p >= o[P] && (M = P, k = o[o.length - 1] - o[o.length - 2]);var z = (p - o[M]) / k;if (u > i.longSwipesMs) {
+            if (!i.longSwipes) return void t.slideTo(t.activeIndex);"next" === t.swipeDirection && (z >= i.longSwipesRatio ? t.slideTo(M + i.slidesPerGroup) : t.slideTo(M)), "prev" === t.swipeDirection && (z > 1 - i.longSwipesRatio ? t.slideTo(M + i.slidesPerGroup) : t.slideTo(M));
+          } else {
+            if (!i.shortSwipes) return void t.slideTo(t.activeIndex);"next" === t.swipeDirection && t.slideTo(M + i.slidesPerGroup), "prev" === t.swipeDirection && t.slideTo(M);
+          }
+        }
+      }).bind(e), e.onClick = (function (e) {
+        this.allowClick || (this.params.preventClicks && e.preventDefault(), this.params.preventClicksPropagation && this.animating && (e.stopPropagation(), e.stopImmediatePropagation()));
+      }).bind(e);var r = "container" === t.touchEventsTarget ? i : s,
+          n = !!t.nested;if (F.touch || !F.pointerEvents && !F.prefixedPointerEvents) {
+        if (F.touch) {
+          var o = !("touchstart" !== a.start || !F.passiveListener || !t.passiveListeners) && { passive: !0, capture: !1 };r.addEventListener(a.start, e.onTouchStart, o), r.addEventListener(a.move, e.onTouchMove, F.passiveListener ? { passive: !1, capture: n } : n), r.addEventListener(a.end, e.onTouchEnd, o);
+        }(t.simulateTouch && !m.ios && !m.android || t.simulateTouch && !F.touch && m.ios) && (r.addEventListener("mousedown", e.onTouchStart, !1), f.addEventListener("mousemove", e.onTouchMove, n), f.addEventListener("mouseup", e.onTouchEnd, !1));
+      } else r.addEventListener(a.start, e.onTouchStart, !1), f.addEventListener(a.move, e.onTouchMove, n), f.addEventListener(a.end, e.onTouchEnd, !1);(t.preventClicks || t.preventClicksPropagation) && r.addEventListener("click", e.onClick, !0), e.on(m.ios || m.android ? "resize orientationchange observerUpdate" : "resize observerUpdate", g, !0);
+    }, detachEvents: function detachEvents() {
+      var e = this,
+          t = e.params,
+          a = e.touchEvents,
+          i = e.el,
+          s = e.wrapperEl,
+          r = "container" === t.touchEventsTarget ? i : s,
+          n = !!t.nested;if (F.touch || !F.pointerEvents && !F.prefixedPointerEvents) {
+        if (F.touch) {
+          var o = !("onTouchStart" !== a.start || !F.passiveListener || !t.passiveListeners) && { passive: !0, capture: !1 };r.removeEventListener(a.start, e.onTouchStart, o), r.removeEventListener(a.move, e.onTouchMove, n), r.removeEventListener(a.end, e.onTouchEnd, o);
+        }(t.simulateTouch && !m.ios && !m.android || t.simulateTouch && !F.touch && m.ios) && (r.removeEventListener("mousedown", e.onTouchStart, !1), f.removeEventListener("mousemove", e.onTouchMove, n), f.removeEventListener("mouseup", e.onTouchEnd, !1));
+      } else r.removeEventListener(a.start, e.onTouchStart, !1), f.removeEventListener(a.move, e.onTouchMove, n), f.removeEventListener(a.end, e.onTouchEnd, !1);(t.preventClicks || t.preventClicksPropagation) && r.removeEventListener("click", e.onClick, !0), e.off(m.ios || m.android ? "resize orientationchange observerUpdate" : "resize observerUpdate", g);
+    } };var w,
+      y = { setBreakpoint: function setBreakpoint() {
+      var e = this,
+          t = e.activeIndex,
+          a = e.initialized,
+          i = e.loopedSlides;void 0 === i && (i = 0);var s = e.params,
+          r = s.breakpoints;if (r && (!r || 0 !== Object.keys(r).length)) {
+        var n = e.getBreakpoint(r);if (n && e.currentBreakpoint !== n) {
+          var o = n in r ? r[n] : void 0;o && ["slidesPerView", "spaceBetween", "slidesPerGroup"].forEach(function (e) {
+            var t = o[e];void 0 !== t && (o[e] = "slidesPerView" !== e || "AUTO" !== t && "auto" !== t ? "slidesPerView" === e ? parseFloat(t) : parseInt(t, 10) : "auto");
+          });var l = o || e.originalParams,
+              d = s.loop && l.slidesPerView !== s.slidesPerView;V.extend(e.params, l), V.extend(e, { allowTouchMove: e.params.allowTouchMove, allowSlideNext: e.params.allowSlideNext, allowSlidePrev: e.params.allowSlidePrev }), e.currentBreakpoint = n, d && a && (e.loopDestroy(), e.loopCreate(), e.updateSlides(), e.slideTo(t - i + e.loopedSlides, 0, !1)), e.emit("breakpoint", l);
+        }
+      }
+    }, getBreakpoint: function getBreakpoint(e) {
+      if (e) {
+        var t = !1,
+            a = [];Object.keys(e).forEach(function (e) {
+          a.push(e);
+        }), a.sort(function (e, t) {
+          return parseInt(e, 10) - parseInt(t, 10);
+        });for (var i = 0; i < a.length; i += 1) {
+          var s = a[i];this.params.breakpointsInverse ? s <= Y.innerWidth && (t = s) : s >= Y.innerWidth && !t && (t = s);
+        }return t || "max";
+      }
+    } },
+      I = { isIE: !!Y.navigator.userAgent.match(/Trident/g) || !!Y.navigator.userAgent.match(/MSIE/g), isEdge: !!Y.navigator.userAgent.match(/Edge/g), isSafari: (w = Y.navigator.userAgent.toLowerCase(), 0 <= w.indexOf("safari") && w.indexOf("chrome") < 0 && w.indexOf("android") < 0), isUiWebView: /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(Y.navigator.userAgent) };var x = { init: !0, direction: "horizontal", touchEventsTarget: "container", initialSlide: 0, speed: 300, preventInteractionOnTransition: !1, edgeSwipeDetection: !1, edgeSwipeThreshold: 20, freeMode: !1, freeModeMomentum: !0, freeModeMomentumRatio: 1, freeModeMomentumBounce: !0, freeModeMomentumBounceRatio: 1, freeModeMomentumVelocityRatio: 1, freeModeSticky: !1, freeModeMinimumVelocity: .02, autoHeight: !1, setWrapperSize: !1, virtualTranslate: !1, effect: "slide", breakpoints: void 0, breakpointsInverse: !1, spaceBetween: 0, slidesPerView: 1, slidesPerColumn: 1, slidesPerColumnFill: "column", slidesPerGroup: 1, centeredSlides: !1, slidesOffsetBefore: 0, slidesOffsetAfter: 0, normalizeSlideIndex: !0, centerInsufficientSlides: !1, watchOverflow: !1, roundLengths: !1, touchRatio: 1, touchAngle: 45, simulateTouch: !0, shortSwipes: !0, longSwipes: !0, longSwipesRatio: .5, longSwipesMs: 300, followFinger: !0, allowTouchMove: !0, threshold: 0, touchMoveStopPropagation: !0, touchStartPreventDefault: !0, touchStartForcePreventDefault: !1, touchReleaseOnEdges: !1, uniqueNavElements: !0, resistance: !0, resistanceRatio: .85, watchSlidesProgress: !1, watchSlidesVisibility: !1, grabCursor: !1, preventClicks: !0, preventClicksPropagation: !0, slideToClickedSlide: !1, preloadImages: !0, updateOnImagesReady: !0, loop: !1, loopAdditionalSlides: 0, loopedSlides: null, loopFillGroupWithBlank: !1, allowSlidePrev: !0, allowSlideNext: !0, swipeHandler: null, noSwiping: !0, noSwipingClass: "swiper-no-swiping", noSwipingSelector: null, passiveListeners: !0, containerModifierClass: "swiper-container-", slideClass: "swiper-slide", slideBlankClass: "swiper-slide-invisible-blank", slideActiveClass: "swiper-slide-active", slideDuplicateActiveClass: "swiper-slide-duplicate-active", slideVisibleClass: "swiper-slide-visible", slideDuplicateClass: "swiper-slide-duplicate", slideNextClass: "swiper-slide-next", slideDuplicateNextClass: "swiper-slide-duplicate-next", slidePrevClass: "swiper-slide-prev", slideDuplicatePrevClass: "swiper-slide-duplicate-prev", wrapperClass: "swiper-wrapper", runCallbacksOnInit: !0 },
+      T = { update: o, translate: d, transition: p, slide: c, loop: u, grabCursor: h, manipulation: v, events: b, breakpoints: y, checkOverflow: { checkOverflow: function checkOverflow() {
+        var e = this,
+            t = e.isLocked;e.isLocked = 1 === e.snapGrid.length, e.allowSlideNext = !e.isLocked, e.allowSlidePrev = !e.isLocked, t !== e.isLocked && e.emit(e.isLocked ? "lock" : "unlock"), t && t !== e.isLocked && (e.isEnd = !1, e.navigation.update());
+      } }, classes: { addClasses: function addClasses() {
+        var t = this.classNames,
+            a = this.params,
+            e = this.rtl,
+            i = this.$el,
+            s = [];s.push(a.direction), a.freeMode && s.push("free-mode"), F.flexbox || s.push("no-flexbox"), a.autoHeight && s.push("autoheight"), e && s.push("rtl"), 1 < a.slidesPerColumn && s.push("multirow"), m.android && s.push("android"), m.ios && s.push("ios"), (I.isIE || I.isEdge) && (F.pointerEvents || F.prefixedPointerEvents) && s.push("wp8-" + a.direction), s.forEach(function (e) {
+          t.push(a.containerModifierClass + e);
+        }), i.addClass(t.join(" "));
+      }, removeClasses: function removeClasses() {
+        var e = this.$el,
+            t = this.classNames;e.removeClass(t.join(" "));
+      } }, images: { loadImage: function loadImage(e, t, a, i, s, r) {
+        var n;function o() {
+          r && r();
+        }e.complete && s ? o() : t ? ((n = new Y.Image()).onload = o, n.onerror = o, i && (n.sizes = i), a && (n.srcset = a), t && (n.src = t)) : o();
+      }, preloadImages: function preloadImages() {
+        var e = this;function t() {
+          null != e && e && !e.destroyed && (void 0 !== e.imagesLoaded && (e.imagesLoaded += 1), e.imagesLoaded === e.imagesToLoad.length && (e.params.updateOnImagesReady && e.update(), e.emit("imagesReady")));
+        }e.imagesToLoad = e.$el.find("img");for (var a = 0; a < e.imagesToLoad.length; a += 1) {
+          var i = e.imagesToLoad[a];e.loadImage(i, i.currentSrc || i.getAttribute("src"), i.srcset || i.getAttribute("srcset"), i.sizes || i.getAttribute("sizes"), !0, t);
+        }
+      } } },
+      E = {},
+      S = (function (u) {
+    function h() {
+      for (var e, t, s, a = [], i = arguments.length; i--;) a[i] = arguments[i];1 === a.length && a[0].constructor && a[0].constructor === Object ? s = a[0] : (t = (e = a)[0], s = e[1]), s || (s = {}), s = V.extend({}, s), t && !s.el && (s.el = t), u.call(this, s), Object.keys(T).forEach(function (t) {
+        Object.keys(T[t]).forEach(function (e) {
+          h.prototype[e] || (h.prototype[e] = T[t][e]);
+        });
+      });var r = this;void 0 === r.modules && (r.modules = {}), Object.keys(r.modules).forEach(function (e) {
+        var t = r.modules[e];if (t.params) {
+          var a = Object.keys(t.params)[0],
+              i = t.params[a];if ("object" != typeof i || null === i) return;if (!(a in s && "enabled" in i)) return;!0 === s[a] && (s[a] = { enabled: !0 }), "object" != typeof s[a] || "enabled" in s[a] || (s[a].enabled = !0), s[a] || (s[a] = { enabled: !1 });
+        }
+      });var n = V.extend({}, x);r.useModulesParams(n), r.params = V.extend({}, n, E, s), r.originalParams = V.extend({}, r.params), r.passedParams = V.extend({}, s);var o = (r.$ = L)(r.params.el);if (t = o[0]) {
+        if (1 < o.length) {
+          var l = [];return o.each(function (e, t) {
+            var a = V.extend({}, s, { el: t });l.push(new h(a));
+          }), l;
+        }t.swiper = r, o.data("swiper", r);var d,
+            p,
+            c = o.children("." + r.params.wrapperClass);return V.extend(r, { $el: o, el: t, $wrapperEl: c, wrapperEl: c[0], classNames: [], slides: L(), slidesGrid: [], snapGrid: [], slidesSizesGrid: [], isHorizontal: function isHorizontal() {
+            return "horizontal" === r.params.direction;
+          }, isVertical: function isVertical() {
+            return "vertical" === r.params.direction;
+          }, rtl: "rtl" === t.dir.toLowerCase() || "rtl" === o.css("direction"), rtlTranslate: "horizontal" === r.params.direction && ("rtl" === t.dir.toLowerCase() || "rtl" === o.css("direction")), wrongRTL: "-webkit-box" === c.css("display"), activeIndex: 0, realIndex: 0, isBeginning: !0, isEnd: !1, translate: 0, previousTranslate: 0, progress: 0, velocity: 0, animating: !1, allowSlideNext: r.params.allowSlideNext, allowSlidePrev: r.params.allowSlidePrev, touchEvents: (d = ["touchstart", "touchmove", "touchend"], p = ["mousedown", "mousemove", "mouseup"], F.pointerEvents ? p = ["pointerdown", "pointermove", "pointerup"] : F.prefixedPointerEvents && (p = ["MSPointerDown", "MSPointerMove", "MSPointerUp"]), r.touchEventsTouch = { start: d[0], move: d[1], end: d[2] }, r.touchEventsDesktop = { start: p[0], move: p[1], end: p[2] }, F.touch || !r.params.simulateTouch ? r.touchEventsTouch : r.touchEventsDesktop), touchEventsData: { isTouched: void 0, isMoved: void 0, allowTouchCallbacks: void 0, touchStartTime: void 0, isScrolling: void 0, currentTranslate: void 0, startTranslate: void 0, allowThresholdMove: void 0, formElements: "input, select, option, textarea, button, video", lastClickTime: V.now(), clickTimeout: void 0, velocities: [], allowMomentumBounce: void 0, isTouchEvent: void 0, startMoving: void 0 }, allowClick: !0, allowTouchMove: r.params.allowTouchMove, touches: { startX: 0, startY: 0, currentX: 0, currentY: 0, diff: 0 }, imagesToLoad: [], imagesLoaded: 0 }), r.useModules(), r.params.init && r.init(), r;
+      }
+    }u && (h.__proto__ = u);var e = { extendedDefaults: { configurable: !0 }, defaults: { configurable: !0 }, Class: { configurable: !0 }, $: { configurable: !0 } };return ((h.prototype = Object.create(u && u.prototype)).constructor = h).prototype.slidesPerViewDynamic = function () {
+      var e = this,
+          t = e.params,
+          a = e.slides,
+          i = e.slidesGrid,
+          s = e.size,
+          r = e.activeIndex,
+          n = 1;if (t.centeredSlides) {
+        for (var o, l = a[r].swiperSlideSize, d = r + 1; d < a.length; d += 1) a[d] && !o && (n += 1, s < (l += a[d].swiperSlideSize) && (o = !0));for (var p = r - 1; 0 <= p; p -= 1) a[p] && !o && (n += 1, s < (l += a[p].swiperSlideSize) && (o = !0));
+      } else for (var c = r + 1; c < a.length; c += 1) i[c] - i[r] < s && (n += 1);return n;
+    }, h.prototype.update = function () {
+      var a = this;if (a && !a.destroyed) {
+        var e = a.snapGrid,
+            t = a.params;t.breakpoints && a.setBreakpoint(), a.updateSize(), a.updateSlides(), a.updateProgress(), a.updateSlidesClasses(), a.params.freeMode ? (i(), a.params.autoHeight && a.updateAutoHeight()) : (("auto" === a.params.slidesPerView || 1 < a.params.slidesPerView) && a.isEnd && !a.params.centeredSlides ? a.slideTo(a.slides.length - 1, 0, !1, !0) : a.slideTo(a.activeIndex, 0, !1, !0)) || i(), t.watchOverflow && e !== a.snapGrid && a.checkOverflow(), a.emit("update");
+      }function i() {
+        var e = a.rtlTranslate ? -1 * a.translate : a.translate,
+            t = Math.min(Math.max(e, a.maxTranslate()), a.minTranslate());a.setTranslate(t), a.updateActiveIndex(), a.updateSlidesClasses();
+      }
+    }, h.prototype.init = function () {
+      var e = this;e.initialized || (e.emit("beforeInit"), e.params.breakpoints && e.setBreakpoint(), e.addClasses(), e.params.loop && e.loopCreate(), e.updateSize(), e.updateSlides(), e.params.watchOverflow && e.checkOverflow(), e.params.grabCursor && e.setGrabCursor(), e.params.preloadImages && e.preloadImages(), e.params.loop ? e.slideTo(e.params.initialSlide + e.loopedSlides, 0, e.params.runCallbacksOnInit) : e.slideTo(e.params.initialSlide, 0, e.params.runCallbacksOnInit), e.attachEvents(), e.initialized = !0, e.emit("init"));
+    }, h.prototype.destroy = function (e, t) {
+      void 0 === e && (e = !0), void 0 === t && (t = !0);var a = this,
+          i = a.params,
+          s = a.$el,
+          r = a.$wrapperEl,
+          n = a.slides;return void 0 === a.params || a.destroyed || (a.emit("beforeDestroy"), a.initialized = !1, a.detachEvents(), i.loop && a.loopDestroy(), t && (a.removeClasses(), s.removeAttr("style"), r.removeAttr("style"), n && n.length && n.removeClass([i.slideVisibleClass, i.slideActiveClass, i.slideNextClass, i.slidePrevClass].join(" ")).removeAttr("style").removeAttr("data-swiper-slide-index").removeAttr("data-swiper-column").removeAttr("data-swiper-row")), a.emit("destroy"), Object.keys(a.eventsListeners).forEach(function (e) {
+        a.off(e);
+      }), !1 !== e && (a.$el[0].swiper = null, a.$el.data("swiper", null), V.deleteProps(a)), a.destroyed = !0), null;
+    }, h.extendDefaults = function (e) {
+      V.extend(E, e);
+    }, e.extendedDefaults.get = function () {
+      return E;
+    }, e.defaults.get = function () {
+      return x;
+    }, e.Class.get = function () {
+      return u;
+    }, e.$.get = function () {
+      return L;
+    }, Object.defineProperties(h, e), h;
+  })(s),
+      C = { name: "device", proto: { device: m }, "static": { device: m } },
+      M = { name: "support", proto: { support: F }, "static": { support: F } },
+      k = { name: "browser", proto: { browser: I }, "static": { browser: I } },
+      P = { name: "resize", create: function create() {
+      var e = this;V.extend(e, { resize: { resizeHandler: function resizeHandler() {
+            e && !e.destroyed && e.initialized && (e.emit("beforeResize"), e.emit("resize"));
+          }, orientationChangeHandler: function orientationChangeHandler() {
+            e && !e.destroyed && e.initialized && e.emit("orientationchange");
+          } } });
+    }, on: { init: function init() {
+        Y.addEventListener("resize", this.resize.resizeHandler), Y.addEventListener("orientationchange", this.resize.orientationChangeHandler);
+      }, destroy: function destroy() {
+        Y.removeEventListener("resize", this.resize.resizeHandler), Y.removeEventListener("orientationchange", this.resize.orientationChangeHandler);
+      } } },
+      z = { func: Y.MutationObserver || Y.WebkitMutationObserver, attach: function attach(e, t) {
+      void 0 === t && (t = {});var a = this,
+          i = new z.func(function (e) {
+        if (1 !== e.length) {
+          var t = function t() {
+            a.emit("observerUpdate", e[0]);
+          };Y.requestAnimationFrame ? Y.requestAnimationFrame(t) : Y.setTimeout(t, 0);
+        } else a.emit("observerUpdate", e[0]);
+      });i.observe(e, { attributes: void 0 === t.attributes || t.attributes, childList: void 0 === t.childList || t.childList, characterData: void 0 === t.characterData || t.characterData }), a.observer.observers.push(i);
+    }, init: function init() {
+      var e = this;if (F.observer && e.params.observer) {
+        if (e.params.observeParents) for (var t = e.$el.parents(), a = 0; a < t.length; a += 1) e.observer.attach(t[a]);e.observer.attach(e.$el[0], { childList: !1 }), e.observer.attach(e.$wrapperEl[0], { attributes: !1 });
+      }
+    }, destroy: function destroy() {
+      this.observer.observers.forEach(function (e) {
+        e.disconnect();
+      }), this.observer.observers = [];
+    } },
+      $ = { name: "observer", params: { observer: !1, observeParents: !1 }, create: function create() {
+      V.extend(this, { observer: { init: z.init.bind(this), attach: z.attach.bind(this), destroy: z.destroy.bind(this), observers: [] } });
+    }, on: { init: function init() {
+        this.observer.init();
+      }, destroy: function destroy() {
+        this.observer.destroy();
+      } } },
+      D = { update: function update(e) {
+      var t = this,
+          a = t.params,
+          i = a.slidesPerView,
+          s = a.slidesPerGroup,
+          r = a.centeredSlides,
+          n = t.params.virtual,
+          o = n.addSlidesBefore,
+          l = n.addSlidesAfter,
+          d = t.virtual,
+          p = d.from,
+          c = d.to,
+          u = d.slides,
+          h = d.slidesGrid,
+          v = d.renderSlide,
+          f = d.offset;t.updateActiveIndex();var m,
+          g,
+          b,
+          w = t.activeIndex || 0;m = t.rtlTranslate ? "right" : t.isHorizontal() ? "left" : "top", r ? (g = Math.floor(i / 2) + s + o, b = Math.floor(i / 2) + s + l) : (g = i + (s - 1) + o, b = s + l);var y = Math.max((w || 0) - b, 0),
+          x = Math.min((w || 0) + g, u.length - 1),
+          T = (t.slidesGrid[y] || 0) - (t.slidesGrid[0] || 0);function E() {
+        t.updateSlides(), t.updateProgress(), t.updateSlidesClasses(), t.lazy && t.params.lazy.enabled && t.lazy.load();
+      }if ((V.extend(t.virtual, { from: y, to: x, offset: T, slidesGrid: t.slidesGrid }), p === y && c === x && !e)) return t.slidesGrid !== h && T !== f && t.slides.css(m, T + "px"), void t.updateProgress();if (t.params.virtual.renderExternal) return t.params.virtual.renderExternal.call(t, { offset: T, from: y, to: x, slides: (function () {
+          for (var e = [], t = y; t <= x; t += 1) e.push(u[t]);return e;
+        })() }), void E();var S = [],
+          C = [];if (e) t.$wrapperEl.find("." + t.params.slideClass).remove();else for (var M = p; M <= c; M += 1) (M < y || x < M) && t.$wrapperEl.find("." + t.params.slideClass + '[data-swiper-slide-index="' + M + '"]').remove();for (var k = 0; k < u.length; k += 1) y <= k && k <= x && (void 0 === c || e ? C.push(k) : (c < k && C.push(k), k < p && S.push(k)));C.forEach(function (e) {
+        t.$wrapperEl.append(v(u[e], e));
+      }), S.sort(function (e, t) {
+        return t - e;
+      }).forEach(function (e) {
+        t.$wrapperEl.prepend(v(u[e], e));
+      }), t.$wrapperEl.children(".swiper-slide").css(m, T + "px"), E();
+    }, renderSlide: function renderSlide(e, t) {
+      var a = this,
+          i = a.params.virtual;if (i.cache && a.virtual.cache[t]) return a.virtual.cache[t];var s = i.renderSlide ? L(i.renderSlide.call(a, e, t)) : L('<div class="' + a.params.slideClass + '" data-swiper-slide-index="' + t + '">' + e + "</div>");return s.attr("data-swiper-slide-index") || s.attr("data-swiper-slide-index", t), i.cache && (a.virtual.cache[t] = s), s;
+    }, appendSlide: function appendSlide(e) {
+      this.virtual.slides.push(e), this.virtual.update(!0);
+    }, prependSlide: function prependSlide(e) {
+      var t = this;if ((t.virtual.slides.unshift(e), t.params.virtual.cache)) {
+        var a = t.virtual.cache,
+            i = {};Object.keys(a).forEach(function (e) {
+          i[e + 1] = a[e];
+        }), t.virtual.cache = i;
+      }t.virtual.update(!0), t.slideNext(0);
+    } },
+      O = { name: "virtual", params: { virtual: { enabled: !1, slides: [], cache: !0, renderSlide: null, renderExternal: null, addSlidesBefore: 0, addSlidesAfter: 0 } }, create: function create() {
+      var e = this;V.extend(e, { virtual: { update: D.update.bind(e), appendSlide: D.appendSlide.bind(e), prependSlide: D.prependSlide.bind(e), renderSlide: D.renderSlide.bind(e), slides: e.params.virtual.slides, cache: {} } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this;if (e.params.virtual.enabled) {
+          e.classNames.push(e.params.containerModifierClass + "virtual");var t = { watchSlidesProgress: !0 };V.extend(e.params, t), V.extend(e.originalParams, t), e.params.initialSlide || e.virtual.update();
+        }
+      }, setTranslate: function setTranslate() {
+        this.params.virtual.enabled && this.virtual.update();
+      } } },
+      A = { handle: function handle(e) {
+      var t = this,
+          a = t.rtlTranslate,
+          i = e;i.originalEvent && (i = i.originalEvent);var s = i.keyCode || i.charCode;if (!t.allowSlideNext && (t.isHorizontal() && 39 === s || t.isVertical() && 40 === s)) return !1;if (!t.allowSlidePrev && (t.isHorizontal() && 37 === s || t.isVertical() && 38 === s)) return !1;if (!(i.shiftKey || i.altKey || i.ctrlKey || i.metaKey || f.activeElement && f.activeElement.nodeName && ("input" === f.activeElement.nodeName.toLowerCase() || "textarea" === f.activeElement.nodeName.toLowerCase()))) {
+        if (t.params.keyboard.onlyInViewport && (37 === s || 39 === s || 38 === s || 40 === s)) {
+          var r = !1;if (0 < t.$el.parents("." + t.params.slideClass).length && 0 === t.$el.parents("." + t.params.slideActiveClass).length) return;var n = Y.innerWidth,
+              o = Y.innerHeight,
+              l = t.$el.offset();a && (l.left -= t.$el[0].scrollLeft);for (var d = [[l.left, l.top], [l.left + t.width, l.top], [l.left, l.top + t.height], [l.left + t.width, l.top + t.height]], p = 0; p < d.length; p += 1) {
+            var c = d[p];0 <= c[0] && c[0] <= n && 0 <= c[1] && c[1] <= o && (r = !0);
+          }if (!r) return;
+        }t.isHorizontal() ? (37 !== s && 39 !== s || (i.preventDefault ? i.preventDefault() : i.returnValue = !1), (39 === s && !a || 37 === s && a) && t.slideNext(), (37 === s && !a || 39 === s && a) && t.slidePrev()) : (38 !== s && 40 !== s || (i.preventDefault ? i.preventDefault() : i.returnValue = !1), 40 === s && t.slideNext(), 38 === s && t.slidePrev()), t.emit("keyPress", s);
+      }
+    }, enable: function enable() {
+      this.keyboard.enabled || (L(f).on("keydown", this.keyboard.handle), this.keyboard.enabled = !0);
+    }, disable: function disable() {
+      this.keyboard.enabled && (L(f).off("keydown", this.keyboard.handle), this.keyboard.enabled = !1);
+    } },
+      N = { name: "keyboard", params: { keyboard: { enabled: !1, onlyInViewport: !0 } }, create: function create() {
+      V.extend(this, { keyboard: { enabled: !1, enable: A.enable.bind(this), disable: A.disable.bind(this), handle: A.handle.bind(this) } });
+    }, on: { init: function init() {
+        this.params.keyboard.enabled && this.keyboard.enable();
+      }, destroy: function destroy() {
+        this.keyboard.enabled && this.keyboard.disable();
+      } } };var H = { lastScrollTime: V.now(), event: -1 < Y.navigator.userAgent.indexOf("firefox") ? "DOMMouseScroll" : (function () {
+      var e = "onwheel",
+          t = (e in f);if (!t) {
+        var a = f.createElement("div");a.setAttribute(e, "return;"), t = "function" == typeof a[e];
+      }return !t && f.implementation && f.implementation.hasFeature && !0 !== f.implementation.hasFeature("", "") && (t = f.implementation.hasFeature("Events.wheel", "3.0")), t;
+    })() ? "wheel" : "mousewheel", normalize: function normalize(e) {
+      var t = 0,
+          a = 0,
+          i = 0,
+          s = 0;return "detail" in e && (a = e.detail), "wheelDelta" in e && (a = -e.wheelDelta / 120), "wheelDeltaY" in e && (a = -e.wheelDeltaY / 120), "wheelDeltaX" in e && (t = -e.wheelDeltaX / 120), "axis" in e && e.axis === e.HORIZONTAL_AXIS && (t = a, a = 0), i = 10 * t, s = 10 * a, "deltaY" in e && (s = e.deltaY), "deltaX" in e && (i = e.deltaX), (i || s) && e.deltaMode && (1 === e.deltaMode ? (i *= 40, s *= 40) : (i *= 800, s *= 800)), i && !t && (t = i < 1 ? -1 : 1), s && !a && (a = s < 1 ? -1 : 1), { spinX: t, spinY: a, pixelX: i, pixelY: s };
+    }, handleMouseEnter: function handleMouseEnter() {
+      this.mouseEntered = !0;
+    }, handleMouseLeave: function handleMouseLeave() {
+      this.mouseEntered = !1;
+    }, handle: function handle(e) {
+      var t = e,
+          a = this,
+          i = a.params.mousewheel;if (!a.mouseEntered && !i.releaseOnEdges) return !0;t.originalEvent && (t = t.originalEvent);var s = 0,
+          r = a.rtlTranslate ? -1 : 1,
+          n = H.normalize(t);if (i.forceToAxis) if (a.isHorizontal()) {
+        if (!(Math.abs(n.pixelX) > Math.abs(n.pixelY))) return !0;s = n.pixelX * r;
+      } else {
+        if (!(Math.abs(n.pixelY) > Math.abs(n.pixelX))) return !0;s = n.pixelY;
+      } else s = Math.abs(n.pixelX) > Math.abs(n.pixelY) ? -n.pixelX * r : -n.pixelY;if (0 === s) return !0;if ((i.invert && (s = -s), a.params.freeMode)) {
+        a.params.loop && a.loopFix();var o = a.getTranslate() + s * i.sensitivity,
+            l = a.isBeginning,
+            d = a.isEnd;if ((o >= a.minTranslate() && (o = a.minTranslate()), o <= a.maxTranslate() && (o = a.maxTranslate()), a.setTransition(0), a.setTranslate(o), a.updateProgress(), a.updateActiveIndex(), a.updateSlidesClasses(), (!l && a.isBeginning || !d && a.isEnd) && a.updateSlidesClasses(), a.params.freeModeSticky && (clearTimeout(a.mousewheel.timeout), a.mousewheel.timeout = V.nextTick(function () {
+          a.slideToClosest();
+        }, 300)), a.emit("scroll", t), a.params.autoplay && a.params.autoplayDisableOnInteraction && a.autoplay.stop(), o === a.minTranslate() || o === a.maxTranslate())) return !0;
+      } else {
+        if (60 < V.now() - a.mousewheel.lastScrollTime) if (s < 0) if (a.isEnd && !a.params.loop || a.animating) {
+          if (i.releaseOnEdges) return !0;
+        } else a.slideNext(), a.emit("scroll", t);else if (a.isBeginning && !a.params.loop || a.animating) {
+          if (i.releaseOnEdges) return !0;
+        } else a.slidePrev(), a.emit("scroll", t);a.mousewheel.lastScrollTime = new Y.Date().getTime();
+      }return t.preventDefault ? t.preventDefault() : t.returnValue = !1, !1;
+    }, enable: function enable() {
+      var e = this;if (!H.event) return !1;if (e.mousewheel.enabled) return !1;var t = e.$el;return "container" !== e.params.mousewheel.eventsTarged && (t = L(e.params.mousewheel.eventsTarged)), t.on("mouseenter", e.mousewheel.handleMouseEnter), t.on("mouseleave", e.mousewheel.handleMouseLeave), t.on(H.event, e.mousewheel.handle), e.mousewheel.enabled = !0;
+    }, disable: function disable() {
+      var e = this;if (!H.event) return !1;if (!e.mousewheel.enabled) return !1;var t = e.$el;return "container" !== e.params.mousewheel.eventsTarged && (t = L(e.params.mousewheel.eventsTarged)), t.off(H.event, e.mousewheel.handle), !(e.mousewheel.enabled = !1);
+    } },
+      G = { update: function update() {
+      var e = this,
+          t = e.params.navigation;if (!e.params.loop) {
+        var a = e.navigation,
+            i = a.$nextEl,
+            s = a.$prevEl;s && 0 < s.length && (e.isBeginning ? s.addClass(t.disabledClass) : s.removeClass(t.disabledClass), s[e.params.watchOverflow && e.isLocked ? "addClass" : "removeClass"](t.lockClass)), i && 0 < i.length && (e.isEnd ? i.addClass(t.disabledClass) : i.removeClass(t.disabledClass), i[e.params.watchOverflow && e.isLocked ? "addClass" : "removeClass"](t.lockClass));
+      }
+    }, onPrevClick: function onPrevClick(e) {
+      e.preventDefault(), this.isBeginning && !this.params.loop || this.slidePrev();
+    }, onNextClick: function onNextClick(e) {
+      e.preventDefault(), this.isEnd && !this.params.loop || this.slideNext();
+    }, init: function init() {
+      var e,
+          t,
+          a = this,
+          i = a.params.navigation;(i.nextEl || i.prevEl) && (i.nextEl && (e = L(i.nextEl), a.params.uniqueNavElements && "string" == typeof i.nextEl && 1 < e.length && 1 === a.$el.find(i.nextEl).length && (e = a.$el.find(i.nextEl))), i.prevEl && (t = L(i.prevEl), a.params.uniqueNavElements && "string" == typeof i.prevEl && 1 < t.length && 1 === a.$el.find(i.prevEl).length && (t = a.$el.find(i.prevEl))), e && 0 < e.length && e.on("click", a.navigation.onNextClick), t && 0 < t.length && t.on("click", a.navigation.onPrevClick), V.extend(a.navigation, { $nextEl: e, nextEl: e && e[0], $prevEl: t, prevEl: t && t[0] }));
+    }, destroy: function destroy() {
+      var e = this,
+          t = e.navigation,
+          a = t.$nextEl,
+          i = t.$prevEl;a && a.length && (a.off("click", e.navigation.onNextClick), a.removeClass(e.params.navigation.disabledClass)), i && i.length && (i.off("click", e.navigation.onPrevClick), i.removeClass(e.params.navigation.disabledClass));
+    } },
+      B = { update: function update() {
+      var e = this,
+          t = e.rtl,
+          s = e.params.pagination;if (s.el && e.pagination.el && e.pagination.$el && 0 !== e.pagination.$el.length) {
+        var r,
+            a = e.virtual && e.params.virtual.enabled ? e.virtual.slides.length : e.slides.length,
+            i = e.pagination.$el,
+            n = e.params.loop ? Math.ceil((a - 2 * e.loopedSlides) / e.params.slidesPerGroup) : e.snapGrid.length;if ((e.params.loop ? ((r = Math.ceil((e.activeIndex - e.loopedSlides) / e.params.slidesPerGroup)) > a - 1 - 2 * e.loopedSlides && (r -= a - 2 * e.loopedSlides), n - 1 < r && (r -= n), r < 0 && "bullets" !== e.params.paginationType && (r = n + r)) : r = void 0 !== e.snapIndex ? e.snapIndex : e.activeIndex || 0, "bullets" === s.type && e.pagination.bullets && 0 < e.pagination.bullets.length)) {
+          var o,
+              l,
+              d,
+              p = e.pagination.bullets;if ((s.dynamicBullets && (e.pagination.bulletSize = p.eq(0)[e.isHorizontal() ? "outerWidth" : "outerHeight"](!0), i.css(e.isHorizontal() ? "width" : "height", e.pagination.bulletSize * (s.dynamicMainBullets + 4) + "px"), 1 < s.dynamicMainBullets && void 0 !== e.previousIndex && (e.pagination.dynamicBulletIndex += r - e.previousIndex, e.pagination.dynamicBulletIndex > s.dynamicMainBullets - 1 ? e.pagination.dynamicBulletIndex = s.dynamicMainBullets - 1 : e.pagination.dynamicBulletIndex < 0 && (e.pagination.dynamicBulletIndex = 0)), o = r - e.pagination.dynamicBulletIndex, d = ((l = o + (Math.min(p.length, s.dynamicMainBullets) - 1)) + o) / 2), p.removeClass(s.bulletActiveClass + " " + s.bulletActiveClass + "-next " + s.bulletActiveClass + "-next-next " + s.bulletActiveClass + "-prev " + s.bulletActiveClass + "-prev-prev " + s.bulletActiveClass + "-main"), 1 < i.length)) p.each(function (e, t) {
+            var a = L(t),
+                i = a.index();i === r && a.addClass(s.bulletActiveClass), s.dynamicBullets && (o <= i && i <= l && a.addClass(s.bulletActiveClass + "-main"), i === o && a.prev().addClass(s.bulletActiveClass + "-prev").prev().addClass(s.bulletActiveClass + "-prev-prev"), i === l && a.next().addClass(s.bulletActiveClass + "-next").next().addClass(s.bulletActiveClass + "-next-next"));
+          });else if ((p.eq(r).addClass(s.bulletActiveClass), s.dynamicBullets)) {
+            for (var c = p.eq(o), u = p.eq(l), h = o; h <= l; h += 1) p.eq(h).addClass(s.bulletActiveClass + "-main");c.prev().addClass(s.bulletActiveClass + "-prev").prev().addClass(s.bulletActiveClass + "-prev-prev"), u.next().addClass(s.bulletActiveClass + "-next").next().addClass(s.bulletActiveClass + "-next-next");
+          }if (s.dynamicBullets) {
+            var v = Math.min(p.length, s.dynamicMainBullets + 4),
+                f = (e.pagination.bulletSize * v - e.pagination.bulletSize) / 2 - d * e.pagination.bulletSize,
+                m = t ? "right" : "left";p.css(e.isHorizontal() ? m : "top", f + "px");
+          }
+        }if (("fraction" === s.type && (i.find("." + s.currentClass).text(s.formatFractionCurrent(r + 1)), i.find("." + s.totalClass).text(s.formatFractionTotal(n))), "progressbar" === s.type)) {
+          var g;g = s.progressbarOpposite ? e.isHorizontal() ? "vertical" : "horizontal" : e.isHorizontal() ? "horizontal" : "vertical";var b = (r + 1) / n,
+              w = 1,
+              y = 1;"horizontal" === g ? w = b : y = b, i.find("." + s.progressbarFillClass).transform("translate3d(0,0,0) scaleX(" + w + ") scaleY(" + y + ")").transition(e.params.speed);
+        }"custom" === s.type && s.renderCustom ? (i.html(s.renderCustom(e, r + 1, n)), e.emit("paginationRender", e, i[0])) : e.emit("paginationUpdate", e, i[0]), i[e.params.watchOverflow && e.isLocked ? "addClass" : "removeClass"](s.lockClass);
+      }
+    }, render: function render() {
+      var e = this,
+          t = e.params.pagination;if (t.el && e.pagination.el && e.pagination.$el && 0 !== e.pagination.$el.length) {
+        var a = e.virtual && e.params.virtual.enabled ? e.virtual.slides.length : e.slides.length,
+            i = e.pagination.$el,
+            s = "";if ("bullets" === t.type) {
+          for (var r = e.params.loop ? Math.ceil((a - 2 * e.loopedSlides) / e.params.slidesPerGroup) : e.snapGrid.length, n = 0; n < r; n += 1) t.renderBullet ? s += t.renderBullet.call(e, n, t.bulletClass) : s += "<" + t.bulletElement + ' class="' + t.bulletClass + '"></' + t.bulletElement + ">";i.html(s), e.pagination.bullets = i.find("." + t.bulletClass);
+        }"fraction" === t.type && (s = t.renderFraction ? t.renderFraction.call(e, t.currentClass, t.totalClass) : '<span class="' + t.currentClass + '"></span> / <span class="' + t.totalClass + '"></span>', i.html(s)), "progressbar" === t.type && (s = t.renderProgressbar ? t.renderProgressbar.call(e, t.progressbarFillClass) : '<span class="' + t.progressbarFillClass + '"></span>', i.html(s)), "custom" !== t.type && e.emit("paginationRender", e.pagination.$el[0]);
+      }
+    }, init: function init() {
+      var a = this,
+          e = a.params.pagination;if (e.el) {
+        var t = L(e.el);0 !== t.length && (a.params.uniqueNavElements && "string" == typeof e.el && 1 < t.length && 1 === a.$el.find(e.el).length && (t = a.$el.find(e.el)), "bullets" === e.type && e.clickable && t.addClass(e.clickableClass), t.addClass(e.modifierClass + e.type), "bullets" === e.type && e.dynamicBullets && (t.addClass("" + e.modifierClass + e.type + "-dynamic"), a.pagination.dynamicBulletIndex = 0, e.dynamicMainBullets < 1 && (e.dynamicMainBullets = 1)), "progressbar" === e.type && e.progressbarOpposite && t.addClass(e.progressbarOppositeClass), e.clickable && t.on("click", "." + e.bulletClass, function (e) {
+          e.preventDefault();var t = L(this).index() * a.params.slidesPerGroup;a.params.loop && (t += a.loopedSlides), a.slideTo(t);
+        }), V.extend(a.pagination, { $el: t, el: t[0] }));
+      }
+    }, destroy: function destroy() {
+      var e = this,
+          t = e.params.pagination;if (t.el && e.pagination.el && e.pagination.$el && 0 !== e.pagination.$el.length) {
+        var a = e.pagination.$el;a.removeClass(t.hiddenClass), a.removeClass(t.modifierClass + t.type), e.pagination.bullets && e.pagination.bullets.removeClass(t.bulletActiveClass), t.clickable && a.off("click", "." + t.bulletClass);
+      }
+    } },
+      X = { setTranslate: function setTranslate() {
+      var e = this;if (e.params.scrollbar.el && e.scrollbar.el) {
+        var t = e.scrollbar,
+            a = e.rtlTranslate,
+            i = e.progress,
+            s = t.dragSize,
+            r = t.trackSize,
+            n = t.$dragEl,
+            o = t.$el,
+            l = e.params.scrollbar,
+            d = s,
+            p = (r - s) * i;a ? 0 < (p = -p) ? (d = s - p, p = 0) : r < -p + s && (d = r + p) : p < 0 ? (d = s + p, p = 0) : r < p + s && (d = r - p), e.isHorizontal() ? (F.transforms3d ? n.transform("translate3d(" + p + "px, 0, 0)") : n.transform("translateX(" + p + "px)"), n[0].style.width = d + "px") : (F.transforms3d ? n.transform("translate3d(0px, " + p + "px, 0)") : n.transform("translateY(" + p + "px)"), n[0].style.height = d + "px"), l.hide && (clearTimeout(e.scrollbar.timeout), o[0].style.opacity = 1, e.scrollbar.timeout = setTimeout(function () {
+          o[0].style.opacity = 0, o.transition(400);
+        }, 1e3));
+      }
+    }, setTransition: function setTransition(e) {
+      this.params.scrollbar.el && this.scrollbar.el && this.scrollbar.$dragEl.transition(e);
+    }, updateSize: function updateSize() {
+      var e = this;if (e.params.scrollbar.el && e.scrollbar.el) {
+        var t = e.scrollbar,
+            a = t.$dragEl,
+            i = t.$el;a[0].style.width = "", a[0].style.height = "";var s,
+            r = e.isHorizontal() ? i[0].offsetWidth : i[0].offsetHeight,
+            n = e.size / e.virtualSize,
+            o = n * (r / e.size);s = "auto" === e.params.scrollbar.dragSize ? r * n : parseInt(e.params.scrollbar.dragSize, 10), e.isHorizontal() ? a[0].style.width = s + "px" : a[0].style.height = s + "px", i[0].style.display = 1 <= n ? "none" : "", e.params.scrollbarHide && (i[0].style.opacity = 0), V.extend(t, { trackSize: r, divider: n, moveDivider: o, dragSize: s }), t.$el[e.params.watchOverflow && e.isLocked ? "addClass" : "removeClass"](e.params.scrollbar.lockClass);
+      }
+    }, setDragPosition: function setDragPosition(e) {
+      var t,
+          a = this,
+          i = a.scrollbar,
+          s = a.rtlTranslate,
+          r = i.$el,
+          n = i.dragSize,
+          o = i.trackSize;t = ((a.isHorizontal() ? "touchstart" === e.type || "touchmove" === e.type ? e.targetTouches[0].pageX : e.pageX || e.clientX : "touchstart" === e.type || "touchmove" === e.type ? e.targetTouches[0].pageY : e.pageY || e.clientY) - r.offset()[a.isHorizontal() ? "left" : "top"] - n / 2) / (o - n), t = Math.max(Math.min(t, 1), 0), s && (t = 1 - t);var l = a.minTranslate() + (a.maxTranslate() - a.minTranslate()) * t;a.updateProgress(l), a.setTranslate(l), a.updateActiveIndex(), a.updateSlidesClasses();
+    }, onDragStart: function onDragStart(e) {
+      var t = this,
+          a = t.params.scrollbar,
+          i = t.scrollbar,
+          s = t.$wrapperEl,
+          r = i.$el,
+          n = i.$dragEl;t.scrollbar.isTouched = !0, e.preventDefault(), e.stopPropagation(), s.transition(100), n.transition(100), i.setDragPosition(e), clearTimeout(t.scrollbar.dragTimeout), r.transition(0), a.hide && r.css("opacity", 1), t.emit("scrollbarDragStart", e);
+    }, onDragMove: function onDragMove(e) {
+      var t = this.scrollbar,
+          a = this.$wrapperEl,
+          i = t.$el,
+          s = t.$dragEl;this.scrollbar.isTouched && (e.preventDefault ? e.preventDefault() : e.returnValue = !1, t.setDragPosition(e), a.transition(0), i.transition(0), s.transition(0), this.emit("scrollbarDragMove", e));
+    }, onDragEnd: function onDragEnd(e) {
+      var t = this,
+          a = t.params.scrollbar,
+          i = t.scrollbar.$el;t.scrollbar.isTouched && (t.scrollbar.isTouched = !1, a.hide && (clearTimeout(t.scrollbar.dragTimeout), t.scrollbar.dragTimeout = V.nextTick(function () {
+        i.css("opacity", 0), i.transition(400);
+      }, 1e3)), t.emit("scrollbarDragEnd", e), a.snapOnRelease && t.slideToClosest());
+    }, enableDraggable: function enableDraggable() {
+      var e = this;if (e.params.scrollbar.el) {
+        var t = e.scrollbar,
+            a = e.touchEventsTouch,
+            i = e.touchEventsDesktop,
+            s = e.params,
+            r = t.$el[0],
+            n = !(!F.passiveListener || !s.passiveListeners) && { passive: !1, capture: !1 },
+            o = !(!F.passiveListener || !s.passiveListeners) && { passive: !0, capture: !1 };F.touch ? (r.addEventListener(a.start, e.scrollbar.onDragStart, n), r.addEventListener(a.move, e.scrollbar.onDragMove, n), r.addEventListener(a.end, e.scrollbar.onDragEnd, o)) : (r.addEventListener(i.start, e.scrollbar.onDragStart, n), f.addEventListener(i.move, e.scrollbar.onDragMove, n), f.addEventListener(i.end, e.scrollbar.onDragEnd, o));
+      }
+    }, disableDraggable: function disableDraggable() {
+      var e = this;if (e.params.scrollbar.el) {
+        var t = e.scrollbar,
+            a = e.touchEventsTouch,
+            i = e.touchEventsDesktop,
+            s = e.params,
+            r = t.$el[0],
+            n = !(!F.passiveListener || !s.passiveListeners) && { passive: !1, capture: !1 },
+            o = !(!F.passiveListener || !s.passiveListeners) && { passive: !0, capture: !1 };F.touch ? (r.removeEventListener(a.start, e.scrollbar.onDragStart, n), r.removeEventListener(a.move, e.scrollbar.onDragMove, n), r.removeEventListener(a.end, e.scrollbar.onDragEnd, o)) : (r.removeEventListener(i.start, e.scrollbar.onDragStart, n), f.removeEventListener(i.move, e.scrollbar.onDragMove, n), f.removeEventListener(i.end, e.scrollbar.onDragEnd, o));
+      }
+    }, init: function init() {
+      var e = this;if (e.params.scrollbar.el) {
+        var t = e.scrollbar,
+            a = e.$el,
+            i = e.params.scrollbar,
+            s = L(i.el);e.params.uniqueNavElements && "string" == typeof i.el && 1 < s.length && 1 === a.find(i.el).length && (s = a.find(i.el));var r = s.find("." + e.params.scrollbar.dragClass);0 === r.length && (r = L('<div class="' + e.params.scrollbar.dragClass + '"></div>'), s.append(r)), V.extend(t, { $el: s, el: s[0], $dragEl: r, dragEl: r[0] }), i.draggable && t.enableDraggable();
+      }
+    }, destroy: function destroy() {
+      this.scrollbar.disableDraggable();
+    } },
+      R = { setTransform: function setTransform(e, t) {
+      var a = this.rtl,
+          i = L(e),
+          s = a ? -1 : 1,
+          r = i.attr("data-swiper-parallax") || "0",
+          n = i.attr("data-swiper-parallax-x"),
+          o = i.attr("data-swiper-parallax-y"),
+          l = i.attr("data-swiper-parallax-scale"),
+          d = i.attr("data-swiper-parallax-opacity");if ((n || o ? (n = n || "0", o = o || "0") : this.isHorizontal() ? (n = r, o = "0") : (o = r, n = "0"), n = 0 <= n.indexOf("%") ? parseInt(n, 10) * t * s + "%" : n * t * s + "px", o = 0 <= o.indexOf("%") ? parseInt(o, 10) * t + "%" : o * t + "px", null != d)) {
+        var p = d - (d - 1) * (1 - Math.abs(t));i[0].style.opacity = p;
+      }if (null == l) i.transform("translate3d(" + n + ", " + o + ", 0px)");else {
+        var c = l - (l - 1) * (1 - Math.abs(t));i.transform("translate3d(" + n + ", " + o + ", 0px) scale(" + c + ")");
+      }
+    }, setTranslate: function setTranslate() {
+      var i = this,
+          e = i.$el,
+          t = i.slides,
+          s = i.progress,
+          r = i.snapGrid;e.children("[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y]").each(function (e, t) {
+        i.parallax.setTransform(t, s);
+      }), t.each(function (e, t) {
+        var a = t.progress;1 < i.params.slidesPerGroup && "auto" !== i.params.slidesPerView && (a += Math.ceil(e / 2) - s * (r.length - 1)), a = Math.min(Math.max(a, -1), 1), L(t).find("[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y]").each(function (e, t) {
+          i.parallax.setTransform(t, a);
+        });
+      });
+    }, setTransition: function setTransition(s) {
+      void 0 === s && (s = this.params.speed);this.$el.find("[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y]").each(function (e, t) {
+        var a = L(t),
+            i = parseInt(a.attr("data-swiper-parallax-duration"), 10) || s;0 === s && (i = 0), a.transition(i);
+      });
+    } },
+      q = { getDistanceBetweenTouches: function getDistanceBetweenTouches(e) {
+      if (e.targetTouches.length < 2) return 1;var t = e.targetTouches[0].pageX,
+          a = e.targetTouches[0].pageY,
+          i = e.targetTouches[1].pageX,
+          s = e.targetTouches[1].pageY;return Math.sqrt(Math.pow(i - t, 2) + Math.pow(s - a, 2));
+    }, onGestureStart: function onGestureStart(e) {
+      var t = this,
+          a = t.params.zoom,
+          i = t.zoom,
+          s = i.gesture;if ((i.fakeGestureTouched = !1, i.fakeGestureMoved = !1, !F.gestures)) {
+        if ("touchstart" !== e.type || "touchstart" === e.type && e.targetTouches.length < 2) return;i.fakeGestureTouched = !0, s.scaleStart = q.getDistanceBetweenTouches(e);
+      }s.$slideEl && s.$slideEl.length || (s.$slideEl = L(e.target).closest(".swiper-slide"), 0 === s.$slideEl.length && (s.$slideEl = t.slides.eq(t.activeIndex)), s.$imageEl = s.$slideEl.find("img, svg, canvas"), s.$imageWrapEl = s.$imageEl.parent("." + a.containerClass), s.maxRatio = s.$imageWrapEl.attr("data-swiper-zoom") || a.maxRatio, 0 !== s.$imageWrapEl.length) ? (s.$imageEl.transition(0), t.zoom.isScaling = !0) : s.$imageEl = void 0;
+    }, onGestureChange: function onGestureChange(e) {
+      var t = this.params.zoom,
+          a = this.zoom,
+          i = a.gesture;if (!F.gestures) {
+        if ("touchmove" !== e.type || "touchmove" === e.type && e.targetTouches.length < 2) return;a.fakeGestureMoved = !0, i.scaleMove = q.getDistanceBetweenTouches(e);
+      }i.$imageEl && 0 !== i.$imageEl.length && (F.gestures ? this.zoom.scale = e.scale * a.currentScale : a.scale = i.scaleMove / i.scaleStart * a.currentScale, a.scale > i.maxRatio && (a.scale = i.maxRatio - 1 + Math.pow(a.scale - i.maxRatio + 1, .5)), a.scale < t.minRatio && (a.scale = t.minRatio + 1 - Math.pow(t.minRatio - a.scale + 1, .5)), i.$imageEl.transform("translate3d(0,0,0) scale(" + a.scale + ")"));
+    }, onGestureEnd: function onGestureEnd(e) {
+      var t = this.params.zoom,
+          a = this.zoom,
+          i = a.gesture;if (!F.gestures) {
+        if (!a.fakeGestureTouched || !a.fakeGestureMoved) return;if ("touchend" !== e.type || "touchend" === e.type && e.changedTouches.length < 2 && !m.android) return;a.fakeGestureTouched = !1, a.fakeGestureMoved = !1;
+      }i.$imageEl && 0 !== i.$imageEl.length && (a.scale = Math.max(Math.min(a.scale, i.maxRatio), t.minRatio), i.$imageEl.transition(this.params.speed).transform("translate3d(0,0,0) scale(" + a.scale + ")"), a.currentScale = a.scale, a.isScaling = !1, 1 === a.scale && (i.$slideEl = void 0));
+    }, onTouchStart: function onTouchStart(e) {
+      var t = this.zoom,
+          a = t.gesture,
+          i = t.image;a.$imageEl && 0 !== a.$imageEl.length && (i.isTouched || (m.android && e.preventDefault(), i.isTouched = !0, i.touchesStart.x = "touchstart" === e.type ? e.targetTouches[0].pageX : e.pageX, i.touchesStart.y = "touchstart" === e.type ? e.targetTouches[0].pageY : e.pageY));
+    }, onTouchMove: function onTouchMove(e) {
+      var t = this,
+          a = t.zoom,
+          i = a.gesture,
+          s = a.image,
+          r = a.velocity;if (i.$imageEl && 0 !== i.$imageEl.length && (t.allowClick = !1, s.isTouched && i.$slideEl)) {
+        s.isMoved || (s.width = i.$imageEl[0].offsetWidth, s.height = i.$imageEl[0].offsetHeight, s.startX = V.getTranslate(i.$imageWrapEl[0], "x") || 0, s.startY = V.getTranslate(i.$imageWrapEl[0], "y") || 0, i.slideWidth = i.$slideEl[0].offsetWidth, i.slideHeight = i.$slideEl[0].offsetHeight, i.$imageWrapEl.transition(0), t.rtl && (s.startX = -s.startX, s.startY = -s.startY));var n = s.width * a.scale,
+            o = s.height * a.scale;if (!(n < i.slideWidth && o < i.slideHeight)) {
+          if ((s.minX = Math.min(i.slideWidth / 2 - n / 2, 0), s.maxX = -s.minX, s.minY = Math.min(i.slideHeight / 2 - o / 2, 0), s.maxY = -s.minY, s.touchesCurrent.x = "touchmove" === e.type ? e.targetTouches[0].pageX : e.pageX, s.touchesCurrent.y = "touchmove" === e.type ? e.targetTouches[0].pageY : e.pageY, !s.isMoved && !a.isScaling)) {
+            if (t.isHorizontal() && (Math.floor(s.minX) === Math.floor(s.startX) && s.touchesCurrent.x < s.touchesStart.x || Math.floor(s.maxX) === Math.floor(s.startX) && s.touchesCurrent.x > s.touchesStart.x)) return void (s.isTouched = !1);if (!t.isHorizontal() && (Math.floor(s.minY) === Math.floor(s.startY) && s.touchesCurrent.y < s.touchesStart.y || Math.floor(s.maxY) === Math.floor(s.startY) && s.touchesCurrent.y > s.touchesStart.y)) return void (s.isTouched = !1);
+          }e.preventDefault(), e.stopPropagation(), s.isMoved = !0, s.currentX = s.touchesCurrent.x - s.touchesStart.x + s.startX, s.currentY = s.touchesCurrent.y - s.touchesStart.y + s.startY, s.currentX < s.minX && (s.currentX = s.minX + 1 - Math.pow(s.minX - s.currentX + 1, .8)), s.currentX > s.maxX && (s.currentX = s.maxX - 1 + Math.pow(s.currentX - s.maxX + 1, .8)), s.currentY < s.minY && (s.currentY = s.minY + 1 - Math.pow(s.minY - s.currentY + 1, .8)), s.currentY > s.maxY && (s.currentY = s.maxY - 1 + Math.pow(s.currentY - s.maxY + 1, .8)), r.prevPositionX || (r.prevPositionX = s.touchesCurrent.x), r.prevPositionY || (r.prevPositionY = s.touchesCurrent.y), r.prevTime || (r.prevTime = Date.now()), r.x = (s.touchesCurrent.x - r.prevPositionX) / (Date.now() - r.prevTime) / 2, r.y = (s.touchesCurrent.y - r.prevPositionY) / (Date.now() - r.prevTime) / 2, Math.abs(s.touchesCurrent.x - r.prevPositionX) < 2 && (r.x = 0), Math.abs(s.touchesCurrent.y - r.prevPositionY) < 2 && (r.y = 0), r.prevPositionX = s.touchesCurrent.x, r.prevPositionY = s.touchesCurrent.y, r.prevTime = Date.now(), i.$imageWrapEl.transform("translate3d(" + s.currentX + "px, " + s.currentY + "px,0)");
+        }
+      }
+    }, onTouchEnd: function onTouchEnd() {
+      var e = this.zoom,
+          t = e.gesture,
+          a = e.image,
+          i = e.velocity;if (t.$imageEl && 0 !== t.$imageEl.length) {
+        if (!a.isTouched || !a.isMoved) return a.isTouched = !1, void (a.isMoved = !1);a.isTouched = !1, a.isMoved = !1;var s = 300,
+            r = 300,
+            n = i.x * s,
+            o = a.currentX + n,
+            l = i.y * r,
+            d = a.currentY + l;0 !== i.x && (s = Math.abs((o - a.currentX) / i.x)), 0 !== i.y && (r = Math.abs((d - a.currentY) / i.y));var p = Math.max(s, r);a.currentX = o, a.currentY = d;var c = a.width * e.scale,
+            u = a.height * e.scale;a.minX = Math.min(t.slideWidth / 2 - c / 2, 0), a.maxX = -a.minX, a.minY = Math.min(t.slideHeight / 2 - u / 2, 0), a.maxY = -a.minY, a.currentX = Math.max(Math.min(a.currentX, a.maxX), a.minX), a.currentY = Math.max(Math.min(a.currentY, a.maxY), a.minY), t.$imageWrapEl.transition(p).transform("translate3d(" + a.currentX + "px, " + a.currentY + "px,0)");
+      }
+    }, onTransitionEnd: function onTransitionEnd() {
+      var e = this.zoom,
+          t = e.gesture;t.$slideEl && this.previousIndex !== this.activeIndex && (t.$imageEl.transform("translate3d(0,0,0) scale(1)"), t.$imageWrapEl.transform("translate3d(0,0,0)"), t.$slideEl = void 0, t.$imageEl = void 0, t.$imageWrapEl = void 0, e.scale = 1, e.currentScale = 1);
+    }, toggle: function toggle(e) {
+      var t = this.zoom;t.scale && 1 !== t.scale ? t.out() : t["in"](e);
+    }, "in": function _in(e) {
+      var t,
+          a,
+          i,
+          s,
+          r,
+          n,
+          o,
+          l,
+          d,
+          p,
+          c,
+          u,
+          h,
+          v,
+          f,
+          m,
+          g = this,
+          b = g.zoom,
+          w = g.params.zoom,
+          y = b.gesture,
+          x = b.image;(y.$slideEl || (y.$slideEl = g.clickedSlide ? L(g.clickedSlide) : g.slides.eq(g.activeIndex), y.$imageEl = y.$slideEl.find("img, svg, canvas"), y.$imageWrapEl = y.$imageEl.parent("." + w.containerClass)), y.$imageEl && 0 !== y.$imageEl.length) && (y.$slideEl.addClass("" + w.zoomedSlideClass), void 0 === x.touchesStart.x && e ? (t = "touchend" === e.type ? e.changedTouches[0].pageX : e.pageX, a = "touchend" === e.type ? e.changedTouches[0].pageY : e.pageY) : (t = x.touchesStart.x, a = x.touchesStart.y), b.scale = y.$imageWrapEl.attr("data-swiper-zoom") || w.maxRatio, b.currentScale = y.$imageWrapEl.attr("data-swiper-zoom") || w.maxRatio, e ? (f = y.$slideEl[0].offsetWidth, m = y.$slideEl[0].offsetHeight, i = y.$slideEl.offset().left + f / 2 - t, s = y.$slideEl.offset().top + m / 2 - a, o = y.$imageEl[0].offsetWidth, l = y.$imageEl[0].offsetHeight, d = o * b.scale, p = l * b.scale, h = -(c = Math.min(f / 2 - d / 2, 0)), v = -(u = Math.min(m / 2 - p / 2, 0)), (r = i * b.scale) < c && (r = c), h < r && (r = h), (n = s * b.scale) < u && (n = u), v < n && (n = v)) : n = r = 0, y.$imageWrapEl.transition(300).transform("translate3d(" + r + "px, " + n + "px,0)"), y.$imageEl.transition(300).transform("translate3d(0,0,0) scale(" + b.scale + ")"));
+    }, out: function out() {
+      var e = this,
+          t = e.zoom,
+          a = e.params.zoom,
+          i = t.gesture;i.$slideEl || (i.$slideEl = e.clickedSlide ? L(e.clickedSlide) : e.slides.eq(e.activeIndex), i.$imageEl = i.$slideEl.find("img, svg, canvas"), i.$imageWrapEl = i.$imageEl.parent("." + a.containerClass)), i.$imageEl && 0 !== i.$imageEl.length && (t.scale = 1, t.currentScale = 1, i.$imageWrapEl.transition(300).transform("translate3d(0,0,0)"), i.$imageEl.transition(300).transform("translate3d(0,0,0) scale(1)"), i.$slideEl.removeClass("" + a.zoomedSlideClass), i.$slideEl = void 0);
+    }, enable: function enable() {
+      var e = this,
+          t = e.zoom;if (!t.enabled) {
+        t.enabled = !0;var a = !("touchstart" !== e.touchEvents.start || !F.passiveListener || !e.params.passiveListeners) && { passive: !0, capture: !1 };F.gestures ? (e.$wrapperEl.on("gesturestart", ".swiper-slide", t.onGestureStart, a), e.$wrapperEl.on("gesturechange", ".swiper-slide", t.onGestureChange, a), e.$wrapperEl.on("gestureend", ".swiper-slide", t.onGestureEnd, a)) : "touchstart" === e.touchEvents.start && (e.$wrapperEl.on(e.touchEvents.start, ".swiper-slide", t.onGestureStart, a), e.$wrapperEl.on(e.touchEvents.move, ".swiper-slide", t.onGestureChange, a), e.$wrapperEl.on(e.touchEvents.end, ".swiper-slide", t.onGestureEnd, a)), e.$wrapperEl.on(e.touchEvents.move, "." + e.params.zoom.containerClass, t.onTouchMove);
+      }
+    }, disable: function disable() {
+      var e = this,
+          t = e.zoom;if (t.enabled) {
+        e.zoom.enabled = !1;var a = !("touchstart" !== e.touchEvents.start || !F.passiveListener || !e.params.passiveListeners) && { passive: !0, capture: !1 };F.gestures ? (e.$wrapperEl.off("gesturestart", ".swiper-slide", t.onGestureStart, a), e.$wrapperEl.off("gesturechange", ".swiper-slide", t.onGestureChange, a), e.$wrapperEl.off("gestureend", ".swiper-slide", t.onGestureEnd, a)) : "touchstart" === e.touchEvents.start && (e.$wrapperEl.off(e.touchEvents.start, ".swiper-slide", t.onGestureStart, a), e.$wrapperEl.off(e.touchEvents.move, ".swiper-slide", t.onGestureChange, a), e.$wrapperEl.off(e.touchEvents.end, ".swiper-slide", t.onGestureEnd, a)), e.$wrapperEl.off(e.touchEvents.move, "." + e.params.zoom.containerClass, t.onTouchMove);
+      }
+    } },
+      W = { loadInSlide: function loadInSlide(e, l) {
+      void 0 === l && (l = !0);var d = this,
+          p = d.params.lazy;if (void 0 !== e && 0 !== d.slides.length) {
+        var c = d.virtual && d.params.virtual.enabled ? d.$wrapperEl.children("." + d.params.slideClass + '[data-swiper-slide-index="' + e + '"]') : d.slides.eq(e),
+            t = c.find("." + p.elementClass + ":not(." + p.loadedClass + "):not(." + p.loadingClass + ")");!c.hasClass(p.elementClass) || c.hasClass(p.loadedClass) || c.hasClass(p.loadingClass) || (t = t.add(c[0])), 0 !== t.length && t.each(function (e, t) {
+          var i = L(t);i.addClass(p.loadingClass);var s = i.attr("data-background"),
+              r = i.attr("data-src"),
+              n = i.attr("data-srcset"),
+              o = i.attr("data-sizes");d.loadImage(i[0], r || s, n, o, !1, function () {
+            if (null != d && d && (!d || d.params) && !d.destroyed) {
+              if ((s ? (i.css("background-image", 'url("' + s + '")'), i.removeAttr("data-background")) : (n && (i.attr("srcset", n), i.removeAttr("data-srcset")), o && (i.attr("sizes", o), i.removeAttr("data-sizes")), r && (i.attr("src", r), i.removeAttr("data-src"))), i.addClass(p.loadedClass).removeClass(p.loadingClass), c.find("." + p.preloaderClass).remove(), d.params.loop && l)) {
+                var e = c.attr("data-swiper-slide-index");if (c.hasClass(d.params.slideDuplicateClass)) {
+                  var t = d.$wrapperEl.children('[data-swiper-slide-index="' + e + '"]:not(.' + d.params.slideDuplicateClass + ")");d.lazy.loadInSlide(t.index(), !1);
+                } else {
+                  var a = d.$wrapperEl.children("." + d.params.slideDuplicateClass + '[data-swiper-slide-index="' + e + '"]');d.lazy.loadInSlide(a.index(), !1);
+                }
+              }d.emit("lazyImageReady", c[0], i[0]);
+            }
+          }), d.emit("lazyImageLoad", c[0], i[0]);
+        });
+      }
+    }, load: function load() {
+      var i = this,
+          t = i.$wrapperEl,
+          a = i.params,
+          s = i.slides,
+          e = i.activeIndex,
+          r = i.virtual && a.virtual.enabled,
+          n = a.lazy,
+          o = a.slidesPerView;function l(e) {
+        if (r) {
+          if (t.children("." + a.slideClass + '[data-swiper-slide-index="' + e + '"]').length) return !0;
+        } else if (s[e]) return !0;return !1;
+      }function d(e) {
+        return r ? L(e).attr("data-swiper-slide-index") : L(e).index();
+      }if (("auto" === o && (o = 0), i.lazy.initialImageLoaded || (i.lazy.initialImageLoaded = !0), i.params.watchSlidesVisibility)) t.children("." + a.slideVisibleClass).each(function (e, t) {
+        var a = r ? L(t).attr("data-swiper-slide-index") : L(t).index();i.lazy.loadInSlide(a);
+      });else if (1 < o) for (var p = e; p < e + o; p += 1) l(p) && i.lazy.loadInSlide(p);else i.lazy.loadInSlide(e);if (n.loadPrevNext) if (1 < o || n.loadPrevNextAmount && 1 < n.loadPrevNextAmount) {
+        for (var c = n.loadPrevNextAmount, u = o, h = Math.min(e + u + Math.max(c, u), s.length), v = Math.max(e - Math.max(u, c), 0), f = e + o; f < h; f += 1) l(f) && i.lazy.loadInSlide(f);for (var m = v; m < e; m += 1) l(m) && i.lazy.loadInSlide(m);
+      } else {
+        var g = t.children("." + a.slideNextClass);0 < g.length && i.lazy.loadInSlide(d(g));var b = t.children("." + a.slidePrevClass);0 < b.length && i.lazy.loadInSlide(d(b));
+      }
+    } },
+      j = { LinearSpline: function LinearSpline(e, t) {
+      var a,
+          i,
+          s,
+          r,
+          n,
+          o = function o(e, t) {
+        for (i = -1, a = e.length; 1 < a - i;) e[s = a + i >> 1] <= t ? i = s : a = s;return a;
+      };return this.x = e, this.y = t, this.lastIndex = e.length - 1, this.interpolate = function (e) {
+        return e ? (n = o(this.x, e), r = n - 1, (e - this.x[r]) * (this.y[n] - this.y[r]) / (this.x[n] - this.x[r]) + this.y[r]) : 0;
+      }, this;
+    }, getInterpolateFunction: function getInterpolateFunction(e) {
+      var t = this;t.controller.spline || (t.controller.spline = t.params.loop ? new j.LinearSpline(t.slidesGrid, e.slidesGrid) : new j.LinearSpline(t.snapGrid, e.snapGrid));
+    }, setTranslate: function setTranslate(e, t) {
+      var a,
+          i,
+          s = this,
+          r = s.controller.control;function n(e) {
+        var t = s.rtlTranslate ? -s.translate : s.translate;"slide" === s.params.controller.by && (s.controller.getInterpolateFunction(e), i = -s.controller.spline.interpolate(-t)), i && "container" !== s.params.controller.by || (a = (e.maxTranslate() - e.minTranslate()) / (s.maxTranslate() - s.minTranslate()), i = (t - s.minTranslate()) * a + e.minTranslate()), s.params.controller.inverse && (i = e.maxTranslate() - i), e.updateProgress(i), e.setTranslate(i, s), e.updateActiveIndex(), e.updateSlidesClasses();
+      }if (Array.isArray(r)) for (var o = 0; o < r.length; o += 1) r[o] !== t && r[o] instanceof S && n(r[o]);else r instanceof S && t !== r && n(r);
+    }, setTransition: function setTransition(t, e) {
+      var a,
+          i = this,
+          s = i.controller.control;function r(e) {
+        e.setTransition(t, i), 0 !== t && (e.transitionStart(), e.params.autoHeight && V.nextTick(function () {
+          e.updateAutoHeight();
+        }), e.$wrapperEl.transitionEnd(function () {
+          s && (e.params.loop && "slide" === i.params.controller.by && e.loopFix(), e.transitionEnd());
+        }));
+      }if (Array.isArray(s)) for (a = 0; a < s.length; a += 1) s[a] !== e && s[a] instanceof S && r(s[a]);else s instanceof S && e !== s && r(s);
+    } },
+      U = { makeElFocusable: function makeElFocusable(e) {
+      return e.attr("tabIndex", "0"), e;
+    }, addElRole: function addElRole(e, t) {
+      return e.attr("role", t), e;
+    }, addElLabel: function addElLabel(e, t) {
+      return e.attr("aria-label", t), e;
+    }, disableEl: function disableEl(e) {
+      return e.attr("aria-disabled", !0), e;
+    }, enableEl: function enableEl(e) {
+      return e.attr("aria-disabled", !1), e;
+    }, onEnterKey: function onEnterKey(e) {
+      var t = this,
+          a = t.params.a11y;if (13 === e.keyCode) {
+        var i = L(e.target);t.navigation && t.navigation.$nextEl && i.is(t.navigation.$nextEl) && (t.isEnd && !t.params.loop || t.slideNext(), t.isEnd ? t.a11y.notify(a.lastSlideMessage) : t.a11y.notify(a.nextSlideMessage)), t.navigation && t.navigation.$prevEl && i.is(t.navigation.$prevEl) && (t.isBeginning && !t.params.loop || t.slidePrev(), t.isBeginning ? t.a11y.notify(a.firstSlideMessage) : t.a11y.notify(a.prevSlideMessage)), t.pagination && i.is("." + t.params.pagination.bulletClass) && i[0].click();
+      }
+    }, notify: function notify(e) {
+      var t = this.a11y.liveRegion;0 !== t.length && (t.html(""), t.html(e));
+    }, updateNavigation: function updateNavigation() {
+      var e = this;if (!e.params.loop) {
+        var t = e.navigation,
+            a = t.$nextEl,
+            i = t.$prevEl;i && 0 < i.length && (e.isBeginning ? e.a11y.disableEl(i) : e.a11y.enableEl(i)), a && 0 < a.length && (e.isEnd ? e.a11y.disableEl(a) : e.a11y.enableEl(a));
+      }
+    }, updatePagination: function updatePagination() {
+      var i = this,
+          s = i.params.a11y;i.pagination && i.params.pagination.clickable && i.pagination.bullets && i.pagination.bullets.length && i.pagination.bullets.each(function (e, t) {
+        var a = L(t);i.a11y.makeElFocusable(a), i.a11y.addElRole(a, "button"), i.a11y.addElLabel(a, s.paginationBulletMessage.replace(/{{index}}/, a.index() + 1));
+      });
+    }, init: function init() {
+      var e = this;e.$el.append(e.a11y.liveRegion);var t,
+          a,
+          i = e.params.a11y;e.navigation && e.navigation.$nextEl && (t = e.navigation.$nextEl), e.navigation && e.navigation.$prevEl && (a = e.navigation.$prevEl), t && (e.a11y.makeElFocusable(t), e.a11y.addElRole(t, "button"), e.a11y.addElLabel(t, i.nextSlideMessage), t.on("keydown", e.a11y.onEnterKey)), a && (e.a11y.makeElFocusable(a), e.a11y.addElRole(a, "button"), e.a11y.addElLabel(a, i.prevSlideMessage), a.on("keydown", e.a11y.onEnterKey)), e.pagination && e.params.pagination.clickable && e.pagination.bullets && e.pagination.bullets.length && e.pagination.$el.on("keydown", "." + e.params.pagination.bulletClass, e.a11y.onEnterKey);
+    }, destroy: function destroy() {
+      var e,
+          t,
+          a = this;a.a11y.liveRegion && 0 < a.a11y.liveRegion.length && a.a11y.liveRegion.remove(), a.navigation && a.navigation.$nextEl && (e = a.navigation.$nextEl), a.navigation && a.navigation.$prevEl && (t = a.navigation.$prevEl), e && e.off("keydown", a.a11y.onEnterKey), t && t.off("keydown", a.a11y.onEnterKey), a.pagination && a.params.pagination.clickable && a.pagination.bullets && a.pagination.bullets.length && a.pagination.$el.off("keydown", "." + a.params.pagination.bulletClass, a.a11y.onEnterKey);
+    } },
+      K = { init: function init() {
+      var e = this;if (e.params.history) {
+        if (!Y.history || !Y.history.pushState) return e.params.history.enabled = !1, void (e.params.hashNavigation.enabled = !0);var t = e.history;t.initialized = !0, t.paths = K.getPathValues(), (t.paths.key || t.paths.value) && (t.scrollToSlide(0, t.paths.value, e.params.runCallbacksOnInit), e.params.history.replaceState || Y.addEventListener("popstate", e.history.setHistoryPopState));
+      }
+    }, destroy: function destroy() {
+      this.params.history.replaceState || Y.removeEventListener("popstate", this.history.setHistoryPopState);
+    }, setHistoryPopState: function setHistoryPopState() {
+      this.history.paths = K.getPathValues(), this.history.scrollToSlide(this.params.speed, this.history.paths.value, !1);
+    }, getPathValues: function getPathValues() {
+      var e = Y.location.pathname.slice(1).split("/").filter(function (e) {
+        return "" !== e;
+      }),
+          t = e.length;return { key: e[t - 2], value: e[t - 1] };
+    }, setHistory: function setHistory(e, t) {
+      if (this.history.initialized && this.params.history.enabled) {
+        var a = this.slides.eq(t),
+            i = K.slugify(a.attr("data-history"));Y.location.pathname.includes(e) || (i = e + "/" + i);var s = Y.history.state;s && s.value === i || (this.params.history.replaceState ? Y.history.replaceState({ value: i }, null, i) : Y.history.pushState({ value: i }, null, i));
+      }
+    }, slugify: function slugify(e) {
+      return e.toString().toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]+/g, "").replace(/--+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
+    }, scrollToSlide: function scrollToSlide(e, t, a) {
+      var i = this;if (t) for (var s = 0, r = i.slides.length; s < r; s += 1) {
+        var n = i.slides.eq(s);if (K.slugify(n.attr("data-history")) === t && !n.hasClass(i.params.slideDuplicateClass)) {
+          var o = n.index();i.slideTo(o, e, a);
+        }
+      } else i.slideTo(0, e, a);
+    } },
+      _ = { onHashCange: function onHashCange() {
+      var e = this,
+          t = f.location.hash.replace("#", "");if (t !== e.slides.eq(e.activeIndex).attr("data-hash")) {
+        var a = e.$wrapperEl.children("." + e.params.slideClass + '[data-hash="' + t + '"]').index();if (void 0 === a) return;e.slideTo(a);
+      }
+    }, setHash: function setHash() {
+      var e = this;if (e.hashNavigation.initialized && e.params.hashNavigation.enabled) if (e.params.hashNavigation.replaceState && Y.history && Y.history.replaceState) Y.history.replaceState(null, null, "#" + e.slides.eq(e.activeIndex).attr("data-hash") || "");else {
+        var t = e.slides.eq(e.activeIndex),
+            a = t.attr("data-hash") || t.attr("data-history");f.location.hash = a || "";
+      }
+    }, init: function init() {
+      var e = this;if (!(!e.params.hashNavigation.enabled || e.params.history && e.params.history.enabled)) {
+        e.hashNavigation.initialized = !0;var t = f.location.hash.replace("#", "");if (t) for (var a = 0, i = e.slides.length; a < i; a += 1) {
+          var s = e.slides.eq(a);if ((s.attr("data-hash") || s.attr("data-history")) === t && !s.hasClass(e.params.slideDuplicateClass)) {
+            var r = s.index();e.slideTo(r, 0, e.params.runCallbacksOnInit, !0);
+          }
+        }e.params.hashNavigation.watchState && L(Y).on("hashchange", e.hashNavigation.onHashCange);
+      }
+    }, destroy: function destroy() {
+      this.params.hashNavigation.watchState && L(Y).off("hashchange", this.hashNavigation.onHashCange);
+    } },
+      Z = { run: function run() {
+      var e = this,
+          t = e.slides.eq(e.activeIndex),
+          a = e.params.autoplay.delay;t.attr("data-swiper-autoplay") && (a = t.attr("data-swiper-autoplay") || e.params.autoplay.delay), e.autoplay.timeout = V.nextTick(function () {
+        e.params.autoplay.reverseDirection ? e.params.loop ? (e.loopFix(), e.slidePrev(e.params.speed, !0, !0), e.emit("autoplay")) : e.isBeginning ? e.params.autoplay.stopOnLastSlide ? e.autoplay.stop() : (e.slideTo(e.slides.length - 1, e.params.speed, !0, !0), e.emit("autoplay")) : (e.slidePrev(e.params.speed, !0, !0), e.emit("autoplay")) : e.params.loop ? (e.loopFix(), e.slideNext(e.params.speed, !0, !0), e.emit("autoplay")) : e.isEnd ? e.params.autoplay.stopOnLastSlide ? e.autoplay.stop() : (e.slideTo(0, e.params.speed, !0, !0), e.emit("autoplay")) : (e.slideNext(e.params.speed, !0, !0), e.emit("autoplay"));
+      }, a);
+    }, start: function start() {
+      var e = this;return void 0 === e.autoplay.timeout && !e.autoplay.running && (e.autoplay.running = !0, e.emit("autoplayStart"), e.autoplay.run(), !0);
+    }, stop: function stop() {
+      var e = this;return !!e.autoplay.running && void 0 !== e.autoplay.timeout && (e.autoplay.timeout && (clearTimeout(e.autoplay.timeout), e.autoplay.timeout = void 0), e.autoplay.running = !1, e.emit("autoplayStop"), !0);
+    }, pause: function pause(e) {
+      var t = this;t.autoplay.running && (t.autoplay.paused || (t.autoplay.timeout && clearTimeout(t.autoplay.timeout), t.autoplay.paused = !0, 0 !== e && t.params.autoplay.waitForTransition ? (t.$wrapperEl[0].addEventListener("transitionend", t.autoplay.onTransitionEnd), t.$wrapperEl[0].addEventListener("webkitTransitionEnd", t.autoplay.onTransitionEnd)) : (t.autoplay.paused = !1, t.autoplay.run())));
+    } },
+      Q = { setTranslate: function setTranslate() {
+      for (var e = this, t = e.slides, a = 0; a < t.length; a += 1) {
+        var i = e.slides.eq(a),
+            s = -i[0].swiperSlideOffset;e.params.virtualTranslate || (s -= e.translate);var r = 0;e.isHorizontal() || (r = s, s = 0);var n = e.params.fadeEffect.crossFade ? Math.max(1 - Math.abs(i[0].progress), 0) : 1 + Math.min(Math.max(i[0].progress, -1), 0);i.css({ opacity: n }).transform("translate3d(" + s + "px, " + r + "px, 0px)");
+      }
+    }, setTransition: function setTransition(e) {
+      var a = this,
+          t = a.slides,
+          i = a.$wrapperEl;if ((t.transition(e), a.params.virtualTranslate && 0 !== e)) {
+        var s = !1;t.transitionEnd(function () {
+          if (!s && a && !a.destroyed) {
+            s = !0, a.animating = !1;for (var e = ["webkitTransitionEnd", "transitionend"], t = 0; t < e.length; t += 1) i.trigger(e[t]);
+          }
+        });
+      }
+    } },
+      J = { setTranslate: function setTranslate() {
+      var e,
+          t = this,
+          a = t.$el,
+          i = t.$wrapperEl,
+          s = t.slides,
+          r = t.width,
+          n = t.height,
+          o = t.rtlTranslate,
+          l = t.size,
+          d = t.params.cubeEffect,
+          p = t.isHorizontal(),
+          c = t.virtual && t.params.virtual.enabled,
+          u = 0;d.shadow && (p ? (0 === (e = i.find(".swiper-cube-shadow")).length && (e = L('<div class="swiper-cube-shadow"></div>'), i.append(e)), e.css({ height: r + "px" })) : 0 === (e = a.find(".swiper-cube-shadow")).length && (e = L('<div class="swiper-cube-shadow"></div>'), a.append(e)));for (var h = 0; h < s.length; h += 1) {
+        var v = s.eq(h),
+            f = h;c && (f = parseInt(v.attr("data-swiper-slide-index"), 10));var m = 90 * f,
+            g = Math.floor(m / 360);o && (m = -m, g = Math.floor(-m / 360));var b = Math.max(Math.min(v[0].progress, 1), -1),
+            w = 0,
+            y = 0,
+            x = 0;f % 4 == 0 ? (w = 4 * -g * l, x = 0) : (f - 1) % 4 == 0 ? (w = 0, x = 4 * -g * l) : (f - 2) % 4 == 0 ? (w = l + 4 * g * l, x = l) : (f - 3) % 4 == 0 && (w = -l, x = 3 * l + 4 * l * g), o && (w = -w), p || (y = w, w = 0);var T = "rotateX(" + (p ? 0 : -m) + "deg) rotateY(" + (p ? m : 0) + "deg) translate3d(" + w + "px, " + y + "px, " + x + "px)";if ((b <= 1 && -1 < b && (u = 90 * f + 90 * b, o && (u = 90 * -f - 90 * b)), v.transform(T), d.slideShadows)) {
+          var E = p ? v.find(".swiper-slide-shadow-left") : v.find(".swiper-slide-shadow-top"),
+              S = p ? v.find(".swiper-slide-shadow-right") : v.find(".swiper-slide-shadow-bottom");0 === E.length && (E = L('<div class="swiper-slide-shadow-' + (p ? "left" : "top") + '"></div>'), v.append(E)), 0 === S.length && (S = L('<div class="swiper-slide-shadow-' + (p ? "right" : "bottom") + '"></div>'), v.append(S)), E.length && (E[0].style.opacity = Math.max(-b, 0)), S.length && (S[0].style.opacity = Math.max(b, 0));
+        }
+      }if ((i.css({ "-webkit-transform-origin": "50% 50% -" + l / 2 + "px", "-moz-transform-origin": "50% 50% -" + l / 2 + "px", "-ms-transform-origin": "50% 50% -" + l / 2 + "px", "transform-origin": "50% 50% -" + l / 2 + "px" }), d.shadow)) if (p) e.transform("translate3d(0px, " + (r / 2 + d.shadowOffset) + "px, " + -r / 2 + "px) rotateX(90deg) rotateZ(0deg) scale(" + d.shadowScale + ")");else {
+        var C = Math.abs(u) - 90 * Math.floor(Math.abs(u) / 90),
+            M = 1.5 - (Math.sin(2 * C * Math.PI / 360) / 2 + Math.cos(2 * C * Math.PI / 360) / 2),
+            k = d.shadowScale,
+            P = d.shadowScale / M,
+            z = d.shadowOffset;e.transform("scale3d(" + k + ", 1, " + P + ") translate3d(0px, " + (n / 2 + z) + "px, " + -n / 2 / P + "px) rotateX(-90deg)");
+      }var $ = I.isSafari || I.isUiWebView ? -l / 2 : 0;i.transform("translate3d(0px,0," + $ + "px) rotateX(" + (t.isHorizontal() ? 0 : u) + "deg) rotateY(" + (t.isHorizontal() ? -u : 0) + "deg)");
+    }, setTransition: function setTransition(e) {
+      var t = this.$el;this.slides.transition(e).find(".swiper-slide-shadow-top, .swiper-slide-shadow-right, .swiper-slide-shadow-bottom, .swiper-slide-shadow-left").transition(e), this.params.cubeEffect.shadow && !this.isHorizontal() && t.find(".swiper-cube-shadow").transition(e);
+    } },
+      ee = { setTranslate: function setTranslate() {
+      for (var e = this, t = e.slides, a = e.rtlTranslate, i = 0; i < t.length; i += 1) {
+        var s = t.eq(i),
+            r = s[0].progress;e.params.flipEffect.limitRotation && (r = Math.max(Math.min(s[0].progress, 1), -1));var n = -180 * r,
+            o = 0,
+            l = -s[0].swiperSlideOffset,
+            d = 0;if ((e.isHorizontal() ? a && (n = -n) : (d = l, o = -n, n = l = 0), s[0].style.zIndex = -Math.abs(Math.round(r)) + t.length, e.params.flipEffect.slideShadows)) {
+          var p = e.isHorizontal() ? s.find(".swiper-slide-shadow-left") : s.find(".swiper-slide-shadow-top"),
+              c = e.isHorizontal() ? s.find(".swiper-slide-shadow-right") : s.find(".swiper-slide-shadow-bottom");0 === p.length && (p = L('<div class="swiper-slide-shadow-' + (e.isHorizontal() ? "left" : "top") + '"></div>'), s.append(p)), 0 === c.length && (c = L('<div class="swiper-slide-shadow-' + (e.isHorizontal() ? "right" : "bottom") + '"></div>'), s.append(c)), p.length && (p[0].style.opacity = Math.max(-r, 0)), c.length && (c[0].style.opacity = Math.max(r, 0));
+        }s.transform("translate3d(" + l + "px, " + d + "px, 0px) rotateX(" + o + "deg) rotateY(" + n + "deg)");
+      }
+    }, setTransition: function setTransition(e) {
+      var a = this,
+          t = a.slides,
+          i = a.activeIndex,
+          s = a.$wrapperEl;if ((t.transition(e).find(".swiper-slide-shadow-top, .swiper-slide-shadow-right, .swiper-slide-shadow-bottom, .swiper-slide-shadow-left").transition(e), a.params.virtualTranslate && 0 !== e)) {
+        var r = !1;t.eq(i).transitionEnd(function () {
+          if (!r && a && !a.destroyed) {
+            r = !0, a.animating = !1;for (var e = ["webkitTransitionEnd", "transitionend"], t = 0; t < e.length; t += 1) s.trigger(e[t]);
+          }
+        });
+      }
+    } },
+      te = { setTranslate: function setTranslate() {
+      for (var e = this, t = e.width, a = e.height, i = e.slides, s = e.$wrapperEl, r = e.slidesSizesGrid, n = e.params.coverflowEffect, o = e.isHorizontal(), l = e.translate, d = o ? t / 2 - l : a / 2 - l, p = o ? n.rotate : -n.rotate, c = n.depth, u = 0, h = i.length; u < h; u += 1) {
+        var v = i.eq(u),
+            f = r[u],
+            m = (d - v[0].swiperSlideOffset - f / 2) / f * n.modifier,
+            g = o ? p * m : 0,
+            b = o ? 0 : p * m,
+            w = -c * Math.abs(m),
+            y = o ? 0 : n.stretch * m,
+            x = o ? n.stretch * m : 0;Math.abs(x) < .001 && (x = 0), Math.abs(y) < .001 && (y = 0), Math.abs(w) < .001 && (w = 0), Math.abs(g) < .001 && (g = 0), Math.abs(b) < .001 && (b = 0);var T = "translate3d(" + x + "px," + y + "px," + w + "px)  rotateX(" + b + "deg) rotateY(" + g + "deg)";if ((v.transform(T), v[0].style.zIndex = 1 - Math.abs(Math.round(m)), n.slideShadows)) {
+          var E = o ? v.find(".swiper-slide-shadow-left") : v.find(".swiper-slide-shadow-top"),
+              S = o ? v.find(".swiper-slide-shadow-right") : v.find(".swiper-slide-shadow-bottom");0 === E.length && (E = L('<div class="swiper-slide-shadow-' + (o ? "left" : "top") + '"></div>'), v.append(E)), 0 === S.length && (S = L('<div class="swiper-slide-shadow-' + (o ? "right" : "bottom") + '"></div>'), v.append(S)), E.length && (E[0].style.opacity = 0 < m ? m : 0), S.length && (S[0].style.opacity = 0 < -m ? -m : 0);
+        }
+      }(F.pointerEvents || F.prefixedPointerEvents) && (s[0].style.perspectiveOrigin = d + "px 50%");
+    }, setTransition: function setTransition(e) {
+      this.slides.transition(e).find(".swiper-slide-shadow-top, .swiper-slide-shadow-right, .swiper-slide-shadow-bottom, .swiper-slide-shadow-left").transition(e);
+    } },
+      ae = { init: function init() {
+      var e = this,
+          t = e.params.thumbs,
+          a = e.constructor;t.swiper instanceof a ? (e.thumbs.swiper = t.swiper, V.extend(e.thumbs.swiper.originalParams, { watchSlidesProgress: !0, slideToClickedSlide: !1 }), V.extend(e.thumbs.swiper.params, { watchSlidesProgress: !0, slideToClickedSlide: !1 })) : V.isObject(t.swiper) && (e.thumbs.swiper = new a(V.extend({}, t.swiper, { watchSlidesVisibility: !0, watchSlidesProgress: !0, slideToClickedSlide: !1 })), e.thumbs.swiperCreated = !0), e.thumbs.swiper.$el.addClass(e.params.thumbs.thumbsContainerClass), e.thumbs.swiper.on("tap", e.thumbs.onThumbClick);
+    }, onThumbClick: function onThumbClick() {
+      var e = this,
+          t = e.thumbs.swiper;if (t) {
+        var a = t.clickedIndex,
+            i = t.clickedSlide;if (!(i && L(i).hasClass(e.params.thumbs.slideThumbActiveClass) || null == a)) {
+          var s;if ((s = t.params.loop ? parseInt(L(t.clickedSlide).attr("data-swiper-slide-index"), 10) : a, e.params.loop)) {
+            var r = e.activeIndex;e.slides.eq(r).hasClass(e.params.slideDuplicateClass) && (e.loopFix(), e._clientLeft = e.$wrapperEl[0].clientLeft, r = e.activeIndex);var n = e.slides.eq(r).prevAll('[data-swiper-slide-index="' + s + '"]').eq(0).index(),
+                o = e.slides.eq(r).nextAll('[data-swiper-slide-index="' + s + '"]').eq(0).index();s = void 0 === n ? o : void 0 === o ? n : o - r < r - n ? o : n;
+          }e.slideTo(s);
+        }
+      }
+    }, update: function update(e) {
+      var t = this,
+          a = t.thumbs.swiper;if (a) {
+        var i = "auto" === a.params.slidesPerView ? a.slidesPerViewDynamic() : a.params.slidesPerView;if (t.realIndex !== a.realIndex) {
+          var s,
+              r = a.activeIndex;if (a.params.loop) {
+            a.slides.eq(r).hasClass(a.params.slideDuplicateClass) && (a.loopFix(), a._clientLeft = a.$wrapperEl[0].clientLeft, r = a.activeIndex);var n = a.slides.eq(r).prevAll('[data-swiper-slide-index="' + t.realIndex + '"]').eq(0).index(),
+                o = a.slides.eq(r).nextAll('[data-swiper-slide-index="' + t.realIndex + '"]').eq(0).index();s = void 0 === n ? o : void 0 === o ? n : o - r == r - n ? r : o - r < r - n ? o : n;
+          } else s = t.realIndex;a.visibleSlidesIndexes.indexOf(s) < 0 && (a.params.centeredSlides ? s = r < s ? s - Math.floor(i / 2) + 1 : s + Math.floor(i / 2) - 1 : r < s && (s = s - i + 1), a.slideTo(s, e ? 0 : void 0));
+        }var l = 1,
+            d = t.params.thumbs.slideThumbActiveClass;if ((1 < t.params.slidesPerView && !t.params.centeredSlides && (l = t.params.slidesPerView), a.slides.removeClass(d), a.params.loop)) for (var p = 0; p < l; p += 1) a.$wrapperEl.children('[data-swiper-slide-index="' + (t.realIndex + p) + '"]').addClass(d);else for (var c = 0; c < l; c += 1) a.slides.eq(t.realIndex + c).addClass(d);
+      }
+    } },
+      ie = [C, M, k, P, $, O, N, { name: "mousewheel", params: { mousewheel: { enabled: !1, releaseOnEdges: !1, invert: !1, forceToAxis: !1, sensitivity: 1, eventsTarged: "container" } }, create: function create() {
+      var e = this;V.extend(e, { mousewheel: { enabled: !1, enable: H.enable.bind(e), disable: H.disable.bind(e), handle: H.handle.bind(e), handleMouseEnter: H.handleMouseEnter.bind(e), handleMouseLeave: H.handleMouseLeave.bind(e), lastScrollTime: V.now() } });
+    }, on: { init: function init() {
+        this.params.mousewheel.enabled && this.mousewheel.enable();
+      }, destroy: function destroy() {
+        this.mousewheel.enabled && this.mousewheel.disable();
+      } } }, { name: "navigation", params: { navigation: { nextEl: null, prevEl: null, hideOnClick: !1, disabledClass: "swiper-button-disabled", hiddenClass: "swiper-button-hidden", lockClass: "swiper-button-lock" } }, create: function create() {
+      var e = this;V.extend(e, { navigation: { init: G.init.bind(e), update: G.update.bind(e), destroy: G.destroy.bind(e), onNextClick: G.onNextClick.bind(e), onPrevClick: G.onPrevClick.bind(e) } });
+    }, on: { init: function init() {
+        this.navigation.init(), this.navigation.update();
+      }, toEdge: function toEdge() {
+        this.navigation.update();
+      }, fromEdge: function fromEdge() {
+        this.navigation.update();
+      }, destroy: function destroy() {
+        this.navigation.destroy();
+      }, click: function click(e) {
+        var t = this.navigation,
+            a = t.$nextEl,
+            i = t.$prevEl;!this.params.navigation.hideOnClick || L(e.target).is(i) || L(e.target).is(a) || (a && a.toggleClass(this.params.navigation.hiddenClass), i && i.toggleClass(this.params.navigation.hiddenClass));
+      } } }, { name: "pagination", params: { pagination: { el: null, bulletElement: "span", clickable: !1, hideOnClick: !1, renderBullet: null, renderProgressbar: null, renderFraction: null, renderCustom: null, progressbarOpposite: !1, type: "bullets", dynamicBullets: !1, dynamicMainBullets: 1, formatFractionCurrent: function formatFractionCurrent(e) {
+          return e;
+        }, formatFractionTotal: function formatFractionTotal(e) {
+          return e;
+        }, bulletClass: "swiper-pagination-bullet", bulletActiveClass: "swiper-pagination-bullet-active", modifierClass: "swiper-pagination-", currentClass: "swiper-pagination-current", totalClass: "swiper-pagination-total", hiddenClass: "swiper-pagination-hidden", progressbarFillClass: "swiper-pagination-progressbar-fill", progressbarOppositeClass: "swiper-pagination-progressbar-opposite", clickableClass: "swiper-pagination-clickable", lockClass: "swiper-pagination-lock" } }, create: function create() {
+      var e = this;V.extend(e, { pagination: { init: B.init.bind(e), render: B.render.bind(e), update: B.update.bind(e), destroy: B.destroy.bind(e), dynamicBulletIndex: 0 } });
+    }, on: { init: function init() {
+        this.pagination.init(), this.pagination.render(), this.pagination.update();
+      }, activeIndexChange: function activeIndexChange() {
+        this.params.loop ? this.pagination.update() : void 0 === this.snapIndex && this.pagination.update();
+      }, snapIndexChange: function snapIndexChange() {
+        this.params.loop || this.pagination.update();
+      }, slidesLengthChange: function slidesLengthChange() {
+        this.params.loop && (this.pagination.render(), this.pagination.update());
+      }, snapGridLengthChange: function snapGridLengthChange() {
+        this.params.loop || (this.pagination.render(), this.pagination.update());
+      }, destroy: function destroy() {
+        this.pagination.destroy();
+      }, click: function click(e) {
+        var t = this;t.params.pagination.el && t.params.pagination.hideOnClick && 0 < t.pagination.$el.length && !L(e.target).hasClass(t.params.pagination.bulletClass) && t.pagination.$el.toggleClass(t.params.pagination.hiddenClass);
+      } } }, { name: "scrollbar", params: { scrollbar: { el: null, dragSize: "auto", hide: !1, draggable: !1, snapOnRelease: !0, lockClass: "swiper-scrollbar-lock", dragClass: "swiper-scrollbar-drag" } }, create: function create() {
+      var e = this;V.extend(e, { scrollbar: { init: X.init.bind(e), destroy: X.destroy.bind(e), updateSize: X.updateSize.bind(e), setTranslate: X.setTranslate.bind(e), setTransition: X.setTransition.bind(e), enableDraggable: X.enableDraggable.bind(e), disableDraggable: X.disableDraggable.bind(e), setDragPosition: X.setDragPosition.bind(e), onDragStart: X.onDragStart.bind(e), onDragMove: X.onDragMove.bind(e), onDragEnd: X.onDragEnd.bind(e), isTouched: !1, timeout: null, dragTimeout: null } });
+    }, on: { init: function init() {
+        this.scrollbar.init(), this.scrollbar.updateSize(), this.scrollbar.setTranslate();
+      }, update: function update() {
+        this.scrollbar.updateSize();
+      }, resize: function resize() {
+        this.scrollbar.updateSize();
+      }, observerUpdate: function observerUpdate() {
+        this.scrollbar.updateSize();
+      }, setTranslate: function setTranslate() {
+        this.scrollbar.setTranslate();
+      }, setTransition: function setTransition(e) {
+        this.scrollbar.setTransition(e);
+      }, destroy: function destroy() {
+        this.scrollbar.destroy();
+      } } }, { name: "parallax", params: { parallax: { enabled: !1 } }, create: function create() {
+      V.extend(this, { parallax: { setTransform: R.setTransform.bind(this), setTranslate: R.setTranslate.bind(this), setTransition: R.setTransition.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        this.params.parallax.enabled && (this.params.watchSlidesProgress = !0, this.originalParams.watchSlidesProgress = !0);
+      }, init: function init() {
+        this.params.parallax && this.parallax.setTranslate();
+      }, setTranslate: function setTranslate() {
+        this.params.parallax && this.parallax.setTranslate();
+      }, setTransition: function setTransition(e) {
+        this.params.parallax && this.parallax.setTransition(e);
+      } } }, { name: "zoom", params: { zoom: { enabled: !1, maxRatio: 3, minRatio: 1, toggle: !0, containerClass: "swiper-zoom-container", zoomedSlideClass: "swiper-slide-zoomed" } }, create: function create() {
+      var t = this,
+          a = { enabled: !1, scale: 1, currentScale: 1, isScaling: !1, gesture: { $slideEl: void 0, slideWidth: void 0, slideHeight: void 0, $imageEl: void 0, $imageWrapEl: void 0, maxRatio: 3 }, image: { isTouched: void 0, isMoved: void 0, currentX: void 0, currentY: void 0, minX: void 0, minY: void 0, maxX: void 0, maxY: void 0, width: void 0, height: void 0, startX: void 0, startY: void 0, touchesStart: {}, touchesCurrent: {} }, velocity: { x: void 0, y: void 0, prevPositionX: void 0, prevPositionY: void 0, prevTime: void 0 } };"onGestureStart onGestureChange onGestureEnd onTouchStart onTouchMove onTouchEnd onTransitionEnd toggle enable disable in out".split(" ").forEach(function (e) {
+        a[e] = q[e].bind(t);
+      }), V.extend(t, { zoom: a });
+    }, on: { init: function init() {
+        this.params.zoom.enabled && this.zoom.enable();
+      }, destroy: function destroy() {
+        this.zoom.disable();
+      }, touchStart: function touchStart(e) {
+        this.zoom.enabled && this.zoom.onTouchStart(e);
+      }, touchEnd: function touchEnd(e) {
+        this.zoom.enabled && this.zoom.onTouchEnd(e);
+      }, doubleTap: function doubleTap(e) {
+        this.params.zoom.enabled && this.zoom.enabled && this.params.zoom.toggle && this.zoom.toggle(e);
+      }, transitionEnd: function transitionEnd() {
+        this.zoom.enabled && this.params.zoom.enabled && this.zoom.onTransitionEnd();
+      } } }, { name: "lazy", params: { lazy: { enabled: !1, loadPrevNext: !1, loadPrevNextAmount: 1, loadOnTransitionStart: !1, elementClass: "swiper-lazy", loadingClass: "swiper-lazy-loading", loadedClass: "swiper-lazy-loaded", preloaderClass: "swiper-lazy-preloader" } }, create: function create() {
+      V.extend(this, { lazy: { initialImageLoaded: !1, load: W.load.bind(this), loadInSlide: W.loadInSlide.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        this.params.lazy.enabled && this.params.preloadImages && (this.params.preloadImages = !1);
+      }, init: function init() {
+        this.params.lazy.enabled && !this.params.loop && 0 === this.params.initialSlide && this.lazy.load();
+      }, scroll: function scroll() {
+        this.params.freeMode && !this.params.freeModeSticky && this.lazy.load();
+      }, resize: function resize() {
+        this.params.lazy.enabled && this.lazy.load();
+      }, scrollbarDragMove: function scrollbarDragMove() {
+        this.params.lazy.enabled && this.lazy.load();
+      }, transitionStart: function transitionStart() {
+        var e = this;e.params.lazy.enabled && (e.params.lazy.loadOnTransitionStart || !e.params.lazy.loadOnTransitionStart && !e.lazy.initialImageLoaded) && e.lazy.load();
+      }, transitionEnd: function transitionEnd() {
+        this.params.lazy.enabled && !this.params.lazy.loadOnTransitionStart && this.lazy.load();
+      } } }, { name: "controller", params: { controller: { control: void 0, inverse: !1, by: "slide" } }, create: function create() {
+      var e = this;V.extend(e, { controller: { control: e.params.controller.control, getInterpolateFunction: j.getInterpolateFunction.bind(e), setTranslate: j.setTranslate.bind(e), setTransition: j.setTransition.bind(e) } });
+    }, on: { update: function update() {
+        this.controller.control && this.controller.spline && (this.controller.spline = void 0, delete this.controller.spline);
+      }, resize: function resize() {
+        this.controller.control && this.controller.spline && (this.controller.spline = void 0, delete this.controller.spline);
+      }, observerUpdate: function observerUpdate() {
+        this.controller.control && this.controller.spline && (this.controller.spline = void 0, delete this.controller.spline);
+      }, setTranslate: function setTranslate(e, t) {
+        this.controller.control && this.controller.setTranslate(e, t);
+      }, setTransition: function setTransition(e, t) {
+        this.controller.control && this.controller.setTransition(e, t);
+      } } }, { name: "a11y", params: { a11y: { enabled: !0, notificationClass: "swiper-notification", prevSlideMessage: "Previous slide", nextSlideMessage: "Next slide", firstSlideMessage: "This is the first slide", lastSlideMessage: "This is the last slide", paginationBulletMessage: "Go to slide {{index}}" } }, create: function create() {
+      var t = this;V.extend(t, { a11y: { liveRegion: L('<span class="' + t.params.a11y.notificationClass + '" aria-live="assertive" aria-atomic="true"></span>') } }), Object.keys(U).forEach(function (e) {
+        t.a11y[e] = U[e].bind(t);
+      });
+    }, on: { init: function init() {
+        this.params.a11y.enabled && (this.a11y.init(), this.a11y.updateNavigation());
+      }, toEdge: function toEdge() {
+        this.params.a11y.enabled && this.a11y.updateNavigation();
+      }, fromEdge: function fromEdge() {
+        this.params.a11y.enabled && this.a11y.updateNavigation();
+      }, paginationUpdate: function paginationUpdate() {
+        this.params.a11y.enabled && this.a11y.updatePagination();
+      }, destroy: function destroy() {
+        this.params.a11y.enabled && this.a11y.destroy();
+      } } }, { name: "history", params: { history: { enabled: !1, replaceState: !1, key: "slides" } }, create: function create() {
+      var e = this;V.extend(e, { history: { init: K.init.bind(e), setHistory: K.setHistory.bind(e), setHistoryPopState: K.setHistoryPopState.bind(e), scrollToSlide: K.scrollToSlide.bind(e), destroy: K.destroy.bind(e) } });
+    }, on: { init: function init() {
+        this.params.history.enabled && this.history.init();
+      }, destroy: function destroy() {
+        this.params.history.enabled && this.history.destroy();
+      }, transitionEnd: function transitionEnd() {
+        this.history.initialized && this.history.setHistory(this.params.history.key, this.activeIndex);
+      } } }, { name: "hash-navigation", params: { hashNavigation: { enabled: !1, replaceState: !1, watchState: !1 } }, create: function create() {
+      var e = this;V.extend(e, { hashNavigation: { initialized: !1, init: _.init.bind(e), destroy: _.destroy.bind(e), setHash: _.setHash.bind(e), onHashCange: _.onHashCange.bind(e) } });
+    }, on: { init: function init() {
+        this.params.hashNavigation.enabled && this.hashNavigation.init();
+      }, destroy: function destroy() {
+        this.params.hashNavigation.enabled && this.hashNavigation.destroy();
+      }, transitionEnd: function transitionEnd() {
+        this.hashNavigation.initialized && this.hashNavigation.setHash();
+      } } }, { name: "autoplay", params: { autoplay: { enabled: !1, delay: 3e3, waitForTransition: !0, disableOnInteraction: !0, stopOnLastSlide: !1, reverseDirection: !1 } }, create: function create() {
+      var t = this;V.extend(t, { autoplay: { running: !1, paused: !1, run: Z.run.bind(t), start: Z.start.bind(t), stop: Z.stop.bind(t), pause: Z.pause.bind(t), onTransitionEnd: function onTransitionEnd(e) {
+            t && !t.destroyed && t.$wrapperEl && e.target === this && (t.$wrapperEl[0].removeEventListener("transitionend", t.autoplay.onTransitionEnd), t.$wrapperEl[0].removeEventListener("webkitTransitionEnd", t.autoplay.onTransitionEnd), t.autoplay.paused = !1, t.autoplay.running ? t.autoplay.run() : t.autoplay.stop());
+          } } });
+    }, on: { init: function init() {
+        this.params.autoplay.enabled && this.autoplay.start();
+      }, beforeTransitionStart: function beforeTransitionStart(e, t) {
+        this.autoplay.running && (t || !this.params.autoplay.disableOnInteraction ? this.autoplay.pause(e) : this.autoplay.stop());
+      }, sliderFirstMove: function sliderFirstMove() {
+        this.autoplay.running && (this.params.autoplay.disableOnInteraction ? this.autoplay.stop() : this.autoplay.pause());
+      }, destroy: function destroy() {
+        this.autoplay.running && this.autoplay.stop();
+      } } }, { name: "effect-fade", params: { fadeEffect: { crossFade: !1 } }, create: function create() {
+      V.extend(this, { fadeEffect: { setTranslate: Q.setTranslate.bind(this), setTransition: Q.setTransition.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this;if ("fade" === e.params.effect) {
+          e.classNames.push(e.params.containerModifierClass + "fade");var t = { slidesPerView: 1, slidesPerColumn: 1, slidesPerGroup: 1, watchSlidesProgress: !0, spaceBetween: 0, virtualTranslate: !0 };V.extend(e.params, t), V.extend(e.originalParams, t);
+        }
+      }, setTranslate: function setTranslate() {
+        "fade" === this.params.effect && this.fadeEffect.setTranslate();
+      }, setTransition: function setTransition(e) {
+        "fade" === this.params.effect && this.fadeEffect.setTransition(e);
+      } } }, { name: "effect-cube", params: { cubeEffect: { slideShadows: !0, shadow: !0, shadowOffset: 20, shadowScale: .94 } }, create: function create() {
+      V.extend(this, { cubeEffect: { setTranslate: J.setTranslate.bind(this), setTransition: J.setTransition.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this;if ("cube" === e.params.effect) {
+          e.classNames.push(e.params.containerModifierClass + "cube"), e.classNames.push(e.params.containerModifierClass + "3d");var t = { slidesPerView: 1, slidesPerColumn: 1, slidesPerGroup: 1, watchSlidesProgress: !0, resistanceRatio: 0, spaceBetween: 0, centeredSlides: !1, virtualTranslate: !0 };V.extend(e.params, t), V.extend(e.originalParams, t);
+        }
+      }, setTranslate: function setTranslate() {
+        "cube" === this.params.effect && this.cubeEffect.setTranslate();
+      }, setTransition: function setTransition(e) {
+        "cube" === this.params.effect && this.cubeEffect.setTransition(e);
+      } } }, { name: "effect-flip", params: { flipEffect: { slideShadows: !0, limitRotation: !0 } }, create: function create() {
+      V.extend(this, { flipEffect: { setTranslate: ee.setTranslate.bind(this), setTransition: ee.setTransition.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this;if ("flip" === e.params.effect) {
+          e.classNames.push(e.params.containerModifierClass + "flip"), e.classNames.push(e.params.containerModifierClass + "3d");var t = { slidesPerView: 1, slidesPerColumn: 1, slidesPerGroup: 1, watchSlidesProgress: !0, spaceBetween: 0, virtualTranslate: !0 };V.extend(e.params, t), V.extend(e.originalParams, t);
+        }
+      }, setTranslate: function setTranslate() {
+        "flip" === this.params.effect && this.flipEffect.setTranslate();
+      }, setTransition: function setTransition(e) {
+        "flip" === this.params.effect && this.flipEffect.setTransition(e);
+      } } }, { name: "effect-coverflow", params: { coverflowEffect: { rotate: 50, stretch: 0, depth: 100, modifier: 1, slideShadows: !0 } }, create: function create() {
+      V.extend(this, { coverflowEffect: { setTranslate: te.setTranslate.bind(this), setTransition: te.setTransition.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this;"coverflow" === e.params.effect && (e.classNames.push(e.params.containerModifierClass + "coverflow"), e.classNames.push(e.params.containerModifierClass + "3d"), e.params.watchSlidesProgress = !0, e.originalParams.watchSlidesProgress = !0);
+      }, setTranslate: function setTranslate() {
+        "coverflow" === this.params.effect && this.coverflowEffect.setTranslate();
+      }, setTransition: function setTransition(e) {
+        "coverflow" === this.params.effect && this.coverflowEffect.setTransition(e);
+      } } }, { name: "thumbs", params: { thumbs: { swiper: null, slideThumbActiveClass: "swiper-slide-thumb-active", thumbsContainerClass: "swiper-container-thumbs" } }, create: function create() {
+      V.extend(this, { thumbs: { swiper: null, init: ae.init.bind(this), update: ae.update.bind(this), onThumbClick: ae.onThumbClick.bind(this) } });
+    }, on: { beforeInit: function beforeInit() {
+        var e = this.params.thumbs;e && e.swiper && (this.thumbs.init(), this.thumbs.update(!0));
+      }, slideChange: function slideChange() {
+        this.thumbs.swiper && this.thumbs.update();
+      }, update: function update() {
+        this.thumbs.swiper && this.thumbs.update();
+      }, resize: function resize() {
+        this.thumbs.swiper && this.thumbs.update();
+      }, observerUpdate: function observerUpdate() {
+        this.thumbs.swiper && this.thumbs.update();
+      }, setTransition: function setTransition(e) {
+        var t = this.thumbs.swiper;t && t.setTransition(e);
+      }, beforeDestroy: function beforeDestroy() {
+        var e = this.thumbs.swiper;e && this.thumbs.swiperCreated && e && e.destroy();
+      } } }];return void 0 === S.use && (S.use = S.Class.use, S.installModule = S.Class.installModule), S.use(ie), S;
+});
+//# sourceMappingURL=swiper.min.js.map
+
+/***/ }),
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2238,7 +10051,7 @@ var _prestashop = __webpack_require__(1);
 
 var _prestashop2 = _interopRequireDefault(_prestashop);
 
-__webpack_require__(4);
+__webpack_require__(5);
 
 var _componentsProductMiniature = __webpack_require__(3);
 
@@ -2379,7 +10192,7 @@ function updateProductListDOM(data) {
 }
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2506,7 +10319,7 @@ var _prestashop2 = _interopRequireDefault(_prestashop);
 });
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2598,7 +10411,7 @@ function toggleMobileStyles() {
 });
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3281,7 +11094,7 @@ function toggleMobileStyles() {
 })(jQuery);
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3293,7 +11106,7 @@ function toggleMobileStyles() {
 
 
 !(function (t, e) {
-   true ? e(exports, __webpack_require__(0), __webpack_require__(24)) : "function" == typeof define && define.amd ? define(["exports", "jquery", "popper.js"], e) : e(t.bootstrap = {}, t.jQuery, t.Popper);
+   true ? e(exports, __webpack_require__(0), __webpack_require__(27)) : "function" == typeof define && define.amd ? define(["exports", "jquery", "popper.js"], e) : e(t.bootstrap = {}, t.jQuery, t.Popper);
 })(undefined, function (t, e, h) {
   "use strict";function i(t, e) {
     for (var n = 0; n < e.length; n++) {
@@ -4279,7 +12092,7 @@ function toggleMobileStyles() {
 //# sourceMappingURL=bootstrap.min.js.map
 
 /***/ }),
-/* 22 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4552,7 +12365,7 @@ function isUndefined(arg) {
 }
 
 /***/ }),
-/* 23 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4735,7 +12548,7 @@ var require;var require;
 });
 
 /***/ }),
-/* 24 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7328,10 +15141,10 @@ exports['default'] = Popper;
 
 //# sourceMappingURL=popper.js.map
 module.exports = exports['default'];
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
-/* 25 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9271,18 +17084,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.4
 });
 
 /***/ }),
-/* 26 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["Tether"] = __webpack_require__(25);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["Tether"] = __webpack_require__(28);
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
-/* 27 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(6);
-module.exports = __webpack_require__(7);
+__webpack_require__(7);
+module.exports = __webpack_require__(8);
 
 
 /***/ })

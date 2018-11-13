@@ -28,6 +28,46 @@
 @import "components/customization-modal";
 @import "components/sitemap";
 
+@import "~swiper/dist/css/swiper.min.css";
+@import "components/swiper.min";
+
+.arrowicon-hover-left,
+.arrowicon-hover,
+.arrowicon-ne-hover-left,
+.arrowicon-ne-hover,
+.swiper-button-next,
+.swiper-button-prev,
+.icon-prev,
+.icon-next {
+    display: inline-block;
+    background: url('../img/arrow-sprite.png') no-repeat;
+    overflow: hidden;
+    text-indent: -9999px;
+    text-align: left;
+    width: 50px;
+    height: 50px;
+    top: 40%;
+//    transition: all .5s;
+}
+.swiper-button-prev,
+.arrowicon-ne-hover-left,
+.icon-prev {
+    background-position: -2px -52px;
+    &:hover {
+        background-position: -2px -0px;
+    }
+}
+
+.arrowicon-ne-hover,
+.swiper-button-next,
+.icon-next {
+    background-position: -54px -52px;
+    &:hover {
+        background-position: -54px -0px;
+    }
+}
+
+
 /*\
  * Restore Bootstrap 3 "hidden" utility classes.
 \*/
@@ -131,7 +171,37 @@
         content: "";
     }
 }
-
+#csinstagramfeed {
+    h2 {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-weight: 400;
+        font-size: 30px;
+        margin-bottom: 2.5em;
+        text-transform: uppercase;
+        &:after,
+        &:before {
+            content: '';
+            border-top: 1px solid;
+            margin: 0 20px 0 0;
+            flex: 1 0 20px;
+        }
+        &:after {
+            margin: 0 0 0 20px;
+        }
+    }
+    img {
+        max-width: 100%;
+        filter: grayscale(1);
+        transition: all .5s;
+        &:hover {
+            filter: grayscale(0);
+        }
+    }
+}
 /*** HEADER ***/
 
 #header {
@@ -152,13 +222,15 @@
         > ul {
             > li {
                 display: inline-block;
-                &.current{
+                &.current {
                     a {
-                        color: $gray-light;                       
+                        color: $gray-light;
                     }
                 }
                 a {
-                     &:hover  {color: $gray-light;}
+                    &:hover {
+                        color: $gray-light;
+                    }
                 }
             }
         }
@@ -298,6 +370,11 @@
         img {
             box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
         }
+    }
+    .card {
+        background: $gray;
+        border: none;
+        box-shadow: none;
     }
     .breadcrumb {
         background: transparent;
@@ -447,7 +524,7 @@
     #header {
         background: $gray-light;
         .header-nav {
-            background: white;
+            background: $gray-light;
             margin-bottom: 0.625rem;
             color: $gray-darker;
             .top-logo {

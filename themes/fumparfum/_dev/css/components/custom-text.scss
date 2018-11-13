@@ -1,37 +1,56 @@
 #custom-text {
-  background: transparent;
-  border-radius: 2px;
-  margin-bottom: 1.5rem;
-  padding: 3.125rem 3.125rem;
-  text-align: center;
-  h2 {
-    text-transform: uppercase;
-    color: white;
-    font-size: 1.563rem;
-    font-weight: 700;
-  }
-  p {
-    color: white;
-    font-weight: 400;
-    font-size: 1.1em;
-    .dark {
-      color: $gray;
-      font-weight: 400;
+    background: transparent;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    padding: 3.125rem 3.125rem;
+    text-align: center;
+    h2 {
+        //    text-transform: uppercase;
+        color: white;
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: .5em;
     }
-  }
-}
-.page-content.page-cms{
-  background: white;
-  padding: 1.25rem;
-  text-align: justify;
-  .cms-box{
-    img{
-      max-width: 100%;
+    h3 {
+        font-weight: 400;
+        font-size: .875rem;
     }
-  }
+    p {
+        color: white;
+        font-weight: 400;
+        font-size: .875rem;
+        .dark {
+            color: $gray-light;
+            font-weight: 400;
+        }
+    }
 }
+
+.page-content.page-cms {
+    background: $gray;
+    padding: 1.25rem 0;
+    text-align: justify;
+    .cms-box {
+        img {
+            max-width: 100%;
+        }
+    }
+}
+
+#cms {
+    .page-header {
+        h1 {
+            text-align: center;
+        }
+    }
+}
+
 @include media-breakpoint-down(md) {
-  #block-cmsinfo {
-    padding: $medium-space $large-space;
-  }
+    #block-cmsinfo {
+        padding: $medium-space $large-space;
+    }
+    #custom-text {
+        padding: 1rem;
+        h2 {font-size: 2.5rem;}
+    }
 }

@@ -14,7 +14,7 @@
 }
 .product-information {
   font-size: $font-size-lg;
-  color: $gray-darker;
+  color: white;
 
   .manufacturer-logo {
     height: 35px;
@@ -182,9 +182,9 @@
   margin-bottom: 0;
 }
 .tabs {
-  @include box-shadow;
+//  @include box-shadow;
   margin-top: 2rem;
-  background: white;
+  background: $gray;
   padding: $medium-space $large-space;
   .tab-pane {
     padding-top: $medium-space;
@@ -193,12 +193,12 @@
     border: none;
     border-bottom: $gray-light 2px solid;
     .nav-link {
-      color: $gray;
+      color: white;
       border: 0 solid transparent;
       &.active {
         border: none;
         border-bottom: $brand-primary 3px solid;
-        color: $brand-primary;
+        color: $gray;
       }
       &:hover {
         border: none;
@@ -490,7 +490,7 @@ li.product-flag {
     font-weight: 700;
     padding: 0.3125rem 0.4375rem;
     text-transform: uppercase;
-    color: white;
+    color: $gray;
     margin-top: $small-space;
     z-index: 2;
     @include box-shadow-light;
@@ -682,3 +682,4 @@ li.product-flag {
     }
   }
 }
+ 

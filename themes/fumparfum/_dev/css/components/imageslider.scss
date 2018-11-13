@@ -78,7 +78,10 @@
         align-items: center;
     }
      &.right {
-          right: 0;
+          right: 1em;
+      }
+      &.left {
+          left: 1em;
       }
   }
     button {

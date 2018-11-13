@@ -46,7 +46,7 @@
 
  *}
 
-<section class="featured-products clearfix">
+{* <section class="featured-products clearfix">
 
   <h2 class="h2 products-section-title text-uppercase">
 
@@ -70,9 +70,9 @@
 
   </a>
 
-</section>
+</section>*}
 
-{* <section class="featured-products clearfix">
+<section class="featured-products clearfix pb-3 pb-md-5">
   <h2 class="h2 products-section-title text-uppercase">
     {l s='Popular Products' d='Shop.Theme.Catalog'}
   </h2>
@@ -88,5 +88,5 @@
     <div class="swiper-button-prev"></div> 
     <div class="swiper-button-next"></div>
   </div>
-</section> *}
+</section>
 

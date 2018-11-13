@@ -22,6 +22,13 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+
+import 'swiper/dist/js/swiper.min';
+//import Swiper from 'swiper/dist/js/swiper.min';
+import './lib/swiper.min';
+import './components/featured-products-slider';
+
 import 'expose-loader?Tether!tether';
 import 'bootstrap/dist/js/bootstrap.min';
 import 'flexibility';

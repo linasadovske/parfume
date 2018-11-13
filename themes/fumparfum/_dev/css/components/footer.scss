@@ -53,7 +53,8 @@
   font-size: $base-font-size;
 }
 .block-social {
-  text-align: right;
+  margin-top: 1rem;
+  text-align: left;
 }
 .block-social li {
   height: 2.5rem;
@@ -159,7 +160,7 @@
     cursor: pointer;
     font-size: $font-size-sm;
     &:hover {
-      color: $gray;
+      color: $gray-light;
     }
   }
 }
@@ -204,7 +205,8 @@
   .links {
     .collapse {
       display: none;
-      &.in {
+      &.in,
+      &.show {
         display: block;
       }
     }
