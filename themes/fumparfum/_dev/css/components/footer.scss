@@ -1,3 +1,6 @@
+.reassurance {
+    background-color: $gray;
+}
 .block_newsletter {
   @include search-box;
   font-size: $font-size-sm;
@@ -57,15 +60,23 @@
   text-align: left;
 }
 .block-social li {
-  height: 2.5rem;
-  width: 2.5rem;
-  background-color: $gray-light;
-  background-repeat: no-repeat;
-  display: inline-block;
-  margin: 0.125rem;
-  cursor: pointer;
+//  height: 2.5rem;
+//  width: 2.5rem;
+//  background-color: $gray-light;
+//  background-repeat: no-repeat;
+//  display: inline-block;
+//  margin: 0.125rem;
+//  cursor: pointer;
+    display: inline-block;
+    background: url('../img/img-sprite.png') no-repeat;
+    overflow: hidden;
+    text-indent: -9999px;
+    text-align: left;
+    cursor: pointer;
+    margin: 0.125rem;
+    
   &:hover {
-    background-color: $brand-primary;
+    transform: scale(1.1);
   }
   a {
     display: block;
@@ -73,21 +84,25 @@
     white-space: nowrap;
     text-indent: 100%;
     overflow: hidden;
+      border-bottom: none;
     &:hover {
       color: transparent;
     }
   }
 }
 .facebook {
-  background-image: url(../img/facebook.svg);
-  &::before{
-    content:"";
-    background-image: url(../img/facebook-blue.svg);
-  }
-  &.icon-gray {
-    background-image: url(../img/facebook-gray.svg);
+    
+    &:not(.icon-gray) {
+        background-position: -2px -540px!important; 
+        width: 35px; 
+        height: 35px;
+    }
+      &.icon-gray {
+        background-position: -2px -0px;
+        width: 55px;
+        height: 55px;
     &:hover {
-      background-image: url(../img/facebook-blue.svg);
+        transform: scale(1.1);
     }
   }
 }
@@ -98,9 +113,11 @@
     background-image: url(../img/twitter-blue.svg);
   }
   &.icon-gray {
-    background-image: url(../img/twitter-gray.svg);
+      background-position: -2px -171px; 
+      width: 55px; 
+      height: 55px;
     &:hover {
-      background-image: url(../img/twitter-blue.svg);
+        transform: scale(1.1);
     }
   }
 }
@@ -117,9 +134,11 @@
     background-image: url(../img/gplus-blue.svg);
   }
   &.icon-gray {
-    background-image: url(../img/gplus-gray.svg);
+      background-position: -2px -57px; 
+      width: 55px; 
+      height: 55px;
     &:hover {
-      background-image: url(../img/gplus-blue.svg);
+        transform: scale(1.1);
     }
   }
 }
@@ -135,9 +154,11 @@
     background-image: url(../img/pinterest-blue.svg);
   }
   &.icon-gray {
-    background-image: url(../img/pinterest-gray.svg);
+      background-position: -2px -114px; 
+      width: 55px; 
+      height: 55px;
     &:hover {
-      background-image: url(../img/pinterest-blue.svg);
+        transform: scale(1.1);
     }
   }
 }
@@ -145,7 +166,9 @@
   background-image: url(../img/vimeo.svg);
 }
 .instagram {
-  background-image: url(../img/instagram.svg);
+    background-position: -2px -577px!important; 
+    width: 35px; 
+    height: 35px;
 }
 .footer-container {
   margin-top: $medium-space;
@@ -154,13 +177,17 @@
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.3);
   li {
     margin-bottom: 0.3125rem;
+    border-bottom: 1px solid $gray-light;
+    list-style-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#848484" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/></svg>');
+    list-style-position: inside;
   }
   li a {
-    color: white;
+    color: $gray-light;
     cursor: pointer;
-    font-size: $font-size-sm;
+//    font-size: $font-size-sm;
+    font-size: .6875rem;
     &:hover {
-      color: $gray-light;
+      color: white;
     }
   }
 }
@@ -191,6 +218,8 @@
       ul {
         background-color: $gray-lighter;
         margin-bottom: 0;
+          
+//           background: $gray-light url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/></svg>') no-repeat scroll right 0.5rem center / 1.25rem 1.25rem;
         > li {
           padding: 0.625rem;
           border-bottom: 1px solid white;

@@ -36,6 +36,7 @@
     "style-loader": "^0.14.0",
     "swiper": "^4.4.2",
     "tether": "^1.1.1",
+    "typeface-roboto": "0.0.54",
     "velocity-animate": "^1.2.3",
     "webpack": "^2.2.1",
     "webpack-sources": "^0.1.0"

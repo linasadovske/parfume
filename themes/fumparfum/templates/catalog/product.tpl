@@ -147,7 +147,7 @@
 
             {block name='page_header'}
 
-              <h1 class="h1" itemprop="name">{block name='page_title'}{$product.name}{/block}</h1>
+              <h1 class="h1 product-name" itemprop="name">{block name='page_title'}{$product.name}{/block}</h1>
 
             {/block}
 
@@ -163,7 +163,7 @@
 
             {block name='product_description_short'}
 
-              <div id="product-description-short-{$product.id}" itemprop="description">{$product.description_short nofilter}</div>
+              <div id="product-description-short-{$product.id}" itemprop="description" class="product-description-short">{$product.description_short nofilter}</div>
 
             {/block}
 
@@ -247,6 +247,17 @@
 
             </div>
 
+
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="row">
+        
+        <div class="col-12">
+            
             {block name='product_tabs'}
 
               <div class="tabs">
@@ -404,11 +415,8 @@
             </div>
 
           {/block}
-
+          
         </div>
-
-      </div>
-
     </div>
 
 

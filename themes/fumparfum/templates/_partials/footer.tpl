@@ -45,14 +45,14 @@
  * International Registered Trademark & Property of PrestaShop SA
 
  *}
-
-<div class="container">
+ 
+<div class="container reassurance">
 
   <div class="row">
 
-    {block name='hook_footer_before'}
+    {block name='hook_display_reassurance'}
 
-      {hook h='displayFooterBefore'}
+      {hook h='displayReassurance'}
 
     {/block}
 
@@ -60,13 +60,13 @@
 
 </div>
 
-<div class="container">
+<div class="container footer-before">
 
   <div class="row">
 
-    {block name='hook_display_reassurance'}
+    {block name='hook_footer_before'}
 
-      {hook h='displayReassurance'}
+      {hook h='displayFooterBefore'}
 
     {/block}
 

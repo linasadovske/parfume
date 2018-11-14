@@ -16,15 +16,19 @@
     }
   }
 }
-.block-category {
+#category .block-category {
 //  min-height: 13.75rem;
   margin-bottom: 1.563rem;
     &.card {
         background-color: transparent;
         box-shadow: none;
         border: none;
+        border-bottom: 1px solid $gray-light;
     }
-    h1 {text-align: center;}
+    h1 {
+        text-align: center;
+        padding-bottom: 1rem;
+    }
   #category-description {
     p,
     strong {

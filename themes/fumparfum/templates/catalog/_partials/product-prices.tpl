@@ -41,10 +41,10 @@
         itemtype="https://schema.org/Offer"
       >
         <link itemprop="availability" href="{$product.seo_availability}"/>
-        <meta itemprop="priceCurrency" content="{$currency.iso_code}">
+        <meta itemprop="priceCurrency" content="{$currency.sign}">
 
         <div class="current-price">
-          <span itemprop="price" content="{$product.price_amount}">{$product.price}</span>
+          <span itemprop="price" content="{$product.price_amount}">{$product.price} {$currency.sign}</span>
 
           {if $product.has_discount}
             {if $product.discount_type === 'percentage'}

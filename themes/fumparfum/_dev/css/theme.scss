@@ -31,41 +31,181 @@
 @import "~swiper/dist/css/swiper.min.css";
 @import "components/swiper.min";
 
-.arrowicon-hover-left,
-.arrowicon-hover,
-.arrowicon-ne-hover-left,
-.arrowicon-ne-hover,
 .swiper-button-next,
 .swiper-button-prev,
-.icon-prev,
-.icon-next {
+.facebook-social,
+.gplus-social,
+.pinterest-social,
+.twitter-social,
+.icon-hover-left,
+.icon-hover-to-top,
+.icon-hover,
+.icon-ne-hover-left,
+.icon-ne-hover-to-top,
+.icon-ne-hover,
+.fb-icon-fum-1,
+.insta-icon-fum-1,
+.mano-asmenine-informacija,
+.mano-uzsakymai,
+.mano-adresai,
+.kreditu-istorija,
+.loginas-fum-hover,
+.loginas-fum {
     display: inline-block;
-    background: url('../img/arrow-sprite.png') no-repeat;
+    background: url('../img/img-sprite.png') no-repeat;
     overflow: hidden;
     text-indent: -9999px;
     text-align: left;
-    width: 50px;
-    height: 50px;
-    top: 40%;
-//    transition: all .5s;
-}
-.swiper-button-prev,
-.arrowicon-ne-hover-left,
-.icon-prev {
-    background-position: -2px -52px;
-    &:hover {
-        background-position: -2px -0px;
-    }
 }
 
-.arrowicon-ne-hover,
-.swiper-button-next,
-.icon-next {
-    background-position: -54px -52px;
-    &:hover {
-        background-position: -54px -0px;
-    }
+//.arrowicon-hover-left,
+//.arrowicon-hover,
+//.arrowicon-ne-hover-left,
+//.arrowicon-ne-hover,
+//.swiper-button-next,
+//.swiper-button-prev,
+//.icon-prev,
+//.icon-next {
+//    display: inline-block;
+//    background: url('../img/sprite.png') no-repeat;
+//    overflow: hidden;
+//    text-indent: -9999px;
+//    text-align: left;
+//    width: 50px;
+//    height: 50px;
+//    top: 40%;
+//    //    transition: all .5s;
+//}
+.facebook-social {
+    background-position: -2px -0px;
+    width: 55px;
+    height: 55px;
 }
+
+.gplus-social {
+    background-position: -2px -57px;
+    width: 55px;
+    height: 55px;
+}
+
+.pinterest-social {
+    background-position: -2px -114px;
+    width: 55px;
+    height: 55px;
+}
+
+.twitter-social {
+    background-position: -2px -171px;
+    width: 55px;
+    height: 55px;
+}
+
+//.icon-hover-left {
+//    background-position: -2px -228px;
+//    width: 50px;
+//    height: 50px;
+//}
+
+.icon-hover-to-top {
+    background-position: -2px -280px;
+    width: 50px;
+    height: 50px;
+}
+
+//.icon-hover {
+//    background-position: -2px -332px;
+//    width: 50px;
+//    height: 50px;
+//}
+.swiper-button-prev,
+.arrowicon-ne-hover-left,
+.icon-prev,
+.icon-ne-hover-left {
+    background-position: -2px -384px;
+    width: 50px;
+    height: 50px;
+    &:hover {background-position: -2px -228px;}
+}
+
+.icon-ne-hover-to-top {
+    background-position: -2px -436px;
+    width: 50px;
+    height: 50px;
+}
+.swiper-button-next,
+.icon-next,
+.icon-ne-hover {
+    background-position: -2px -488px;
+    width: 50px;
+    height: 50px;
+    &:hover {background-position: -2px -332px;}
+}
+
+.fb-icon-fum-1 {
+    background-position: -2px -540px;
+    width: 35px;
+    height: 35px;
+}
+
+.insta-icon-fum-1 {
+    background-position: -2px -577px;
+    width: 35px;
+    height: 35px;
+}
+
+.mano-asmenine-informacija {
+    background-position: -2px -614px;
+    width: 34px;
+    height: 30px;
+}
+
+.mano-uzsakymai {
+    background-position: -2px -646px;
+    width: 34px;
+    height: 30px;
+}
+
+.mano-adresai {
+    background-position: -2px -678px;
+    width: 30px;
+    height: 30px;
+}
+
+.kreditu-istorija {
+    background-position: -2px -710px;
+    width: 29px;
+    height: 30px;
+}
+
+.loginas-fum-hover {
+    background-position: -34px -678px;
+    width: 20px;
+    height: 20px;
+}
+
+.loginas-fum {
+    background-position: -34px -700px;
+    width: 20px;
+    height: 20px;
+}
+
+//.swiper-button-prev,
+//.arrowicon-ne-hover-left,
+//.icon-prev {
+//    background-position: -2px -52px;
+//    &:hover {
+//        background-position: -2px -0px;
+//    }
+//}
+//
+//.arrowicon-ne-hover,
+//.swiper-button-next,
+//.icon-next {
+//    background-position: -54px -52px;
+//    &:hover {
+//        background-position: -54px -0px;
+//    }
+//}
 
 
 /*\
@@ -171,6 +311,7 @@
         content: "";
     }
 }
+
 #csinstagramfeed {
     h2 {
         display: flex;
@@ -202,6 +343,7 @@
         }
     }
 }
+
 /*** HEADER ***/
 
 #header {

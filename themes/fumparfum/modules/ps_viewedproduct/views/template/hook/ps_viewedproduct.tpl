@@ -22,11 +22,18 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<section class="featured-products clearfix mt-3">
-  <h2>{l s='Viewed products' d='Shop.Theme.Catalog'}</h2>
-  <div class="products">
-    {foreach from=$products item="product"}
-      {include file="catalog/_partials/miniatures/product.tpl" product=$product}
-    {/foreach}
+<section class="featured-products clearfix mt-3 mb-md-5">
+  <h2 class="h2 products-section-title text-uppercase">{l s='Viewed products' d='Shop.Theme.Catalog'}</h2>
+  <div class="products swiper-container">
+    <div class="swiper-wrapper">
+      {foreach from=$products item="product"}
+        <div class="swiper-slide"> 
+          {include file="catalog/_partials/miniatures/product.tpl" product=$product}
+        </div>
+      {/foreach}
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div> 
+    <div class="swiper-button-next"></div>
   </div>
 </section>

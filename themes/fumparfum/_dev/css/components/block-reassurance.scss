@@ -16,7 +16,7 @@ margin-bottom: 1em;
   }
   #product &{
     @include box-shadow;
-    background: white;
+    background: $gray;
     span{
       font-weight: 700;
     }
