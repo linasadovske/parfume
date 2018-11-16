@@ -39,7 +39,7 @@
         &:hover,
         &:focus {
             .highlighted-informations {
-                bottom: 5.5rem;
+                bottom: 7.5rem;
                 &::after {
                     opacity: 1;
                 }
@@ -104,14 +104,15 @@
     .highlighted-informations {
         position: absolute;
         bottom: 1.25rem;
-        padding-top: 0.625rem;
+            padding: .625rem 0;
         z-index: 0;
         background: $gray;
         text-align: center;
         width: 100%;
-        height: 3.125rem;
+//        height: 3.125rem;
         box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(255,255,255, .2);
+//        border: 1px solid rgba(255,255,255, .2);
+        border: 1px solid $gray-light;
         transition: bottom .3s;
         color: white;
         .quick-view {
@@ -146,7 +147,8 @@
         .pack {
             display: block;
             position: absolute;
-            left: -0.4375rem;
+//            left: -0.4375rem;
+            left: .05rem;
             padding: 0.3125rem 0.4375rem;
             color: $gray;
             background: $brand-primary;
@@ -198,7 +200,7 @@
     }
     .all-product-link {
         clear: both;
-        color: $gray;
+        color: white;
         font-weight: 700;
         margin-top: 1.5rem;
         margin-bottom: 1.5rem;

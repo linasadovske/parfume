@@ -100,7 +100,7 @@
 
         <i class="material-icons">&#xE7FF;</i>
 
-        <span class="hidden-sm-down">{l s='Sign in' d='Shop.Theme.Actions'}</span>
+        <span>{l s='Sign in' d='Shop.Theme.Actions'}</span>
 
       </a>
       /
@@ -114,7 +114,7 @@
 
       >
 
-        <span class="hidden-sm-down">{l s='Register' d='Shop.Theme.Actions'}</span>
+        <span>{l s='Register' d='Shop.Theme.Actions'}</span>
 
       </a>
 

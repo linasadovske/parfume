@@ -33,6 +33,8 @@
 
 .swiper-button-next,
 .swiper-button-prev,
+.carousel-control .icon-prev,
+.carousel-control .icon-next,
 .facebook-social,
 .gplus-social,
 .pinterest-social,
@@ -50,13 +52,16 @@
 .mano-adresai,
 .kreditu-istorija,
 .loginas-fum-hover,
-.loginas-fum {
+.loginas-fum,
+.mypresta_scrollup {
     display: inline-block;
-    background: url('../img/img-sprite.png') no-repeat;
+    background: url('../img/img-sprite.png') no-repeat!important;
     overflow: hidden;
     text-indent: -9999px;
     text-align: left;
 }
+.swiper-button-next,
+.swiper-button-prev {top: 30%;}
 
 //.arrowicon-hover-left,
 //.arrowicon-hover,
@@ -106,39 +111,47 @@
 //    height: 50px;
 //}
 
-.icon-hover-to-top {
-    background-position: -2px -280px;
-    width: 50px;
-    height: 50px;
-}
+//.icon-hover-to-top {
+//    background-position: -2px -280px;
+//    width: 50px;
+//    height: 50px;
+//}
 
 //.icon-hover {
 //    background-position: -2px -332px;
 //    width: 50px;
 //    height: 50px;
 //}
-.swiper-button-prev,
-.arrowicon-ne-hover-left,
-.icon-prev,
-.icon-ne-hover-left {
-    background-position: -2px -384px;
+
+.icon-ne-hover-to-top,
+body .mypresta_scrollup {
+    background-position: -2px -436px!important;
+    opacity: 1!important;
     width: 50px;
     height: 50px;
-    &:hover {background-position: -2px -228px;}
+    z-index: 2;
+    &:hover {
+        background-position: -2px -280px!important;
+    }
 }
 
-.icon-ne-hover-to-top {
-    background-position: -2px -436px;
+.featured-products .swiper-button-prev,
+.arrowicon-ne-hover-left,
+.carousel-control .icon-prev,
+.icon-ne-hover-left {
+    background-position: -2px -384px!important;
     width: 50px;
     height: 50px;
+    &:hover {background-position: -2px -228px!important;}
 }
-.swiper-button-next,
-.icon-next,
+
+.featured-products .swiper-button-next,
+.carousel-control .icon-next,
 .icon-ne-hover {
-    background-position: -2px -488px;
+    background-position: -2px -488px!important;
     width: 50px;
     height: 50px;
-    &:hover {background-position: -2px -332px;}
+    &:hover {background-position: -2px -332px!important;}
 }
 
 .fb-icon-fum-1 {
@@ -343,6 +356,56 @@
         }
     }
 }
+body {
+    overflow-x: hidden;
+}
+
+#header .header-nav #_desktop_contact_link #contact-link > * {
+    display: inline;
+    margin-right: 1em;
+}
+
+.header-nav,
+footer .copyright {
+    font-size: 12px;
+}
+
+#index #carousel {
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+#index .carousel .carousel-inner {
+    margin-bottom: 0;
+    height: auto;
+}
+
+#index .carousel figure {
+    margin-bottom: 0;
+}
+
+.full-width {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+.parallax {
+    height: 500px;
+    background-attachment: fixed;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+@media only screen and (max-device-width: 1366px) {
+    .parallax {
+        background-attachment: scroll;
+    }
+}
 
 /*** HEADER ***/
 
@@ -385,7 +448,7 @@
         #menu-icon {
             vertical-align: middle;
             cursor: pointer;
-            margin: 0 1rem;
+//            margin: 0 1rem;
             .material-icons {
                 line-height: 50px;
             }
@@ -585,6 +648,20 @@
         margin-bottom: 0;
     }
 }
+#csinstagramfeed {
+    .btn {display: none;}
+}
+
+/*** SEARCH ***/
+#_mobile_search {
+    .search-widget{
+        max-width: 100%;
+        input[type=text] {
+            min-width: auto;
+            max-width: 100%;
+        }
+    }
+}
 
 /*** FOOTER ***/
 
@@ -608,6 +685,39 @@
 }
 
 @include media-breakpoint-down(md) {
+    .mobile-logo {
+        background-color: black;
+
+    }
+    #csinstagramfeed h2:after, 
+    #csinstagramfeed h2:before,
+    .featured-products .products-section-title:before,
+    .featured-products .products-section-title:after {display: none;}
+    #csinstagramfeed {
+        h2 {
+            padding: 0 1rem;
+            margin-bottom: 1rem;
+        }
+        #bxslider-instagram {
+            .picture {
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+            .btn {
+                display: block;
+                margin-top: 2rem;
+            }
+            .full-width {
+                width: 100%;
+                position: relative;
+                left: 0;
+                right: 0;
+                margin-left: 0;
+                margin-right: 0;
+                max-width: 100vw;
+            }
+        }
+    }
     .container {
         max-width: 100%;
     }
@@ -664,16 +774,20 @@
         margin-top: 1rem;
     }
     #header {
-        background: $gray-light;
+//        background: $gray-light;
         .header-nav {
-            background: $gray-light;
-            margin-bottom: 0.625rem;
-            color: $gray-darker;
+//            background: $gray-light;
+            margin-bottom: 0;
+            color: $brand-primary;
+            border-bottom: none;
             .top-logo {
-                padding-top: 11px;
+//                padding-top: 11px;                
+                margin: 0 auto;
                 a {
+                    margin: 0 auto;
+                    text-transform: uppercase;
                     img {
-                        max-height: 50px;
+//                        max-height: 50px;
                         max-width: 100%;
                     }
                 }
@@ -684,6 +798,8 @@
             .user-info {
                 text-align: left;
                 margin-left: 0;
+                color: $gray-light;
+                a {color: $gray-light;}
                 .logged {
                     color: $brand-primary;
                 }

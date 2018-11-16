@@ -50,7 +50,7 @@
 
   <div id="block-reassurance" class="w-100">
 
-    <ul class="row mb-0">
+    <ul class="row mb-0 mx-0">
 
       {foreach from=$elements item=element}
 

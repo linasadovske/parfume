@@ -26,6 +26,13 @@ a {
         text-decoration: none;
     }
 }
+.gray {
+    color: $gray-light;
+    &:hover {
+        color: $brand-primary;
+        text-decoration: underline;
+    }
+}
 
 p {
     font-size: 0.9375rem;
@@ -101,6 +108,19 @@ h6 {font-family: 'Roboto', sans-serif;
         color: white;
         box-shadow: none;
         border-color: transparent;
+    }
+    &:not(:disabled) {        
+        &:not(.disabled) {
+            &:active {
+                background-color: $gray;
+                color: white;
+                box-shadow: none;
+                border-color: transparent;
+                &:focus {
+                    box-shadow: 0 0 0 0.2rem rgba(255,255,255,.5);
+                }
+            }
+        }
     }
     .material-icons {
         margin-right: $small-space;

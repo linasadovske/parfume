@@ -46,73 +46,73 @@
 
  *}
 
-
-
 <div class="block-contact col-md-3 links wrapper">
 
-  <div class="hidden-sm-down">
+    <div class="hidden-sm-down">
 
-    <p class="h4 text-uppercase block-contact-title">{l s='Store information' d='Shop.Theme.Global'}</p>
-  {* {$contact_infos.address.formatted nofilter} *}
-      <div class="shop-address">
-          {if $shop.address.address1}
-            {$shop.address.address1} {$shop.address.city}
-          {else}
-            {l s='Subačiaus g. 19, Vilnius' d='Shop.Theme.Global'}
-          {/if}
-      </div>
-      <div class="shop-email">
-        {if $contact_infos.email}  
-        <a href="mailto:{$contact_infos.email}" title="{l s='Contact us' d='Shop.Theme.Global'}">{$contact_infos.email}</a>   
-        {else}
-          <a href="mailto:store@fumparfum.com" title="{l s='Contact us' d='Shop.Theme.Global'}">store@fumparfum.com</a>
-        {/if}
-      </div>
-      <div class="shop-phone">
-      {if $contact_infos.phone}
-        {$contact_infos.phone}
-      {else}
-        <a href="{$urls.pages.contact}">{l s='Contact us' d='Shop.Theme.Global'}</a>
-      {/if}
-      </div>
-      {if $contact_infos.fax}
-
-        <br>
-
-        {* [1][/1] is for a HTML tag. *}
-
-        {l
-
-          s='Fax: [1]%fax%[/1]'
-
-          sprintf=[
-
-            '[1]' => '<span>',
-
-            '[/1]' => '</span>',
-
-            '%fax%' => $contact_infos.fax
-
-          ]
-
-          d='Shop.Theme.Global'
-
-        }
-
-      {/if}
-  </div>
-
-  <div class="hidden-md-up">
-
-    <div class="title">
-
-      <a class="h3" href="{$urls.pages.stores}">{l s='Store information' d='Shop.Theme.Global'}</a>
-
+    <p class="h4 block-contact-title">{l s='Store information' d='Shop.Theme.Global'}</p>
+    {* {$contact_infos.address.formatted nofilter} *}
+    </div> 
+    <div class="title clearfix hidden-md-up" data-target="#block-contact-footer" data-toggle="collapse">
+    <span class="h3">{l s='Store information' d='Shop.Theme.Global'}</span>
+    <span class="float-xs-right">
+      <span class="navbar-toggler collapse-icons">
+        <i class="material-icons add">&#xE313;</i>
+        <i class="material-icons remove">&#xE316;</i>
+      </span>
+    </span>
     </div>
+    <div class="collapse" id="block-contact-footer">
+    <div class="shop-address">
+      {if $shop.address.address1}
+        {$shop.address.address1} {$shop.address.city}
+      {else}
+        {l s='Subačiaus g. 19, Vilnius' d='Shop.Theme.Global'}
+      {/if}
+    </div>      
+    <div class="shop-phone">
+    {if $contact_infos.phone}
+    <a href="tel:+37068474941">{$contact_infos.phone}</a>
+    {else}
+    <a href="{$urls.pages.contact}">{l s='Contact us' d='Shop.Theme.Global'}</a>
+    {/if}
+    </div>
+    <div class="shop-email">
+    {if $contact_infos.email}  
+    <a href="mailto:{$contact_infos.email}" title="{l s='Contact us' d='Shop.Theme.Global'}">{$contact_infos.email}</a>   
+    {else}
+      <a href="mailto:store@fumparfum.com" title="{l s='Contact us' d='Shop.Theme.Global'}">store@fumparfum.com</a>
+    {/if}
+    </div>
+    {if $contact_infos.fax}
 
-  </div>
+    <br>
 
-  {hook h='displaySocialfollow'}
+    {* [1][/1] is for a HTML tag. *}
+
+    {l
+
+      s='Fax: [1]%fax%[/1]'
+
+      sprintf=[
+
+        '[1]' => '<span>',
+
+        '[/1]' => '</span>',
+
+        '%fax%' => $contact_infos.fax
+
+      ]
+
+      d='Shop.Theme.Global'
+
+    }
+
+    {/if}
+
+    {hook h='displaySocialfollow'}
+
+    </div>  
 
 </div>
 

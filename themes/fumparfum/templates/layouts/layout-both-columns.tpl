@@ -188,6 +188,19 @@
       </section>
 
 
+        <div class="container reassurance my-5">
+
+          <div class="row">
+
+            {block name='hook_display_reassurance'}
+
+              {hook h='displayReassurance'}
+
+            {/block}
+
+          </div>
+
+        </div>
 
       <footer id="footer">
 

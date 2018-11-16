@@ -74,3 +74,23 @@ $(document).ready(() => {
   productMinitature.init();
   productSelect.init();
 });
+
+ // instagram mobile show more
+
+ $(function () {
+     if ($(window).width() < 768) {
+         $("#csinstagramfeed").removeClass('full-width');
+        $("#bxslider-instagram li").slice(3).hide();
+        $("#bxslider-instagram .btn-primary").on('click', function (e) {
+            e.preventDefault();
+            $("#bxslider-instagram li:hidden").slideDown();
+            if ($("#bxslider-instagram li:hidden").length == 0) {
+                console.log("nebera");
+                $("#bxslider-instagram .btn-primary").hide();
+            }
+            $('html,body').animate({
+                scrollTop: $(this).offset().top
+            }, 1500);
+        });
+     } 
+});

@@ -82,8 +82,31 @@
 
         </div>
 
-        <div class="hidden-md-up text-sm-center mobile row">
+        <div class="hidden-md-up text-sm-center mobile d-flex flex-column w-100">
+          <div class="d-flex align-items-center">
+              <div class="col-8" id="_mobile_user_info"></div>
+              <div class="col-4" id="_mobile_language_selector"></div>
+          </div>
+          <div class="d-flex mobile-logo">
+              <div class="top-logo" id="_mobile_logo"></div>
+          </div>
+          <div class="d-flex align-items-center">
+              <div class="col-2" id="menu-icon">
 
+                <i class="material-icons d-inline">&#xE5D2;</i>
+
+              </div>
+              <div class="col-8" id="_mobile_search">
+              {block name='search'}
+                  {hook h='displaySearch'}
+                {/block}
+             </div>
+              <div class="col-2" id="_mobile_cart"></div>
+          </div>
+           
+           
+           
+            {*
           <div class="float-xs-left" id="menu-icon">
 
             <i class="material-icons d-inline">&#xE5D2;</i>
@@ -97,6 +120,7 @@
           <div class="top-logo" id="_mobile_logo"></div>
 
           <div class="clearfix"></div>
+          *}
 
         </div>
 
@@ -160,10 +184,11 @@
 
         <div class="js-top-menu-bottom">
 
+{*
           <div id="_mobile_currency_selector"></div>
 
           <div id="_mobile_language_selector"></div>
-
+*}
           <div id="_mobile_contact_link"></div>
 
         </div>

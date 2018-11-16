@@ -46,19 +46,6 @@
 
  *}
  
-<div class="container reassurance">
-
-  <div class="row">
-
-    {block name='hook_display_reassurance'}
-
-      {hook h='displayReassurance'}
-
-    {/block}
-
-  </div>
-
-</div>
 
 <div class="container footer-before">
 
@@ -104,7 +91,7 @@
 
     <div class="row">
 
-        <div class="text-center text-sm-left col-md-6">        
+        <div class="col-md-6 pl-0 text-left text-sm-left">        
 
           {block name='copyright_link'}
 
@@ -114,11 +101,11 @@
 
         </div>
 
-        <div class="text-center text-sm-right col-md-6">  
+        <div class="col-md-6 px-0 text-left text-sm-right">  
 
           {l s='Made by'} 
 
-          <a class="_blank" href="https://adisoft.lt/" target="_blank" title="{l s='Adisoft'}">{l s='Adisoft'}</a>
+          <a class="gray" href="https://adisoft.lt/" target="_blank" title="{l s='Adisoft'}">{l s='Adisoft'}</a>
 
         </div>
 

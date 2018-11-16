@@ -68,7 +68,7 @@
     <div class="shop-phone">
     {if $contact_infos.phone}
       <i class="material-icons">&#xE0CD;</i>
-      {$contact_infos.phone}
+      <a href="tel:+37068474941">{$contact_infos.phone}</a>
       {* {l
         s='Call us: [1]%phone%[/1]'
         sprintf=[

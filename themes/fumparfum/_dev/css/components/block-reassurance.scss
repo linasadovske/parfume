@@ -14,11 +14,11 @@ margin-bottom: 1em;
   li .block-reassurance-item{
     padding: 1rem 1.5rem;
   }
-  #product &{
-    @include box-shadow;
-    background: $gray;
-    span{
-      font-weight: 700;
-    }
-  }
+//  #product &{
+//    @include box-shadow;
+//    background: $gray;
+//    span{
+//      font-weight: 700;
+//    }
+//  }
 }

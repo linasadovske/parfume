@@ -21,12 +21,15 @@
 		<h2 class="subheading">{l s='Instagram srautas'}</h2>
 		<ul id="bxslider-instagram" class="bxslider clearfix row">
 		{foreach $instagram_pics as $pic}
-			<li class="picture item col-md-2 col-xs-6">
+			<li class="picture item col-xl-2 col-lg-4 col-md-6 col-12">
 				<a href="{$pic.link}" title="{$pic.caption|escape:'html':'UTF-8'}" target="_blank" rel="nofollow">
 					<img src="{$pic.image}" alt="{$pic.caption|escape:'html':'UTF-8'}" class="img-responsive" />
 				</a>
 			</li>
 		{/foreach}
+        <button href="#" class="border w-100 btn btn-primary text-uppercase btn-lg">
+            {l s='Show more'}
+        </button>
 		</ul>
 	</section>
 {/if}
