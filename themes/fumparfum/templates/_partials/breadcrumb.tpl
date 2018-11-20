@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <nav aria-label="breadcrumb" data-depth="{$breadcrumb.count}" class="breadcrumb hidden-sm-down">
-  <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+  <ol itemscope itemtype="http://schema.org/BreadcrumbList">
     {block name='breadcrumb'}
       {foreach from=$breadcrumb.links item=path name=breadcrumb}
         {block name='breadcrumb_item'}

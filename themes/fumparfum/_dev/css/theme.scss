@@ -457,7 +457,7 @@ footer .copyright {
 }
 
 .parallax {
-    height: 500px;
+    height: 300px;
     background-attachment: fixed;
     background-position: top;
     background-repeat: no-repeat;
@@ -490,6 +490,7 @@ footer .copyright {
         > ul {
             > li {
                 display: inline-block;
+                position: relative;
                 &.current {
                     a {
                         color: $gray-light;
@@ -653,6 +654,21 @@ footer .copyright {
 }
 
 /*** WRAPPER ***/
+#category,
+#product,
+#new-products {
+    #wrapper {
+        .breadcrumb {
+            border-bottom: none;
+            justify-content: center;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+        #js-product-list-header {
+            padding-left: 0;
+        }
+    }
+}
 
 #wrapper {
     background: $gray;
@@ -1003,5 +1019,12 @@ footer .copyright {
     button {
         margin-top: 1em;
         padding: 1em 5em;
+    }
+    
+}
+@include media-breakpoint-down(md) {
+    .banner-caption {
+        max-width: 50%;
+        bottom: 5%;
     }
 }

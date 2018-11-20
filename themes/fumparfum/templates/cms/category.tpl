@@ -48,8 +48,6 @@
 
 {extends file='page.tpl'}
 
-
-
 {block name='page_title'}
 
   {$cms_category.name}
@@ -57,16 +55,17 @@
 {/block}
 
 {block name='page_content'}
-
-{$cms_category.description}
+<p class="text-center">
+    {$cms_category.description|nl2br nofilter}
+</p>
 
   {block name='cms_sub_categories'}
 
     {if $sub_categories}
 
-      <p>
-      {* {l s='List of sub categories in %name%:' d='Shop.Theme.Global' sprintf=['%name%' => $cms_category.name]} *}
-      </p>
+      {*<p>
+       {l s='List of sub categories in %name%:' d='Shop.Theme.Global' sprintf=['%name%' => $cms_category.name]} 
+      </p>*}
 
       <ul class="row">
 
@@ -82,21 +81,37 @@
 
   {/block}
 
-
-
   {block name='cms_sub_pages'}
 
     {if $cms_pages}
 
-      <p>
-        {* {l s='List of pages in %category_name%:' d='Shop.Theme.Global' sprintf=['%category_name%' => $cms_category.name]} *}
-      </p>
+      {* <p>
+        {l s='List of pages in %category_name%:' d='Shop.Theme.Global' sprintf=['%category_name%' => $cms_category.name]}
+      </p> *}
 
-      <ul class="row">
+      <ul class="row mt-5">
 
         {foreach from=$cms_pages item=cms_page}
 
-          <li class="col-md-3"><a href="{$cms_page.link}">{$cms_page.meta_title}</a></li>
+          <li class="col-lg-3 col-sm-6">
+          <a href="{$cms_page.link}" 
+            class="cms-sub-pages"
+             title="{$cms_page.meta_title}" 
+             style="background-image: url(../../themes/fumparfum/_dev/img/{if $cms_page.meta_title == 'Studija'}studija{elseif $cms_page.meta_title == 'Kūrėjai'}kurejai{elseif $cms_page.meta_title == 'Renginiai'}renginiai{else}partneriai{/if}.jpg)">
+{*
+              {if $cms_page.meta_title == "Studija"}
+                  <img src="{$urls.img_url}studija.jpg" alt="{$cms_page.meta_title}">
+              {elseif $cms_page.meta_title == "Kūrėjai" }
+                  <img src="../../themes/fumparfum/_dev/img/kurejai.jpg" alt="{$cms_page.meta_title}">
+              {elseif $cms_page.meta_title == "Renginiai" }
+                  <img src="../../themes/fumparfum/_dev/img/renginiai.jpg" alt="{$cms_page.meta_title}">
+              {elseif $cms_page.meta_title == "Partneriai" }
+                  <img src="../../themes/fumparfum/_dev/img/partneriai.jpg" alt="{$cms_page.meta_title}">
+              {/if}
+*}
+          <span class="text-center text-uppercase">{$cms_page.meta_title}</span>
+          </a>
+          </li>
 
         {/foreach}
 
@@ -105,6 +120,13 @@
     {/if}
 
   {/block}
+  
+  
+  <div class="py-5"></div>
+  {hook h='displayParralaxBanner'}
 
 {/block}
+
+
+
 

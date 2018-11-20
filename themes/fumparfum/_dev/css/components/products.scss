@@ -98,10 +98,14 @@
         .material-icons {
             line-height: inherit;
         }
-        &:hover {
-            background-color: $gray-lighter;
-            color: white;
-        }
+        &:not(.disabled),
+        &:not(:disabled) {
+            &:hover {
+                background-color: $brand-primary;
+                color: $gray;
+                border-color: transparent;
+            }
+        }        
     }
 }
 

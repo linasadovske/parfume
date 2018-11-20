@@ -106,4 +106,6 @@ $(document).ready(function() {
          });
           
       }) 
+    
+     $("#contact #content-wrapper").addClass('col-md-6');
 });

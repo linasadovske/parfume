@@ -1,15 +1,18 @@
 .contact-rich {
-  color: $gray;
+  color: $brand-primary;
   margin-bottom: 2rem;
   word-wrap: break-word;
   h4 {
     text-transform: uppercase;
-    color: $gray-darker;
+    color: $brand-primary;
     margin-bottom: 2rem;
+      font-size: 30px;
+      letter-spacing: 1px;
   }
   .block {
     height: auto;
     overflow: hidden;
+
     .icon {
       float: left;
       width: 3.5rem;
@@ -18,23 +21,29 @@
       }
     }
     .data {
-      color: $gray-darker;
-      font-size: $font-size-sm;
+      color: $brand-primary;
+      font-size: .75rem;
       width: auto;
       overflow: hidden;
-      &.email{
-        padding-top: 0.375rem;
-      }
+//      &.email{
+//        padding-top: 0.375rem;
+//      }
     }
   }
+    .store-info {
+        font-size: .75rem;
+        margin-bottom: 3rem;
+    }
 }
 .contact-form {
-  background: white;
-  padding: 1rem;
-  color: $gray;
+  background: none;
+//  padding: 1rem;
+  color: $brand-primary;
   width: 100%;
   h3 {
     text-transform: uppercase;
-    color: $gray-darker;
+    color: $brand-primary;
+      font-size: 30px;
+      letter-spacing: 1px;
   }
 }

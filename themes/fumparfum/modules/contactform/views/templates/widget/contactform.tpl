@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<section class="contact-form">
+<section class="contact-form px-3 px-md-0">
   <form action="{$urls.pages.contact}" method="post" {if $contact.allow_file_upload}enctype="multipart/form-data"{/if}>
 
     {if $notifications}
@@ -39,14 +39,14 @@
       <section class="form-fields">
 
         <div class="form-group row">
-          <div class="col-md-9 col-md-offset-3">
+          <div class="col-12">
             <h3>{l s='Contact us' d='Shop.Theme.Global'}</h3>
           </div>
         </div>
 
         <div class="form-group row">
           <label class="col-md-3 form-control-label">{l s='Subject' d='Shop.Forms.Labels'}</label>
-          <div class="col-md-6">
+          <div class="col-12">
             <select name="id_contact" class="form-control form-control-select">
               {foreach from=$contact.contacts item=contact_elt}
                 <option value="{$contact_elt.id_contact}">{$contact_elt.name}</option>
@@ -57,13 +57,12 @@
 
         <div class="form-group row">
           <label class="col-md-3 form-control-label">{l s='Email address' d='Shop.Forms.Labels'}</label>
-          <div class="col-md-6">
+          <div class="col-12">
             <input
               class="form-control"
               name="from"
               type="email"
-              value="{$contact.email}"
-              placeholder="{l s='your@email.com' d='Shop.Forms.Help'}"
+              value="{$contact.email}"              
             >
           </div>
         </div>
@@ -71,7 +70,7 @@
         {if $contact.orders}
           <div class="form-group row">
             <label class="col-md-3 form-control-label">{l s='Order reference' d='Shop.Forms.Labels'}</label>
-            <div class="col-md-6">
+            <div class="col-12">
               <select name="id_order" class="form-control form-control-select">
                 <option value="">{l s='Select reference' d='Shop.Forms.Help'}</option>
                 {foreach from=$contact.orders item=order}
@@ -88,7 +87,7 @@
         {if $contact.allow_file_upload}
           <div class="form-group row">
             <label class="col-md-3 form-control-label">{l s='Attachment' d='Shop.Forms.Labels'}</label>
-            <div class="col-md-6">
+            <div class="col-12">
               <input type="file" name="fileUpload" class="filestyle" data-buttonText="{l s='Choose file' d='Shop.Theme.Actions'}">
             </div>
             <span class="col-md-3 form-control-comment">
@@ -99,11 +98,10 @@
 
         <div class="form-group row">
           <label class="col-md-3 form-control-label">{l s='Message' d='Shop.Forms.Labels'}</label>
-          <div class="col-md-9">
+          <div class="col-12">
             <textarea
               class="form-control"
               name="message"
-              placeholder="{l s='How can we help?' d='Shop.Forms.Help'}"
               rows="3"
             >{if $contact.message}{$contact.message}{/if}</textarea>
           </div>
@@ -119,7 +117,7 @@
 
       </section>
 
-      <footer class="form-footer text-sm-right">
+      <footer class="form-footer">
         <style>
           input[name=url] {
             display: none !important;
@@ -127,7 +125,7 @@
         </style>
         <input type="text" name="url" value=""/>
         <input type="hidden" name="token" value="{$token}" />
-        <input class="btn btn-primary" type="submit" name="submitMessage" value="{l s='Send' d='Shop.Theme.Actions'}">
+        <input class="btn btn-primary btn-lg" type="submit" name="submitMessage" value="{l s='Send' d='Shop.Theme.Actions'}">
       </footer>
     {/if}
 
