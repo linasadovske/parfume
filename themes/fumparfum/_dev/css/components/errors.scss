@@ -1,5 +1,8 @@
+#js-product-list-header {
+    padding-left: 1rem;
+}
 #products,
-#pagenotfound {
+#pagenotfound {    
   #main {
     .page-header {
       margin: 2rem 0 3rem;
@@ -9,12 +12,12 @@
     }
   }
   .page-not-found {
-    @include box-shadow;
-    background: white;
+//    @include box-shadow;
+//    background: white;
     padding: 1rem;
     font-size: $font-size-sm;
-    color: $gray;
-    max-width: 570px;
+    color: white;
+//    max-width: 570px;
     margin: 0 auto;
     h4 {
       font-size: $base-font-size;
@@ -23,9 +26,16 @@
     }
     .search-widget {
       float: none;
-      input {
+        color: white;
+      input[type=text] {
         width: 100%;
+          display: block;
       }
+        button[type=submit] {
+            position: absolute;
+            right: -2.25rem;
+            bottom: .125rem;
+        }
     }
   }
 }

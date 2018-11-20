@@ -69,7 +69,12 @@ p {
         }
     }
 }
-
+.h1, h1 {
+    font-size: 1.875rem;
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
 .h1,
 .h2,
 .h3 {
@@ -165,9 +170,12 @@ h6 {font-family: 'Roboto', sans-serif;
 
 label,
 .label {
-    color: $gray-darker;
-    text-align: right;
-    font-size: 0.875rem;
+    color: $brand-primary;
+    font-size: .75rem;
+}
+
+.form-group.row {
+    flex-direction: column;
 }
 
 small.label,
@@ -186,9 +194,11 @@ small.value {
     padding: 0.5rem 1.5rem;
     font-size: .75rem;
     &:focus {
-        background-color: white;
+        background-color: none;
         outline: 0.1rem solid $brand-primary;
         color: $gray-light;
+        border-color: white;
+        box-shadow: none;
     }
 }
 
@@ -211,7 +221,7 @@ small.value {
             padding: 0.625rem 1rem;
             text-transform: uppercase;
             &[data-action="show-password"] {
-                background: $gray;
+                background: $gray-lighter;
                 padding: .78rem 1rem;
             }
         }
@@ -274,6 +284,13 @@ textarea {
         color: white;
     }
 }
+input[type="text"]::placeholder {
+    color: rgba(132, 132, 132, .5);
+}
+input:focus {
+  box-shadow: 0px 0px 4px white;
+  outline-style:none;
+}
 
 .form-group {
     &.has-error {
@@ -286,6 +303,7 @@ textarea {
         }
     }
 }
+
 
 .group-span-filestyle {
     label {
@@ -544,4 +562,7 @@ textarea {
 .separator {
     margin: 0;
     border-color: rgba(0, 0, 0, 0.25);
+}
+#submit-login {
+    width: 100%;
 }

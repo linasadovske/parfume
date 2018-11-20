@@ -75,17 +75,20 @@
     .order-actions {
       a {
         padding: 0 0.125rem;
-      }
+      }       
     }
+    @media (min-width: 769px) {
+            padding: 0;
+      }
     .forgot-password {
-      text-align: center;
+//      text-align: center;
       font-size: $font-size-sm;
       margin-top: 1rem;
       padding-bottom: 0.9375rem;
     }
     .no-account {
-      text-align: center;
-      font-size: $base-font-size;
+//      text-align: center;
+      font-size: .875rem;
     }
   }
 }
@@ -94,7 +97,10 @@
   #content {
     @include customer-area-base-box;
     max-width: 640px;
-    margin: 0 auto;
+//    margin: 0 auto;
+      @media (min-width: 769px) {
+            padding: 0;
+      }
   }
 }
 /*** Addresses page ***/
@@ -366,3 +372,4 @@
 .login-form {
   margin-top: 15px;
 }
+

@@ -49,7 +49,8 @@
 <div id="_desktop_contact_link">
   <div id="contact-link">
     <div class="shop-address">
-        <i class="material-icons">&#xE55F;</i>
+        {* <i class="material-icons">&#xE55F;</i>*}
+        <div class="fum-nav"></div>
         {if $shop.address.address1}
           {$shop.address.address1} {$shop.address.city}
         {else}
@@ -57,7 +58,8 @@
         {/if}
     </div>
     <div class="shop-email">
-      <i class="material-icons">&#xE158;</i>
+      {* <i class="material-icons">&#xE158;</i>*}
+      <div class="mail"></div>
       {if $shop.email}  
       <a href="mailto:{$contact_infos.email}" title="{l s='Contact us' d='Shop.Theme.Global'}">{$contact_infos.email}</a>   
         {* {$shop.email} *}
@@ -67,7 +69,8 @@
     </div>
     <div class="shop-phone">
     {if $contact_infos.phone}
-      <i class="material-icons">&#xE0CD;</i>
+      {* <i class="material-icons">&#xE0CD;</i>*}
+      <div class="fum-phone"></div>
       <a href="tel:+37068474941">{$contact_infos.phone}</a>
       {* {l
         s='Call us: [1]%phone%[/1]'

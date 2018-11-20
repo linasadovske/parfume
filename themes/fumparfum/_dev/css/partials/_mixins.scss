@@ -3,28 +3,34 @@
     position: relative;
     input[type=text] {
       &:focus {
-        outline: 3px $brand-primary solid;
-        color: $gray-darker;
-        background: white;
+//        outline: 3px $brand-primary solid;
+        color: white;
+        background: none;
         + button .search {
           color: $brand-primary;
         }
       }
       border: none;
-      padding: 10px;
+      padding: 3px;
       min-width: 255px;
-      color: $gray;
-      border: $input-btn-border-width solid $input-border-color;
+    display: none;
+    color: $gray-light;
+    background: none;
+      border-bottom: $input-btn-border-width solid $gray-light;
     }
     button[type=submit] {
-      position: absolute;
+//      position: absolute;
       background: none;
       border: none;
-      bottom: 0.3125rem;
-      right: 0.125rem;
-      color: $gray;
+            margin-right: .5rem;
+//      bottom: 0.3125rem;
+//      right: 0.125rem;
+      color: $brand-primary;
+        > * {
+            vertical-align: middle;
+        }
       .search:hover {
-        color: $brand-primary;
+        color: $gray-light;
       }
     }
   }

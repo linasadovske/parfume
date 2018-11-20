@@ -29,6 +29,12 @@
   <section id="main">
 
     {block name='page_header_container'}
+      <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{$urls.base_url} ">{l s='Pradinis'}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{$page.meta.title}</li>
+          </ol>
+        </nav>
       {block name='page_title' hide}
         <header class="page-header">
           <h1>{$smarty.block.child}</h1>

@@ -62,7 +62,7 @@
 
       >
 
-        <i class="material-icons">&#xE7FF;</i>
+        {* <i class="material-icons">&#xE7FF;</i> *}
 
         {l s='Sign out' d='Shop.Theme.Actions'}
 
@@ -80,7 +80,7 @@
 
       >
 
-        <i class="material-icons hidden-md-up logged">&#xE7FF;</i>
+        {* <i class="material-icons hidden-md-up logged">&#xE7FF;</i> *}
 
         <span class="hidden-sm-down">{$customerName}</span>
 
@@ -98,7 +98,7 @@
 
       >
 
-        <i class="material-icons">&#xE7FF;</i>
+        {* <i class="material-icons">&#xE7FF;</i> *}
 
         <span>{l s='Sign in' d='Shop.Theme.Actions'}</span>
 

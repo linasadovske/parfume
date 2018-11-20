@@ -6938,6 +6938,18 @@ $(function () {
         });
     }
 });
+$(document).ready(function () {
+
+    // When your page loads
+    $(function () {
+        // When the toggle areas in your navbar are clicked, toggle them
+        $(".header-nav #search_widget button").click(function (e) {
+            e.preventDefault();
+            $(".header-nav #search_widget input[type=text]").toggle("slow");
+            $(this).unbind(e);
+        });
+    });
+});
 
 /***/ }),
 /* 8 */
