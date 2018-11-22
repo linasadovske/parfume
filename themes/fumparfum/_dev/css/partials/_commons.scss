@@ -87,7 +87,8 @@ h2,
 h3,
 h4,
 h5, 
-h6 {font-family: 'Roboto', sans-serif; 
+h6 {
+    font-family: 'Roboto', sans-serif; 
 }
 
 .h4 {
@@ -95,6 +96,9 @@ h6 {font-family: 'Roboto', sans-serif;
     color: $gray-light;
 }
 
+.h6, h6 {
+    font-weight: 500;
+}
 .btn-primary,
 .btn-secondary {
     background-color: $brand-primary;
@@ -219,10 +223,16 @@ small.value {
         border-color: white;
         box-shadow: none;
     }
-    &:disabled {background-color: transparent;}
+    &:disabled {
+        background-color: transparent;
+    }
+    &.js-child-focus {
+        &.js-visible-password {border: none;}
+    } 
 }
 
 .input-group {
+    &.js-parent-focus {border: $input-btn-border-width solid $gray-light;}
     &.focus {
         outline: 0.1rem solid $brand-primary;
     }
@@ -243,11 +253,15 @@ small.value {
             text-transform: uppercase;
             &[data-action="show-password"] {
                 background: $gray-lighter;
-                padding: .78rem 1rem;
+//                padding: .78rem 1rem;
             }
+        }
+        &:focus {
+            outline-color: $brand-primary;
         }
     }
 }
+
 
 input,
 textarea {
@@ -306,6 +320,12 @@ textarea {
         color: white;
     }
 }
+
+button[type=submit] {
+    &:focus {
+        outline-color: white;
+    }
+}
 input[type="text"]::placeholder {
     color: rgba(132, 132, 132, .5);
 }
@@ -355,26 +375,26 @@ input:focus {
         }
         &.form-control,
         &.input-group {
-            color: $gray-darker;
-            background-color: white;
-            height: $input-height;
+            color: $brand-primary;
+            background-color: transparent;
+            height: 2.125rem;
             padding: 0.175rem 0.5rem;
             width: 3rem;
-            border: $input-btn-border-width solid $input-border-color;
+            border: $input-btn-border-width solid $gray-light;
             float: left;
         }
     }
     .btn-touchspin {
         @extend .btn-default;
-        background-color: white;
-        border: $input-btn-border-width solid $input-border-color;
+        background-color: transparent;
+        border: $input-btn-border-width solid $gray-light;
         height: $input-height / 2 + 0.0625rem;
         &:hover {
-            background-color: $gray-light;
+            background-color: $gray-lighter;
         }
     }
     .input-group-btn-vertical {
-        color: $gray-darker;
+        color: $brand-primary;
         width: auto;
         float: left;
         .bootstrap-touchspin-up {
@@ -397,6 +417,7 @@ input:focus {
             top: 0.0625rem;
             left: 0.1875rem;
             font-size: 0.9375rem;
+            color: $brand-primary;
         }
     }
 }
@@ -447,12 +468,12 @@ input:focus {
             height: 0.9375rem;
             vertical-align: middle;
             cursor: pointer;
-            border: 2px $gray-darker solid;
+            border: 2px $brand-primary solid;
             .checkbox-checked {
                 display: none;
                 margin: -0.25rem -0.125rem;
                 font-size: 1.1rem;
-                color: $gray-darker;
+                color: $brand-primary;
             }
         }
         &:checked + span {
@@ -461,7 +482,7 @@ input:focus {
             }
         }
         &:focus + span {
-            border-color: $gray;
+            border-color: $gray-light;
         }
     }
     label {
@@ -586,7 +607,7 @@ input:focus {
 
 .separator {
     margin: 0;
-    border-color: rgba(0, 0, 0, 0.25);
+    border-color: rgba(255, 255, 255, 0.25);
 }
 #submit-login {
     width: 100%;

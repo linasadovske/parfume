@@ -186,7 +186,7 @@
         {hook h="displayWrapperBottom"}
 
       </section>
-
+{if $page.page_name != "cart"}
 
         <div class="container reassurance my-5">
 
@@ -201,7 +201,7 @@
           </div>
 
         </div>
-
+{/if}
       <footer id="footer">
 
         {block name="footer"}

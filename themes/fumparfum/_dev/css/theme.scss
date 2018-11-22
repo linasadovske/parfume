@@ -66,24 +66,6 @@
     top: 30%;
 }
 
-//.arrowicon-hover-left,
-//.arrowicon-hover,
-//.arrowicon-ne-hover-left,
-//.arrowicon-ne-hover,
-//.swiper-button-next,
-//.swiper-button-prev,
-//.icon-prev,
-//.icon-next {
-//    display: inline-block;
-//    background: url('../img/sprite.png') no-repeat;
-//    overflow: hidden;
-//    text-indent: -9999px;
-//    text-align: left;
-//    width: 50px;
-//    height: 50px;
-//    top: 40%;
-//    //    transition: all .5s;
-//}
 .facebook-social {
     background-position: -2px -0px;
     width: 55px;
@@ -108,21 +90,6 @@
     height: 55px;
 }
 
-//.icon-hover-left {
-//    background-position: -2px -228px;
-//    width: 50px;
-//    height: 50px;
-//}
-//.icon-hover-to-top {
-//    background-position: -2px -280px;
-//    width: 50px;
-//    height: 50px;
-//}
-//.icon-hover {
-//    background-position: -2px -332px;
-//    width: 50px;
-//    height: 50px;
-//}
 .icon-ne-hover-to-top,
 body .mypresta_scrollup {
     background-position: -2px -436px !important;
@@ -170,58 +137,35 @@ body .mypresta_scrollup {
     height: 35px;
 }
 
-.mano-asmenine-informacija {
-    background-position: -2px -614px;
-    width: 34px;
+.mano-asmenine-informacija,
+.mano-uzsakymai,
+.mano-adresai,
+.kreditu-istorija {
     height: 30px;
+    margin-right: 1.7rem;
+}
+#my-account .mano-asmenine-informacija {
+    background-position: -2px -614px!important;
+    width: 34px;
 }
 
 .mano-uzsakymai {
-    background-position: -2px -646px;
+    background-position: -2px -646px!important;
     width: 34px;
-    height: 30px;
 }
 
 .mano-adresai {
-    background-position: -2px -678px;
+    background-position: -2px -678px!important;
     width: 30px;
-    height: 30px;
+    margin-left: 4px;
 }
 
 .kreditu-istorija {
-    background-position: -2px -710px;
+    background-position: -2px -710px!important;
     width: 29px;
-    height: 30px;
+    margin-left: 5px;
 }
 
-//.loginas-fum-hover {
-//    background-position: -34px -678px;
-//    width: 20px;
-//    height: 20px;
-//}
-//
-//.loginas-fum {
-//    background-position: -34px -700px;
-//    width: 20px;
-//    height: 20px;
-//}
-//.swiper-button-prev,
-//.arrowicon-ne-hover-left,
-//.icon-prev {
-//    background-position: -2px -52px;
-//    &:hover {
-//        background-position: -2px -0px;
-//    }
-//}
-//
-//.arrowicon-ne-hover,
-//.swiper-button-next,
-//.icon-next {
-//    background-position: -54px -52px;
-//    &:hover {
-//        background-position: -54px -0px;
-//    }
-//}
 .mail,
 .fum-cartas-btn,
 .fum-cartas,
@@ -256,12 +200,6 @@ body .mypresta_scrollup {
     &:hover {background-position: -2px -66px;}
 }
 
-//.fum-cartas-hover {
-//    background-position: -2px -66px;
-//    width: 23px;
-//    height: 20px;
-//}
-
 .fum-phone {
     margin-right: .5rem;
     background-position: -2px -88px;
@@ -273,6 +211,9 @@ body .mypresta_scrollup {
     background-position: -2px -110px;
     width: 20px;
     height: 20px;
+    &:focus {
+        outline-color: white;
+    }
 }
 
 .fum-nav {
@@ -370,6 +311,12 @@ body .mypresta_scrollup {
     .hidden-unless-lg {
         display: none !important;
     }
+}
+.gray-href {
+    color: $gray-light;
+    text-decoration: underline;
+    font-size: .875rem;
+    &:hover {color: $brand-primary;}
 }
 
 .divider {
@@ -469,6 +416,9 @@ footer .copyright {
         background-attachment: scroll;
     }
 }
+.form-footer {
+    margin-bottom: 3rem;
+}
 
 /*** HEADER ***/
 
@@ -552,7 +502,11 @@ footer .copyright {
             //                &:before {background-position: -34px -678px;}
             //            }
             .account {
-                margin-left: $small-space;
+                margin-left: .25rem;
+                span {color: $gray-light;}
+            }
+            .logout {
+                margin-right: .25rem;
             }
             a {
                 text-transform: uppercase;
@@ -564,7 +518,7 @@ footer .copyright {
         }
         .cart-preview {
             &.active {
-                background: $brand-primary;
+                background: transparent;
                 a,
                 i {
                     color: white;

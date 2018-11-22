@@ -1,7 +1,7 @@
 /*** SOME GENERIC STYLES ***/
 @mixin customer-area-base-box {
-  @include box-shadow;
-  background: white;
+//  @include box-shadow;
+  background: $gray;
   padding: 1rem;
 }
 @mixin customer-area-box {
@@ -71,7 +71,7 @@
 /*** Most of the customer accpunt pages ***/
 .page-customer-account {
   #content {
-    @include customer-area-box;
+//    @include customer-area-box;
     .order-actions {
       a {
         padding: 0 0.125rem;
@@ -81,13 +81,13 @@
             padding: 0;
       }
     .forgot-password {
-//      text-align: center;
+
       font-size: $font-size-sm;
       margin-top: 1rem;
+        margin-bottom: 1.5rem;
       padding-bottom: 0.9375rem;
     }
     .no-account {
-//      text-align: center;
       font-size: .875rem;
     }
   }
@@ -95,7 +95,7 @@
 /*** Login page ***/
 .page-authentication {
   #content {
-    @include customer-area-base-box;
+//    @include customer-area-base-box;
     max-width: 640px;
 //    margin: 0 auto;
       @media (min-width: 769px) {
@@ -163,7 +163,7 @@
   font-size: 0.875rem;
   color: $gray;
   .box {
-    @include customer-area-base-box;
+//    @include customer-area-base-box;
     margin-bottom: 1rem;
   }
   h3 {
@@ -295,35 +295,40 @@
 .page-my-account {
   #content {
     .links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
       a {
-        text-align: center;
         display: inline-block;
-        font-size: $base-font-size;
-        font-weight: 700;
+        font-size: .875rem;
         text-transform: uppercase;
-        color: $gray;
+        color: $brand-primary;
         padding: 0 0.9375rem;
         margin-bottom: 1.875rem;
         span.link-item {
-          display: block;
-          height: 100%;
-          @include customer-area-base-box;
-        }
+            display: flex;
+            align-items: center;
+            width: 100%;
+            background-color: $gray-lighter;
+            position: relative;
+            padding: .9rem 1.25rem;
+            &:after {
+                position: absolute;
+                content: "";
+                top: .85rem;
+                bottom: .75rem;
+                left: 4.2rem;
+                height: 50%;
+                width: 1px;
+                background: $gray-light;
+            }
+          }
         i {
-          display: block;
           font-size: 2.6rem;
-          width: 100%;
-          color: $gray-darker;
-          padding-bottom: 3.4rem;
+          color: $brand-primary;
         }
         &:hover {
-          color: $gray-darker;
-          i {
-            color: $brand-primary;
-          }
+          color: $gray-light;
+//          i {
+//            color: $brand-lighter;
+//          }
         }
       }
     }

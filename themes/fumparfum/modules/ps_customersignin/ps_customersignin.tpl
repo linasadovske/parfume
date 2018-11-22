@@ -67,7 +67,7 @@
         {l s='Sign out' d='Shop.Theme.Actions'}
 
       </a>
-
+      /      
       <a
 
         class="account"
@@ -82,7 +82,7 @@
 
         {* <i class="material-icons hidden-md-up logged">&#xE7FF;</i> *}
 
-        <span class="hidden-sm-down">{$customerName}</span>
+        <span class="hidden-sm-down text-capitalize">{$customerName}</span>
 
       </a>
 

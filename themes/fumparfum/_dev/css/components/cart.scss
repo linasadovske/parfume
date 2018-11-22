@@ -1,3 +1,10 @@
+#cart {
+    .card {
+        &.cart-container {
+            border: 1px solid $gray-light;
+        }
+    }
+}
 .cart-grid {
   margin-bottom: 1rem;
 }
@@ -16,7 +23,7 @@
     white-space: inherit;
   }
   .value {
-    color: $gray-darker;
+    color: $brand-primary;
     float: right;
   }
   &.cart-summary-subtotals {
@@ -30,7 +37,7 @@
 .cart-grid-body {
   a.label {
     &:hover {
-      color: $brand-primary;
+      color: $gray-light;
     }
   }
   .card-block {
@@ -50,7 +57,7 @@
     margin-bottom: 0;
     .cart-summary-line {
       .label {
-        color: $gray;
+        color: $brand-primary;
         .code {
           text-decoration: underline;
           cursor: pointer;
@@ -88,7 +95,7 @@
     }
   }
   .promo-input {
-    color: $gray-darker;
+    color: $brand-primary;
     border: $gray 1px solid;
     height: 2.5rem;
     text-indent: 0.625rem;
@@ -133,10 +140,19 @@
       line-height: inherit;
       text-align: left;
       white-space: inherit;
+        &.title {
+            text-transform: uppercase;
+            font-size: 1.125rem;
+        }
+            
     }
+      >.value{font-size: .75rem;}
     > .out-of-stock {
       color: red;
     }
+      &.product-price {
+          &.h5 {font-size: .75rem;}
+      }
     > .available {
       color: $brand-success;
     }
@@ -151,10 +167,10 @@
 .product-line-grid-right {
   .cart-line-product-actions,
   .product-price {
-    color: $gray-darker;
+    color: $brand-primary;
     line-height: 36px;
     .remove-from-cart {
-      color: $gray-darker;
+      color: $brand-primary;
       display: inline-block;
       margin-top: 0.3125rem;
     }
