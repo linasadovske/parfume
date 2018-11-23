@@ -886,8 +886,9 @@ footer .copyright {
             .blockcart {
                 margin-left: 0;
                 background: inherit;
+                padding: .75rem 0;
                 &.active {
-                    margin-left: 0.5rem;
+//                    margin-left: 0.5rem;
                 }
                 &.inactive {
                     .cart-products-count {

@@ -54,9 +54,9 @@
 
       {foreach from=$elements item=element}
 
-        <li class="col-md-4 col-xs-12">
+        <li class="{if $page.page_name != "checkout"}col-md-4 {/if}col-xs-12">
 
-          <div class="block-reassurance-item text-center">
+          <div class="block-reassurance-item{if $page.page_name != "checkout"} text-center {/if}">
 
             <img src="{$element.image}" alt="{$element.text}">
             <br>

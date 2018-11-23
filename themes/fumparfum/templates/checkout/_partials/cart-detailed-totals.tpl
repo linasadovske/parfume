@@ -49,20 +49,20 @@
     {include file='checkout/_partials/cart-voucher.tpl'}
   {/block}
 
-  <hr class="separator">
 
   <div class="card-block">
+  
+    <div class="cart-summary-line">
+      <span class="label">{$cart.subtotals.tax.label}</span>
+      <span class="value">{$cart.subtotals.tax.value}</span>
+    </div>
+    
     <div class="cart-summary-line cart-total">
       <span class="label">{$cart.totals.total.label} {$cart.labels.tax_short}</span>
       <span class="value">{$cart.totals.total.value}</span>
     </div>
-
-    <div class="cart-summary-line">
-      <small class="label">{$cart.subtotals.tax.label}</small>
-      <small class="value">{$cart.subtotals.tax.value}</small>
-    </div>
+    
   </div>
 
-  <hr class="separator">
 </div>
 {/block}

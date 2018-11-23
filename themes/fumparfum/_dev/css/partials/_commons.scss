@@ -99,8 +99,7 @@ h6 {
 .h6, h6 {
     font-weight: 500;
 }
-.btn-primary,
-.btn-secondary {
+.btn-primary {
     background-color: $brand-primary;
     color: $gray;
     border-color: transparent;
@@ -110,6 +109,7 @@ h6 {
     padding: 0.5rem 1.25rem;
     border-radius: 0;
     transition: all .5s;
+        font-size: .875rem;
     &.btn-lg {
         padding: .5rem 15%;
         font-size: .875rem;
@@ -154,7 +154,24 @@ h6 {
         margin-right: $small-space;
     }
 }
-
+.btn-secondary {
+    background-color: $gray-lighter;
+    border-color: $gray-lighter;
+    color: $brand-primary;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: .5rem 1.25rem;
+    border-radius: 0;
+    transition: all .5s;
+    font-size: .875rem;
+    &:hover {
+        background-color: $brand-primary;
+        color: $gray-lighter;
+    }
+    &:focus {
+        outline-color: $brand-primary;
+    }
+}
 .btn-tertiary {
     @extend .btn-secondary;
     background-color: #F7F7F7;
@@ -230,6 +247,12 @@ small.value {
         &.js-visible-password {border: none;}
     } 
 }
+button {
+    &:focus {
+        outline: 0.1rem solid $brand-primary;
+    }
+}
+
 
 .input-group {
     &.js-parent-focus {border: $input-btn-border-width solid $gray-light;}
@@ -431,7 +454,7 @@ input:focus {
     cursor: pointer;
     border-radius: 50%;
     border: $gray 2px solid;
-    background: white;
+    background: none;
     margin-right: 1.25rem;
     input[type="radio"] {
         opacity: 0;
@@ -491,11 +514,12 @@ input:focus {
 }
 
 .text-muted {
+    color: $gray-light;
     font-size: 0.875rem;
 }
 
 .done {
-    color: $brand-success;
+    color: $brand-primary;
     display: inline-block;
     padding: 0 0.8125rem;
     margin-right: 1.563rem;

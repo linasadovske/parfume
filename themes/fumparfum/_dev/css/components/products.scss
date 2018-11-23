@@ -69,7 +69,7 @@
 .input-radio {
     &:checked + span,
     &:hover + span {
-        border: 2px solid $gray-darker;
+        border: 2px solid $gray-light;
     }
 }
 
@@ -198,21 +198,22 @@
 }
 
 .product-discount {
-    color: $gray;
+    color: $gray-light;
     .regular-price {
         text-decoration: line-through;
         font-weight: normal;
         margin-right: $small-space;
+        font-size: .625rem;
     }
 }
 
 .has-discount {
     &.product-price,
     p {
-        color: $brand-secondary;
+        color: $brand-primary;
     }
     .discount {
-        background: $brand-secondary;
+        background: $gray-light;
         color: white;
         font-weight: 600;
         padding: 0.3125rem $small-space;
@@ -419,16 +420,38 @@
 }
 
 #blockcart-modal {
-    color: $gray-darker;
+    color: $brand-primary;
+    .cart-content-btn {
+        display: flex;
+        > * {
+            line-height: 2.5;    
+            margin-right: 3px;
+        }
+    }
+    p {
+        font-size: .875rem;
+        margin-bottom: .5rem;
+    }
+    .close {
+        color: $brand-primary;
+        box-shadow: none;
+        opacity: 1;
+        font-weight: 400;
+        &:hover {color: $brand-primary;}
+    }
     .modal-header {
-        background: $brand-success;
+        background: #000;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom: 1px solid $brand-primary;
     }
     .modal-body {
-        background: $gray-light;
+        background: #000;
         padding: 3.125rem 1.875rem;
         .divide-right span {
             display: inline-block;
             margin-bottom: 0.3125rem;
+            font-size: .875rem;
         }
     }
     .modal-dialog {
@@ -439,8 +462,8 @@
         width: 100%;
     }
     .modal-title {
-        font-weight: 600;
-        color: white;
+        display: flex;
+        color: $brand-primary;
         font-size: 1.125rem;
         i.material-icons {
             margin-right: $large-space;
@@ -448,10 +471,13 @@
     }
     .product-name {
         color: $brand-primary;
-        font-size: 1.125rem;
+        font-size: 1.875rem;
     }
+    .modal-price {font-size: 1.875rem;}
     .cart-products-count {
-        font-size: 1.125rem;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
     }
     .cart-content {
         padding-left: $extra-large-space;
@@ -466,7 +492,7 @@
         }
     }
     .divide-right {
-        border-right: $gray 1px solid;
+        border-right: $brand-primary 1px solid;
     }
 }
 
@@ -538,7 +564,9 @@
         color: $brand-warning;
     }
 }
-
+.nav-link[href="#product-details"] {
+    display: none;
+}
 #product-details {
     .label {
         font-size: .75rem;
@@ -798,11 +826,20 @@ li.product-flag {
         }
         .modal-body {
             padding: 1.875rem;
+            .cart-content-btn {
+                flex-wrap: wrap;
+                padding: 0 .75rem;
+                > * {
+                    width: 100%;
+                    margin-bottom: .25rem;
+                }
+            }
         }
     }
 }
 
 @include media-breakpoint-down(sm) {
+    .tabs {padding: 0;}
     #blockcart-modal {
         .divide-right {
             border-right: none;

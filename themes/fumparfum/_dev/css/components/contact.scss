@@ -32,7 +32,9 @@
   }
     .store-info {
         font-size: .75rem;
-        margin-bottom: 3rem;
+        .store-info {
+            margin-bottom: 3rem;
+        }        
     }
 }
 .contact-form {

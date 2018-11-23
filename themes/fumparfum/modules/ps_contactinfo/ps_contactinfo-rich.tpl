@@ -26,7 +26,8 @@
 <div class="contact-rich px-3 px-md-0">
   <h4>{l s='Store information' d='Shop.Theme.Global'}</h4>
   
-    <p class="store-info">Visi FUMparFUM aromatai yra itin riboto tiražo, pagaminti rankomis iš aukščiausios kokybės natūralių ir sintetinių esencijų, laikantis tarptautinių IFRA rekomendacijų ir Geros Gamybos Praktikos reikalavimų, pagal ES standartus, FUMparFUM laboratorijoje Vilniuje.</p>
+    <p class="store-info">{l s='Visi FUMparFUM aromatai yra itin riboto tiražo, pagaminti rankomis iš aukščiausios kokybės natūralių ir sintetinių esencijų, laikantis tarptautinių IFRA rekomendacijų ir Geros Gamybos Praktikos reikalavimų, pagal ES standartus, FUMparFUM laboratorijoje Vilniuje.' d='Shop.Theme.Global'}</p>
+    <p class="store-info">{l s='Pardavėjas: Aistis Mickevičius, individualios veiklos pažymos nr. 311514.' d='Shop.Theme.Global'}</p>
   <div class="block d-flex align-items-center">
     {* <div class="icon"><i class="material-icons">&#xE55F;</i></div>*}
     <div class="fum-nav"></div>

@@ -23,15 +23,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="product-line-grid row">
+
   <!--  product left content: image-->
-  <div class="product-line-grid-left col-md-3 col-xs-4">
+  <div class="product-line-grid-left col-md-2 col-xs-4">
     <span class="product-image media-middle">
       <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}">
     </span>
   </div>
 
   <!--  product left body: description -->
-  <div class="product-line-grid-body col-md-4 col-xs-8">
+  <div class="product-line-grid-body col-md-5 col-xs-8">
     <div class="product-line-info">
       <a class="label title" href="{$product.url}" data-id_customization="{$product.id_customization|intval}">{$product.name}</a>
     </div>
@@ -135,13 +136,11 @@
           </div>
           <div class="col-md-6 col-xs-2 price">
             <span class="product-price">
-              <strong>
                 {if isset($product.is_gift) && $product.is_gift}
                   <span class="gift">{l s='Gift' d='Shop.Theme.Checkout'}</span>
                 {else}
                   {$product.total}
                 {/if}
-              </strong>
             </span>
           </div>
         </div>

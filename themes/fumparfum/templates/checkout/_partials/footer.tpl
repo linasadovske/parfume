@@ -23,7 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='footer'}
-<div class="text-sm-center">
-  {l s='%copyright% %year% - Ecommerce software by %prestashop%' sprintf=['%prestashop%' => 'PrestaShop™', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme.Global'}
-</div>
+    <div class="text-sm-center">
+        {l s='All rights reserved %copyright% %year%' sprintf=['%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme.Global'} 
+    </div>
+    <div class="text-sm-center">
+        {l s='Made by'} 
+        <a class="gray" href="https://adisoft.lt/" target="_blank" title="{l s='Adisoft'}">
+            {l s='Adisoft'}
+        </a>
+    </div>
 {/block}

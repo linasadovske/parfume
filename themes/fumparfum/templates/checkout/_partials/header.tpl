@@ -26,7 +26,7 @@
   {block name='header_nav'}
     <nav class="header-nav">
       <div class="container">
-        <div class="row">
+        <div class="row align-items-center">
           <div class="col-md-6 hidden-sm-down" id="_desktop_logo">
             <a href="{$urls.base_url}">
               <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name} {l s='logo' d='Shop.Theme.Global'}">

@@ -1,13 +1,35 @@
 body#checkout {
-  color: $gray-darker;
+  color: $brand-primary;
+    .h4 {font-size: 1rem;}
+    .form-group {
+        &.row {
+            flex-direction: row;
+        }
+    }
+    #block-reassurance {
+        .row {
+            flex-direction: column;
+            .block-reassurance-item {
+                display: flex;
+                align-items: center;
+                border-top: 1px solid $gray-light;
+                img {
+                    height: 100%;
+                    margin-right: 1rem;
+                }
+            }
+        }
+    }
   #header .header-nav {
     max-height: none;
-    padding: 5rem 0 0.9375rem;
+//    padding: 5rem 0 0.9375rem;
+      padding: 1rem;
+      background-color: black;
     border: none;
     margin-bottom: 0;
-    @include box-shadow;
+      a {text-decoration: none;}
     .logo {
-      max-height: 4.375rem;
+//      max-height: 4.375rem;
       width: auto;
     }
   }
@@ -18,9 +40,14 @@ body#checkout {
       margin-top: 0.1875rem;
     }
   }
-  a:hover {
-    color: #1a8196;
-  }
+    
+    a {
+        text-decoration: underline;
+        :hover {
+        color: $gray-light;
+      }
+    }
+    
   section#content {
     margin-bottom: 1.563rem;
   }
@@ -28,20 +55,33 @@ body#checkout {
     min-height: 100%;
   }
   section.checkout-step {
-    @include box-shadow;
-    background-color: white;
-    border-bottom: 1px rgba(0, 0, 0, 0.25) solid;
+    background-color: $gray;
+    border: 1px solid $gray-light;
+      border-bottom: 0;
     padding: 0.9375rem;
     &:last-child {
-      border: 0;
+      border-bottom: 1px solid $gray-light;
     }
     .step-title {
       text-transform: uppercase;
       cursor: pointer;
       margin-bottom: 0;
+        font-size: 1.125rem;
+        font-weight: 400;
+        
     }
     .content {
-      padding: 0 2.313rem;
+      padding: 0 1rem;
+        .nav-link {
+            padding: 0;
+            color: $gray-light;
+            text-decoration: none;
+            font-weight: 400;;
+            font-size: .875rem;
+            &.active {
+                color: $brand-primary;
+            }
+        }
     }
     .step-edit {
       text-transform: lowercase;
@@ -62,6 +102,7 @@ body#checkout {
     &.-current {
       .content {
         display: block;
+        margin-top: 2rem;
       }
     }
     &.-current.-reachable.-complete {
@@ -123,7 +164,7 @@ body#checkout {
       padding: 0.625rem 3.125rem;
     }
     .form-footer {
-      text-align: center;
+      text-align: left;
     }
     #conditions-to-approve {
       padding-top: 1rem;
@@ -140,8 +181,10 @@ body#checkout {
       }
     }
     .step-number {
-      display: inline-block;
-      padding: 0.625rem;
+        display: inline-block;
+        padding: .25rem .625rem;
+        border-right: 1px solid $gray-light;
+        margin-right: .625rem;
     }
     .address-selector {
       display: flex;
@@ -153,10 +196,10 @@ body#checkout {
       background: $gray-lighter;
       flex: 0 0 49%;
       margin-bottom: $small-space;
-      border: 3px solid transparent;
+      border: 1px solid transparent;
       &.selected {
-        background: white;
-        border: $brand-primary 3px solid;
+        background: $gray-lighter;
+        border: $brand-primary 1px solid;
       }
     }
     .address-alias {
@@ -204,7 +247,9 @@ body#checkout {
     .add-address {
       margin-top: 1.25rem;
       a {
-        color: $gray-darker;
+        color: $brand-primary;
+          text-decoration: underline;
+          &:hover {color: $gray-light;}
         i {
           font-size: $font-size-lg;
         }
@@ -241,7 +286,8 @@ body#checkout {
       font-size: $font-size-sm;
     }
     .forgot-password {
-      margin-left: 14.38rem;
+        font-size: .75rem;
+        margin-bottom: 1.5rem;
     }
   }
   .additional-information {
@@ -259,8 +305,9 @@ body#checkout {
   .cancel-address {
     margin: 0.625rem;
     display: block;
-    color: $gray;
+    color: $gray-light;
     text-decoration: underline;
+      font-size: .75rem;
   }
   .modal-content {
     padding: $medium-space;
@@ -344,10 +391,11 @@ body#checkout {
     }
   }
   #footer {
-    @include box-shadow;
-    padding: 0.9375rem;
-    background: white;
-    color: $gray;
+//    @include box-shadow;
+    padding: 1.5rem 0.9375rem;
+    background: black;
+    color: $brand-primary;
+      font-size: .75rem;
   }
 }
 /**** ORDER CONFIRMATION *****/

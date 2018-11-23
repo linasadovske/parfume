@@ -101,7 +101,7 @@
                   {hook h='displaySearch'}
                 {/block}
              </div>
-              <div class="col-2" id="_mobile_cart"></div>
+              <div class="col-2 px-0" id="_mobile_cart"></div>
           </div>
            
            
