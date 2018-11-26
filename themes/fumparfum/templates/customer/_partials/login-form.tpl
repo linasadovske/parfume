@@ -46,7 +46,7 @@
     </section>
 
     {block name='login_form_footer'}
-      <footer class="form-footer col-md-6 pl-md-0">
+      <footer class="form-footer col-md-6 pl-md-0 px-0" >
         <input type="hidden" name="submitLogin" value="1">
         {block name='form_buttons'}
           <button id="submit-login" class="btn btn-primary btn-lg" data-link-action="sign-in" type="submit" class="form-control-submit">

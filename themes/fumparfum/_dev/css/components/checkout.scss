@@ -1,6 +1,12 @@
 body#checkout {
   color: $brand-primary;
-    .h4 {font-size: 1rem;}
+    p {
+        font-size: .75rem;
+    }
+    .h4 {
+        font-size: 1rem;
+        color: $brand-primary;
+    }
     .form-group {
         &.row {
             flex-direction: row;
@@ -63,11 +69,14 @@ body#checkout {
       border-bottom: 1px solid $gray-light;
     }
     .step-title {
-      text-transform: uppercase;
-      cursor: pointer;
-      margin-bottom: 0;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-bottom: 0;
         font-size: 1.125rem;
         font-weight: 400;
+        border-bottom: 1px solid $gray-light;
+        margin: -1rem;
+        padding: 1rem;
         
     }
     .content {
@@ -105,6 +114,7 @@ body#checkout {
         margin-top: 2rem;
       }
     }
+    &.checkout-step.-reachable.-complete .step-title {color: $gray-light;}
     &.-current.-reachable.-complete {
       .done,
       .step-edit {
@@ -117,6 +127,9 @@ body#checkout {
         display: block;
       }
     }
+      &.-unreachable.checkout-step {
+          .step-title {color: $gray-light;}
+      }
     &.-reachable.-complete {
       h1 {
         .done {
@@ -165,6 +178,7 @@ body#checkout {
     }
     .form-footer {
       text-align: left;
+        margin-bottom: 1rem;
     }
     #conditions-to-approve {
       padding-top: 1rem;
@@ -328,13 +342,14 @@ body#checkout {
     h4.h4 {
       margin-top: 0.625rem;
       margin-bottom: 1.25rem;
-      color: $gray-darker;
+      color: $gray-light;
     }
     h4.black {
-      color: #000000;
+      color: $brand-primary;
     }
     h4.addresshead {
       margin-top: 0.1875rem;
+        font-size: .875rem;
     }
     .noshadow {
       box-shadow: none;
@@ -342,8 +357,9 @@ body#checkout {
     #order-items {
       border-right: 0;
       h3.h3 {
-        color: $gray-darker;
+        color: $gray-light;
         margin-top: 1.25rem;
+        font-size: 1rem;
       }
       table {
         tr {
@@ -356,29 +372,31 @@ body#checkout {
       }
     }
     .order-confirmation-table {
-      padding: 1rem;
-      margin-bottom: 2rem;
-      background-color: #fff;
-      border: 3px solid #e5e5e5;
-      border-radius: 0;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        background-color: $gray;
+        border: 1px solid $gray-light;
+        border-radius: 0;
+        font-size: .875em;
     }
     .summary-selected-carrier {
       margin-bottom: 0.75rem;
-      background-color: #fff;
-      border: 1px solid #e5e5e5;
+      background-color: $gray;
+      border: 1px solid $gray-light;
       border-radius: 0;
       padding: 1rem;
+      font-size: .75rem;
     }
     .step-edit {
       display: inline;
-      color: $gray;
+      color: $gray-light;
     }
     .step-edit:hover {
       cursor: pointer;
     }
     a {
       .step-edit {
-        color: $gray;
+        color: $gray-light;
       }
     }
   }
@@ -388,6 +406,12 @@ body#checkout {
     textarea {
       max-width: 100%;
       margin-bottom: 10px;
+        background-color: $gray;
+        border: 1px solid $gray-light;
+        color: $gray-light;
+        &:focus {
+            outline-color: $brand-primary;
+        }
     }
   }
   #footer {
@@ -397,10 +421,40 @@ body#checkout {
     color: $brand-primary;
       font-size: .75rem;
   }
+    .text-muted {
+        color: $gray-light;
+    }
+    span[href="nav-separator"] {
+        margin: 0 .5rem;
+    }
+    
+    .media-left {
+        margin-right: 1rem;
+    }
 }
+
+#js-checkout-summary {
+    .card-block {
+        border: 1px solid $gray-light;
+        padding: 1rem;
+        &+ .card-block {
+            margin-top: 2rem;
+        }
+        p,
+        a {
+            font-size: .75rem;
+        }
+    }
+}
+#checkout-payment-step {
+    .card-block {
+        font-size: .75rem;
+    }
+}
+
 /**** ORDER CONFIRMATION *****/
 #order-details {
-  padding-left: $large-space;
+//  padding-left: $large-space;
   > .card-title {
     margin-bottom: $large-space;
   }
@@ -412,12 +466,13 @@ body#checkout {
   }
 }
 #order-items {
-  border-right: $gray-light 1px solid;
+//  border-right: $gray-light 1px solid;
   hr {
-    border-top-color: $gray-darker;
+    border-top-color: $gray-lighter;
   }
   table {
     width: 100%;
+      margin-bottom: 2rem;
     tr {
       height: $large-space;
       td {
@@ -429,12 +484,16 @@ body#checkout {
   }
   .order-line {
     margin-top: 1rem;
+    font-size: .875em;
+    align-items: center;
+    border-top: 1px solid $gray-lighter;
+    padding-top: 1rem;
   }
   .image {
     img {
         width: 100%;
         border: 1px solid gray-lighter;
-        margin-bottom: 1rem;
+//        margin-bottom: 1rem;
     }
   }
   .details {
@@ -452,8 +511,16 @@ body#checkout {
     width: 50%;
     margin: 0 auto 1rem;
   }
+    h3.card-title.h3 {
+        font-size: 1.25rem;
+    }
 }
 @include media-breakpoint-down(md) {
+    body#checkout section.checkout-step {
+        .step-title {
+            font-size: .875rem;
+        }
+    }
   .done {
     margin: 0;
     padding: 0;
@@ -470,6 +537,7 @@ body#checkout {
     .custom-radio {
       flex: 0 0 auto;
     }
+      label {margin-top: 1rem;}
   }
   .condition-label {
     label[for="conditions_to_approve[terms-and-conditions]"] {
@@ -501,6 +569,7 @@ body#checkout {
     }
     .form-group {
       margin-bottom: 0.5rem;
+            overflow-x: hidden;
     }
   }
   #order-items {
@@ -526,7 +595,27 @@ body#checkout {
       padding-bottom: 1rem;
     }
   }
+    
+    #js-checkout-summary {
+        .card-block {
+            border-top: none;
+            &+ .card-block {
+                margin-top: 0;
+            }
+        }
+    }
 
+    body#checkout {
+        #block-reassurance {
+            li {
+                &:first-child {
+                    .block-reassurance-item {
+                        border-top: none;
+                    } 
+                }
+            }
+        }
+    }
 }
 
 @include media-breakpoint-down(xs) {

@@ -461,10 +461,12 @@ footer .copyright {
         background-color: $gray;
         #menu-icon {
             vertical-align: middle;
-            cursor: pointer;
+            cursor: pointer;                  
             //            margin: 0 1rem;
             .material-icons {
-                line-height: 50px;
+                line-height: inherit;
+                border: 1px solid $brand-primary;
+                padding: .2rem .15rem;
             }
         }
         .right-nav {
@@ -806,6 +808,9 @@ footer .copyright {
             .search-widget {
                 min-width: inherit;
             }
+            a[data-depth="0"] {
+                color: $brand-primary;
+            }
         }
     }
     #products .product-miniature,
@@ -901,7 +906,7 @@ footer .copyright {
             background: $gray-light;
             padding-bottom: 0;
             a[data-depth="0"] {
-                color: $gray-darker;
+                color: $brand-primary;
             }
             .search-widget {
                 width: 100%;

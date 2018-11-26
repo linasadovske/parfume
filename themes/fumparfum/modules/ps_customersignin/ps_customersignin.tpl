@@ -57,6 +57,8 @@
         class="logout hidden-sm-down"
 
         href="{$logout_url}"
+        
+        title="{l s='Sign out' d='Shop.Theme.Actions'}"
 
         rel="nofollow"
 

@@ -9,13 +9,14 @@
                 class="{if $depth >= 0}dropdown-item{/if}{if $depth === 1} dropdown-submenu{/if}"
                 href="{$node.url}" data-depth="{$depth}"
                 {if $node.open_in_new_window} target="_blank" {/if}
+                title="{$node.label}"
               >{$node.label}
                 {if $node.children|count}
                   {* Cannot use page identifier as we can have the same page several times *}
                   {assign var=_expand_id value=10|mt_rand:100000}
                   <span class="">
 <!--                   float-xs-right hidden-md-up-->
-                    <span data-target="#top_sub_menu_{$_expand_id}" data-toggle="collapse" class="navbar-toggler collapse-icons">
+                    <span data-target="#top_sub_menu_{$_expand_id}" data-toggle="collapse" class="navbar-toggler collapse-icons float-right float-md-none">
                       <i class="material-icons add">&#xE313;</i>
                       <i class="material-icons remove">&#xE316;</i>
                     </span>

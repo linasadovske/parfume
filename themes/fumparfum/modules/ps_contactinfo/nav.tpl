@@ -71,7 +71,7 @@
     {if $contact_infos.phone}
       {* <i class="material-icons">&#xE0CD;</i>*}
       <div class="fum-phone"></div>
-      <a href="tel:+37068474941">{$contact_infos.phone}</a>
+      <a href="tel:+37068474941" title="{l s='Contact us' d='Shop.Theme.Global'}">{$contact_infos.phone}</a>
       {* {l
         s='Call us: [1]%phone%[/1]'
         sprintf=[
@@ -82,7 +82,7 @@
         d='Shop.Theme.Global'
       } *}
     {else}
-      <a href="{$urls.pages.contact}">{l s='Contact us' d='Shop.Theme.Global'}</a>
+      <a href="{$urls.pages.contact}" title="{l s='Contact us' d='Shop.Theme.Global'}">{l s='Contact us' d='Shop.Theme.Global'}</a>
     {/if}
     </div>
   </div>

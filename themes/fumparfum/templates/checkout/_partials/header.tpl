@@ -35,21 +35,31 @@
           <div class="col-md-6 text-xs-right hidden-sm-down">
             {hook h='displayNav1'}
           </div>
+          {*
           <div class="hidden-md-up text-sm-center mobile">
-            {hook h='displayNav2'}
-            <div class="float-xs-left" id="menu-icon">
-              <i class="material-icons">&#xE5D2;</i>
-            </div>
-            <div class="float-xs-right" id="_mobile_cart"></div>
-            <div class="float-xs-right" id="_mobile_user_info"></div>
+            {hook h='displayNav2'}            
+            <div class="col" id="_mobile_user_info"></div>
+          </div>
+          *}
+        </div>
+        <div class="row justify-content-center hidden-md-up mobile">
+          <div class="hidden-md-up text-sm-center mobile">
             <div class="top-logo" id="_mobile_logo"></div>
-            <div class="clearfix"></div>
           </div>
         </div>
-      </div>
+        {*
+        <div class="d-flex align-items-center justify-content-between hidden-md-up mobile">
+            <div class="col-2" id="menu-icon">
+                <i class="material-icons">&#xE5D2;</i>
+            </div>
+            <div class="col-2" id="_mobile_cart"></div>
+        </div>
+        *}
+    </div>
+
     </nav>
   {/block}
-
+{*
   {block name='header_top'}
     <div class="header-top hidden-md-up">
       <div class="container">
@@ -73,4 +83,6 @@
     </div>
     {hook h='displayNavFullWidth'}
   {/block}
+  
+  *}
 {/block}

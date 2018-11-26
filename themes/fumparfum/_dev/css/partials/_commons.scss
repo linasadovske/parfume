@@ -453,7 +453,7 @@ input:focus {
     vertical-align: middle;
     cursor: pointer;
     border-radius: 50%;
-    border: $gray 2px solid;
+    border: $brand-primary 2px solid;
     background: none;
     margin-right: 1.25rem;
     input[type="radio"] {
@@ -514,8 +514,8 @@ input:focus {
 }
 
 .text-muted {
-    color: $gray-light;
-    font-size: 0.875rem;
+    color: $gray-light!important;
+    font-size: .875em;
 }
 
 .done {

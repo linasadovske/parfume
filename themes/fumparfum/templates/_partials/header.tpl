@@ -148,7 +148,7 @@
 
               <h1>
 
-                <a href="{$urls.base_url}">
+                <a href="{$urls.base_url}" title="{$shop.name}">
 
                   <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
 
@@ -158,7 +158,7 @@
 
             {else}
 
-                <a href="{$urls.base_url}">
+                <a href="{$urls.base_url}" title="{$shop.name}">
 
                   <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
 
@@ -184,13 +184,13 @@
 
         <div class="js-top-menu-bottom">
 
-{*
+
           <div id="_mobile_currency_selector"></div>
-
+{*
           <div id="_mobile_language_selector"></div>
-*}
-          <div id="_mobile_contact_link"></div>
 
+          <div id="_mobile_contact_link"></div>
+*}
         </div>
 
       </div>

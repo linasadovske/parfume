@@ -66,14 +66,14 @@
 
         <div class="form-group row">
           <label class="col-md-3 form-control-label"></label>
-          <div class="col-md-9">
+          <div class="col-md-5">
             <textarea rows="3" name="msgText" class="form-control"></textarea>
           </div>
         </div>
 
       </section>
 
-      <footer class="form-footer text-sm-center">
+      <footer class="form-footer">
         <input type="hidden" name="id_order" value="{$order.details.id}">
         <button type="submit" name="submitMessage" class="btn btn-primary form-control-submit">
           {l s='Send' d='Shop.Theme.Actions'}

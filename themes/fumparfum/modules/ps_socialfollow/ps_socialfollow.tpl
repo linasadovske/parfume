@@ -56,7 +56,9 @@
 
       {foreach from=$social_links item='social_link'}
 
-        <li class="{$social_link.class}"><a href="{$social_link.url}" target="_blank">{$social_link.label}</a></li>
+        <li class="{$social_link.class}">
+            <a href="{$social_link.url}" target="_blank" title="{$social_link.label}">{$social_link.label}</a>
+        </li>
 
       {/foreach}
 

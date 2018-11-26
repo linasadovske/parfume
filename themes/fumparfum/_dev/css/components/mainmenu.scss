@@ -102,12 +102,14 @@
 
 #mobile_top_menu_wrapper {
   padding: 15px;
-  background: white;
+  background: $gray;
   #top-menu {
     margin-bottom: 0.625rem;
+      background: none;
+      width: 100%;
   }
   .top-menu {
-    color: $gray-darker;
+    color: $brand-primary;
     .collapse-icons[aria-expanded="true"] {
       .add {
         display: none;
@@ -126,6 +128,9 @@
     a[data-depth="0"] {
       padding: 0.625rem;
       border-bottom: 1px solid $gray-lighter;
+        &:last-child {
+            border-bottom: none;
+        }
     }
     .collapse {
       display: none;
