@@ -14,7 +14,11 @@
     .products {
         display: flex;
         flex-wrap: wrap;
-        justify-content: flex-start;
+        justify-content: space-around;
+        &:after {
+            content: '';
+          width: 250px;
+        }
     }
     .product-thumbnail {
         display: block;

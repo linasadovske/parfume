@@ -68,13 +68,13 @@
 
         <div class="hidden-sm-down row w-100 mx-0">
 
-          <div class="col-md-5 col-xs-12">
+          <div class="col-lg-5 col-md-4 col-12">
 
             {hook h='displayNav1'}
 
           </div>
 
-          <div class="col-md-7 right-nav">
+          <div class="col-lg-7 col-md-8 right-nav">
 
               {hook h='displayNav2'}
 
@@ -92,21 +92,17 @@
           </div>
           <div class="d-flex align-items-center">
               <div class="col-2" id="menu-icon">
-
                 <i class="material-icons d-inline">&#xE5D2;</i>
-
               </div>
               <div class="col-8" id="_mobile_search">
-              {block name='search'}
+                {block name='search'}
                   {hook h='displaySearch'}
                 {/block}
              </div>
               <div class="col-2 px-0" id="_mobile_cart"></div>
-          </div>
+          </div>           
            
-           
-           
-            {*
+         {*        
           <div class="float-xs-left" id="menu-icon">
 
             <i class="material-icons d-inline">&#xE5D2;</i>
@@ -186,11 +182,11 @@
 
 
           <div id="_mobile_currency_selector"></div>
-{*
+
           <div id="_mobile_language_selector"></div>
 
-          <div id="_mobile_contact_link"></div>
-*}
+          {* <div id="_mobile_contact_link"></div> *}
+
         </div>
 
       </div>

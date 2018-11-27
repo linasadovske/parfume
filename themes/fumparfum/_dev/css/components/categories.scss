@@ -8,7 +8,7 @@
   .up {
     margin-bottom: 1rem;
     .btn-secondary {
-      color: $gray;
+      color: $brand-primary;
       text-transform: inherit;
       .material-icons {
         margin-right: 0;
@@ -69,6 +69,9 @@
   }
   .total-products {
     padding-top: 0.625rem;
+      p {
+        font-size: .75rem;
+      }
   }
   h1 {
     padding-top: 0.625rem;
@@ -362,6 +365,10 @@
 /*** Responsive part ***/
 @include media-breakpoint-down(sm) {
   #category {
+    .block-category h1 {
+        text-align: left;
+        padding-bottom: .5rem;
+    }
     #left-column {
       width: 100%;
       #search_filters_wrapper {

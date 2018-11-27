@@ -121,8 +121,6 @@
 
           {/block}
 
-
-
           {block name="left_column"}
 
             <div id="left-column" class="col-xs-12 col-sm-4 col-md-3">
@@ -139,8 +137,7 @@
 
             </div>
 
-          {/block}
-
+          {/block}         
 
 
           {block name="content_wrapper"}

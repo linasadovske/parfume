@@ -55,7 +55,7 @@
 {/block}
 
 {block name='page_content'}
-<p class="text-center">
+<p class="text-md-center col-md-8 mx-auto px-0 px-md-auto">
     {$cms_category.description|nl2br nofilter}
 </p>
 
@@ -98,18 +98,7 @@
             class="cms-sub-pages"
              title="{$cms_page.meta_title}" 
              style="background-image: url(../../themes/fumparfum/_dev/img/{if $cms_page.meta_title == 'Studija'}studija{elseif $cms_page.meta_title == 'Kūrėjai'}kurejai{elseif $cms_page.meta_title == 'Renginiai'}renginiai{else}partneriai{/if}.jpg)">
-{*
-              {if $cms_page.meta_title == "Studija"}
-                  <img src="{$urls.img_url}studija.jpg" alt="{$cms_page.meta_title}">
-              {elseif $cms_page.meta_title == "Kūrėjai" }
-                  <img src="../../themes/fumparfum/_dev/img/kurejai.jpg" alt="{$cms_page.meta_title}">
-              {elseif $cms_page.meta_title == "Renginiai" }
-                  <img src="../../themes/fumparfum/_dev/img/renginiai.jpg" alt="{$cms_page.meta_title}">
-              {elseif $cms_page.meta_title == "Partneriai" }
-                  <img src="../../themes/fumparfum/_dev/img/partneriai.jpg" alt="{$cms_page.meta_title}">
-              {/if}
-*}
-          <span class="text-center text-uppercase">{$cms_page.meta_title}</span>
+              <span class="text-center text-uppercase">{$cms_page.meta_title}</span>
           </a>
           </li>
 

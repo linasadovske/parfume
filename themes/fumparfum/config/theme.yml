@@ -53,10 +53,15 @@ global_settings:
   modules:
    to_disable:
      - ps_emailsubscription
+     - ps_facetedsearch
    to_enable:
      - ps_linklist
      - csoft_instagramfeeds
      - scrolltop
+     - eicaptcha
+     - cardinity
+     - psgdpr
+     - ps_categoryproducts
   hooks:
     custom_hooks:
     - name: displaySlider
@@ -84,6 +89,7 @@ global_settings:
         - ps_banner
         - ps_bestsellers
         - csoft_instagramfeeds
+        - ps_brandlist 
       displaySlider: 
         - ps_imageslider
       displaySocialfollow:
@@ -95,6 +101,8 @@ global_settings:
         - ps_linklist
         - ps_customeraccountlinks  
         - scrolltop
+      displayFooterProduct:
+        - ps_categoryproducts
       displaySearch:
         - ps_searchbar
       displayProductAdditionalInfo:

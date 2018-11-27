@@ -54,7 +54,7 @@
 
       <a
 
-        class="logout hidden-sm-down"
+        class="logout"
 
         href="{$logout_url}"
         
@@ -84,7 +84,7 @@
 
         {* <i class="material-icons hidden-md-up logged">&#xE7FF;</i> *}
 
-        <span class="hidden-sm-down text-capitalize">{$customerName}</span>
+        <span class="text-capitalize">{$customerName}</span>
 
       </a>
 

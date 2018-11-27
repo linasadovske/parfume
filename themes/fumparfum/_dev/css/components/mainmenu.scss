@@ -39,6 +39,7 @@
   .collapse {
     display: inherit;
   }
+  .collapse-icons {padding: 0;}
   .sub-menu {
     &.collapse {
       display: none;
@@ -102,11 +103,12 @@
 
 #mobile_top_menu_wrapper {
   padding: 15px;
-  background: $gray;
+  background: $gray-lighter;
   #top-menu {
-    margin-bottom: 0.625rem;
+    margin-bottom: 0;
       background: none;
       width: 100%;
+      
   }
   .top-menu {
     color: $brand-primary;
@@ -118,6 +120,7 @@
         display: block;
       }
     }
+    .material-icons.add {color: $brand-primary;}
     .collapse-icons .remove {
       display: none;
     }
@@ -125,12 +128,14 @@
       display: inline-block;
       padding: 0;
     }
-    a[data-depth="0"] {
-      padding: 0.625rem;
-      border-bottom: 1px solid $gray-lighter;
+      li {
+          border-bottom: 1px solid $gray-light;
         &:last-child {
             border-bottom: none;
         }
+      }
+    a[data-depth="0"] {
+      padding: 0.625rem 0;      
     }
     .collapse {
       display: none;
@@ -155,17 +160,19 @@
       margin-left: 0;
       width: 100%;
       min-width: 100%;
-      background: white;
+      background: inherit;
       ul[data-depth="0"] > li {
         border-bottom: 1px solid $gray;
       }
       ul[data-depth="1"] {
         margin: 0;
+        padding-left: 1rem;          
         > li {
           float: none;
           margin: 0;
+          border-bottom: none;
           a {
-            text-transform: none;
+              padding: .625rem 0;
           }
         }
       }
@@ -173,8 +180,8 @@
         padding: 0;
       }
       li > a {
-        padding: 0.625rem;
-        border-bottom: 1px solid white;
+        padding: .625rem 0;
+        border-bottom: none;
         font-weight: bold;
       }
       ul[data-depth="2"] li a {
