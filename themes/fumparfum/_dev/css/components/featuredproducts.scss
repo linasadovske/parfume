@@ -14,17 +14,12 @@
     .products {
         display: flex;
         flex-wrap: wrap;
-//        justify-content: space-around;
-//        &:after {
-//            content: '';
-//          width: 250px;
-//        }
     }
     .product-thumbnail {
         display: block;
     }
     .product-title a {
-        color: white;
+        color: $brand-primary;
         font-size: $font-size-sm;
         text-decoration: none;
         text-align: center;
@@ -138,7 +133,7 @@
 
 
     .product-miniature {
-        margin: 0 auto;
+        margin: 0 .9375rem;
         .discount {
             display: none;
         }
@@ -150,7 +145,6 @@
         .pack {
             display: block;
             position: absolute;
-//            left: -0.4375rem;
             left: .05rem;
             padding: 0.3125rem 0.4375rem;
             color: $gray;
@@ -222,3 +216,30 @@
 //        }
 //    }
 //}
+#index {
+    #search_filters_brands {
+        padding: 0;
+        .products-section-title {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: 400;
+            font-size: 30px;
+            margin-bottom: 2.5em;
+            font-family: 'Roboto', sans-serif; 
+            text-transform: uppercase;
+            &:after,
+            &:before {
+                content: '';
+                border-top: 1px solid;
+                margin: 0 20px 0 0;
+                flex: 1 0 20px;
+            }
+            &:after {
+                margin: 0 0 0 20px;
+            }
+        }
+    }
+}

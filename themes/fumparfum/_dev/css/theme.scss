@@ -103,6 +103,7 @@ body .mypresta_scrollup {
 }
 
 .featured-products .swiper-button-prev,
+#search_filters_brands .swiper-button-prev,
 .arrowicon-ne-hover-left,
 .carousel-control .icon-prev,
 .icon-ne-hover-left {
@@ -115,6 +116,7 @@ body .mypresta_scrollup {
 }
 
 .featured-products .swiper-button-next,
+#search_filters_brands .swiper-button-next,
 .carousel-control .icon-next,
 .icon-ne-hover {
     background-position: -2px -488px !important;
@@ -124,7 +126,8 @@ body .mypresta_scrollup {
         background-position: -2px -332px !important;
     }
 }
-
+#search_filters_brands .swiper-button-prev,
+#search_filters_brands .swiper-button-next {top: 50%;}
 .fb-icon-fum-1 {
     background-position: -2px -540px;
     width: 35px;
@@ -782,7 +785,9 @@ footer .copyright {
     #csinstagramfeed h2:after,
     #csinstagramfeed h2:before,
     .featured-products .products-section-title:before,
-    .featured-products .products-section-title:after {
+    .featured-products .products-section-title:after,
+    #search_filters_brands .products-section-title:before,
+    #search_filters_brands .products-section-title:after {
         display: none;
     }
     #csinstagramfeed {
@@ -1062,5 +1067,8 @@ footer .copyright {
     #product #wrapper .breadcrumb {
         padding-bottom: 1rem;
     }
+    #search_filters_brands {
+        .swiper-wrapper {text-align: center;}
+    }    
 }
 

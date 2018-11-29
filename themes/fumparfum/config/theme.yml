@@ -60,8 +60,8 @@ global_settings:
      - scrolltop
      - eicaptcha
      - cardinity
-     - psgdpr
      - ps_categoryproducts
+     - soobrandlogoslider
   hooks:
     custom_hooks:
     - name: displaySlider
@@ -88,8 +88,8 @@ global_settings:
         - ps_featuredproducts
         - ps_banner
         - ps_bestsellers
-        - csoft_instagramfeeds
-        - ps_brandlist 
+        - ps_brandlist
+        - csoft_instagramfeeds        
       displaySlider: 
         - ps_imageslider
       displaySocialfollow:

@@ -6,17 +6,19 @@
 //        outline: 3px $brand-primary solid;
         color: white;
         background: none;
+        box-shadow: none;
+        border-bottom-color: $brand-primary;
         + button .search {
           color: $brand-primary;
         }
       }
-      border: none;
-      padding: 3px;
-      min-width: 255px;
-    display: none;
-    color: $gray-light;
-    background: none;
-      border-bottom: $input-btn-border-width solid $gray-light;
+        border: none;
+        padding: 3px;
+        min-width: 255px;
+        display: none;
+        color: $gray-light;
+        background: none;
+        border-bottom: $input-btn-border-width solid $gray-light;
     }
     button[type=submit] {
 //      position: absolute;

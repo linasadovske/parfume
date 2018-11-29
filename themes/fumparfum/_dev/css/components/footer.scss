@@ -36,11 +36,11 @@
   margin-bottom: 0.625rem;
 }
 .block-contact {
-  padding-left: 3rem;
-  color: white;
+//  padding-left: 3rem;
+  color: $brand-primary;
     font-size: .6875rem;
   .block-contact-title{
-    color: white;
+    color: $brand-primary;
   }
 }
 .linklist {
@@ -76,9 +76,7 @@
 //  width: 2.5rem;
 //  background-color: $gray-light;
 //  background-repeat: no-repeat;
-//  display: inline-block;
 //  margin: 0.125rem;
-//  cursor: pointer;
     display: inline-block;
     background: url('../img/img-sprite.png') no-repeat;
     overflow: hidden;

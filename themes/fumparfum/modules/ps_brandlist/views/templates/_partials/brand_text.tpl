@@ -22,18 +22,19 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-
-<ul>
-
+<div class="swiper-container">
+<div class="brands swiper-wrapper align-items-center">
   {foreach from=$brands item=brand name=brand_list}
     {if $smarty.foreach.brand_list.iteration <= $text_list_nb}
-      <li class="facet-label">
-      
-        <a href="{$brand['link']}" title="{$brand['name']}">
-        {$brand|var_dump}
-          {$brand['name']}
-        </a>
-      </li>
+      <div class="facet-label swiper-slide">
+        <a href="{$link->getmanufacturerLink($brand.id_manufacturer, $brand.link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$brand.name|escape:'htmlall':'UTF-8'}" class="lnk_img">
+					<img src="{$link->getManufacturerImageLink($brand.id_manufacturer, $imageName)}" alt="{$brand.name|escape:'htmlall':'UTF-8'}" />
+				</a>
+      </div>
     {/if}
   {/foreach}
-</ul>
+</div>
+	<div class="swiper-pagination"></div>
+  <div class="swiper-button-prev"></div> 
+  <div class="swiper-button-next"></div>
+</div>
