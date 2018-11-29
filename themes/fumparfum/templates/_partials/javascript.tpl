@@ -39,3 +39,4 @@
     {/foreach}
   </script>
 {/if}
+<script type="text/javascript" async="" src="//projectsadisoftlt.api.oneall.com/socialize/library.js"></script>

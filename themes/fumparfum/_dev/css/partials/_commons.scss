@@ -111,8 +111,9 @@ h6 {
     transition: all .5s;
         font-size: .875rem;
     &.btn-lg {
-        padding: .5rem 15%;
+        padding: 1rem 15%;
         font-size: .875rem;
+        font-weight: 700;
         @media (max-width: 767px) {
             width: 100%;
         }

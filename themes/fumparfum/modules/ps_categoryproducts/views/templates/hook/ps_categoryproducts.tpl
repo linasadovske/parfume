@@ -22,17 +22,25 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<section class="featured-products clearfix mt-3">
-  <h2>
+
+<section class="featured-products clearfix pb-3 pb-md-5 mt-3">
+  <h2 class="products-section-title">
     {if $products|@count == 1}
-      {l s='%s other product in the same category:' sprintf=[$products|@count] d='Shop.Theme.Catalog'}
+      {l s='%s other product in the same category' sprintf=[$products|@count] d='Shop.Theme.Catalog'}
     {else}
-      {l s='%s other products in the same category:' sprintf=[$products|@count] d='Shop.Theme.Catalog'}
+      {l s='%s other products in the same category' sprintf=[$products|@count] d='Shop.Theme.Catalog'}
     {/if}
   </h2>
-  <div class="products">
+  <div class="products swiper-container"> 
+    <div class="swiper-wrapper">
       {foreach from=$products item="product"}
+        <div class="swiper-slide"> 
           {include file="catalog/_partials/miniatures/product.tpl" product=$product}
+        </div>
       {/foreach}
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div> 
+    <div class="swiper-button-next"></div>
   </div>
 </section>

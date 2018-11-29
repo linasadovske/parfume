@@ -53,7 +53,7 @@
     {* <img src="{$banner_img}" alt="{$banner_desc}" title="{$banner_desc}" class="img-fluid"> *}
     <div class="banner-caption">
         <h2>{l s = "Banner title"}</h2>
-        {$banner_desc}
+        <div class="banner-desc">{$banner_desc}</div>
         <br>
         <button class="btn btn-primary btn-lg">{l s = "Shop now"}</button>
     </div>

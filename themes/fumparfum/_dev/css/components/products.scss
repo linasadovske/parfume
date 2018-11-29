@@ -1,7 +1,7 @@
 #product {
     #content {
         position: relative;
-        max-width: 452px;
+//        max-width: 452px;
         margin: 0 auto;
     }
     .product-name {
@@ -239,7 +239,7 @@
             display: block;
             border-width: 2px 0;
             border-style: solid;
-            border-color: #eee;
+            border-color: $gray-lighter;
             padding: 1.5em 0 0.5em;
             margin: 1.5em 0;
             position: relative;
@@ -253,16 +253,9 @@
                 width: 3rem;
                 height: 2rem;
                 font: 6em/1.08em 'PT Sans', sans-serif;
-                color: #666;
+                color: $gray-lighter;
                 text-align: center;
             }
-            //            &:after {
-            //                content: "\2013 \2003" attr(cite);
-            //                display: block;
-            //                text-align: right;
-            //                font-size: 0.875em;
-            //                color: #e74c3c;
-            //            }
         }
 
     }
@@ -276,11 +269,11 @@
             }
 
         }
-    } //  @include box-shadow;
+    } 
     margin-top: 2rem;
     margin-bottom: 2rem;
     background: $gray;
-    padding: $medium-space $large-space;
+//    padding: $medium-space $large-space;
     //    .tab-pane {
     //        padding-top: $medium-space;
     //    }
@@ -839,7 +832,27 @@ li.product-flag {
 }
 
 @include media-breakpoint-down(sm) {
-    .tabs {padding: 0;}
+    .tabs {
+        padding: 0;
+        .nav-item {
+            width: 100%;
+            text-align: center;
+        }
+        #tab-content {
+            border: none;
+            border-bottom: 1px solid $gray-lighter;
+            padding: 0;
+        }
+        .product-description {
+            h2 {font-size: 1.75rem;margin-bottom: .5em;}
+            h3 {font-size: 1.5rem;margin-bottom: .5em;}
+        }
+    }
+    .product-quantity .add {
+        flex-shrink: 0;
+        flex-grow: 1;    
+    }
+    .product-variants>.product-variants-item select {width: 100%;}
     #blockcart-modal {
         .divide-right {
             border-right: none;

@@ -37,3 +37,8 @@
 #order-confirmation {
     #block-reassurance {display: none;}
 }
+@include media-breakpoint-down(sm) {
+    #block-reassurance li {
+        border-bottom: 1px solid $gray-lighter;
+    }
+}

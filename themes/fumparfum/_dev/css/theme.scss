@@ -611,7 +611,6 @@ footer .copyright {
 
 /*** WRAPPER ***/
 #category,
-#product,
 #new-products,
 .cms-id-2 {
     #wrapper {
@@ -626,7 +625,19 @@ footer .copyright {
         }
     }
 }
-
+#product {
+    #wrapper {
+        .breadcrumb {
+            border-bottom: 1px solid $brand-primary;
+            justify-content: flex-start;
+            padding-bottom: 0;
+            margin-bottom: 2rem;
+        }
+        #js-product-list-header {
+            padding-left: 0;
+        }
+    }
+}
 #wrapper {
     background: $gray;
     box-shadow: inset 0 2px 5px 0 rgba(0, 0, 0, 0.11);
@@ -856,9 +867,9 @@ footer .copyright {
 }
 
 @include media-breakpoint-down(sm) {    
-    #category,
-    #product,
-    #new-products,
+//    #category,
+//    #product,
+//    #new-products,
     .cms-id-2 {
         #wrapper {
             .breadcrumb {
@@ -1015,22 +1026,41 @@ footer .copyright {
     max-width: 40%;
     bottom: 20%;
     left: 10%;
+    h2 {
+        font-size: 3.125rem;
+        text-transform: uppercase;
+        font-weight: 400;
+        margin-bottom: .25em;
+    }
+    .banner-desc {
+        font-size: .875rem;
+    }
     a {
         color: #000;
         &:hover {
             color: #000;
 
         }
-    }
-    button {
-        margin-top: 1em;
-        padding: 1em 5em;
-    }
-    
+    }    
 }
 @include media-breakpoint-down(md) {
     .banner-caption {
-        max-width: 50%;
+        max-width: 65%;
         bottom: 5%;
+        h2 {font-size: 2.5rem;}
+        button {margin-top: 0;}
     }
 }
+@include media-breakpoint-down(sm) {
+     .header-top {
+         background: $gray;}
+    
+    .pagination {flex-wrap: wrap;}
+    
+}
+@include media-breakpoint-down(xs) {
+    #product #wrapper .breadcrumb {
+        padding-bottom: 1rem;
+    }
+}
+

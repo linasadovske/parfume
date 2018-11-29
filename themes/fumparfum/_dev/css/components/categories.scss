@@ -36,7 +36,7 @@
       color: $brand-primary;
     }
     p {
-      color: $gray-darker;
+      color: $brand-primary;
       margin-bottom: 0;
       &:first-child {
         margin-bottom: $medium-space;
@@ -48,8 +48,8 @@
     right: 0.75rem;
     bottom: 0;
     img {
-      width: 141px;
-      height: 180px;
+      width: 100px;
+        height: auto;
     }
   }
 }
@@ -57,18 +57,16 @@
   .sort-by-row {
     display: flex;
     align-items: center;
-      justify-content: flex-end;
   }
   .sort-by {
     white-space: normal;
     word-break: break-word;
     margin-right: -0.9375rem;
-    margin-left: 0.9375rem;
-    text-align: right;
-          font-size: .75rem;
+    font-size: .75rem;
   }
   .total-products {
     padding-top: 0.625rem;
+    display: none;
       p {
         font-size: .75rem;
       }
@@ -87,7 +85,7 @@
     padding: $small-space;
     cursor: pointer;
     border: $input-btn-border-width solid $gray-light;
-//    @include box-shadow-light;
+    font-size: .75rem;
   }
   .select-list {
     display: block;
@@ -161,9 +159,7 @@
 #search_filters,
 #search_filters_brands,
 #search_filters_suppliers {
-  @include box-shadow;
   margin-bottom: 1.563rem;
-  background: gray;
   padding: 1.563rem 1.25rem;
   .facet {
     .collapse {
@@ -177,7 +173,7 @@
       margin-bottom: 0;
       a {
         margin-top: 0.4375rem;
-        color: $gray-darker;
+        color: $brand-primary;
         display: inline-block;
         font-size:$font-size-lg;
       }
@@ -366,7 +362,7 @@
 @include media-breakpoint-down(sm) {
   #category {
     .block-category h1 {
-        text-align: left;
+//        text-align: left;
         padding-bottom: .5rem;
     }
     #left-column {
@@ -469,6 +465,11 @@
   }
 }
 
+#category {
+    .banner.full-width.parallax {
+        margin-top: 5rem;
+    }    
+}
 @include media-breakpoint-down(xs) {
   .products-selection {
     .filter-button {

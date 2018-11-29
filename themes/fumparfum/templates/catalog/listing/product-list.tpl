@@ -66,4 +66,6 @@
     </section>
 
   </section>
+  
+  {hook h='displayParralaxBanner'}
 {/block}
