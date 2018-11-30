@@ -6,8 +6,9 @@
     text-transform: uppercase;
     color: $brand-primary;
     margin-bottom: 2rem;
-      font-size: 30px;
-      letter-spacing: 1px;
+    font-size: 30px;
+    letter-spacing: 1px;
+    font-weight: 400;
   }
   .block {
     height: auto;
@@ -45,7 +46,12 @@
   h3 {
     text-transform: uppercase;
     color: $brand-primary;
-      font-size: 30px;
-      letter-spacing: 1px;
+    font-size: 30px;
+    letter-spacing: 1px;
+    font-weight: 400;
   }
+    
+}
+#contact .contact-form form .form-fields #captcha-box > div {
+    float: none;
 }

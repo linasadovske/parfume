@@ -519,7 +519,28 @@ footer .copyright {
         }
         .language-selector {
             margin-top: 0.9375rem;
+            padding-left: 1rem;
             white-space: nowrap;
+            text-transform: uppercase;
+            i {    
+                font-size: 20px;
+                padding-left: .25rem;
+            }
+            .btn-unstyle {
+                text-transform: uppercase;
+            }
+            &.dropdown {
+                select {
+                    background-color: $gray;
+                    text-transform: inherit;
+                    -webkit-appearance: none;
+                    option {
+                        &:focus {
+                            outline-color: $brand-primary;
+                        }
+                    }
+                }
+            }
         }
         .cart-preview {
             &.active {
@@ -615,7 +636,12 @@ footer .copyright {
 /*** WRAPPER ***/
 #category,
 #new-products,
-.cms-id-2 {
+#best-sales,
+.cms-id-2,
+.cms-id-6,
+.cms-id-7,
+.cms-id-8,
+.cms-id-9{
     #wrapper {
         .breadcrumb {
             border-bottom: none;
@@ -625,6 +651,22 @@ footer .copyright {
         }
         #js-product-list-header {
             padding-left: 0;
+            font-weight: 400;
+            &.h2 {
+                padding-bottom: 1rem;
+                border-bottom: 1px solid $brand-primary;
+                margin-bottom: 1.75rem;
+                text-align: center;
+            }
+        }
+    }
+}
+#cms {
+    #wrapper {
+        .breadcrumb {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
         }
     }
 }
@@ -1061,7 +1103,15 @@ footer .copyright {
          background: $gray;}
     
     .pagination {flex-wrap: wrap;}
-    
+    #header .header-nav .language-selector {
+        padding: 0;
+        margin-top: 0;
+        background: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#fff" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: center right;
+        background-size: 1.2rem;  
+        select {padding: .75rem; }
+    }
 }
 @include media-breakpoint-down(xs) {
     #product #wrapper .breadcrumb {

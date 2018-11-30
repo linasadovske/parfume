@@ -84,8 +84,8 @@
 
         <div class="hidden-md-up text-sm-center mobile d-flex flex-column w-100">
           <div class="d-flex align-items-center">
-              <div class="col-8" id="_mobile_user_info"></div>
-              <div class="col-4" id="_mobile_language_selector"></div>
+              <div class="col-10" id="_mobile_user_info"></div>
+              <div class="col-2" id="_mobile_language_selector"></div>
           </div>
           <div class="d-flex mobile-logo">
               <div class="top-logo" id="_mobile_logo"></div>

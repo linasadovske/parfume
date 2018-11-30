@@ -97,7 +97,7 @@
           <a href="{$cms_page.link}" 
             class="cms-sub-pages"
              title="{$cms_page.meta_title}" 
-             style="background-image: url(../../themes/fumparfum/_dev/img/{if $cms_page.meta_title == 'Studija'}studija{elseif $cms_page.meta_title == 'Kūrėjai'}kurejai{elseif $cms_page.meta_title == 'Renginiai'}renginiai{else}partneriai{/if}.jpg)">
+             style="background-image: url(../../../themes/fumparfum/_dev/img/{if $cms_page.meta_title == 'Studija'}studija{elseif $cms_page.meta_title == 'Kūrėjai'}kurejai{elseif $cms_page.meta_title == 'Renginiai'}renginiai{else}partneriai{/if}.jpg)">
               <span class="text-center text-uppercase">{$cms_page.meta_title}</span>
           </a>
           </li>

@@ -54,7 +54,7 @@
 
       {foreach from=$elements item=element}
 
-        <li class="{if $page.page_name != "checkout"}col-md-4 {/if}col-12">
+        <li class="{if $page.page_name != "checkout"}col-md-4 {else}col-md-12 {/if}col-12">
 
           <div class="block-reassurance-item{if $page.page_name != "checkout"} text-center {/if}">
 

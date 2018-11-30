@@ -107,5 +107,5 @@ $(document).ready(function() {
           
       }) 
     
-     $("#contact #content-wrapper").addClass('col-md-6');
+     $("#contact #content-wrapper").addClass('col-md-6').removeClass('col-md-9');
 });

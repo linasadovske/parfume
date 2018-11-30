@@ -61,7 +61,8 @@ global_settings:
      - eicaptcha
      - cardinity
      - ps_categoryproducts
-     - soobrandlogoslider
+     - ps_brandlist
+     - psgdpr
   hooks:
     custom_hooks:
     - name: displaySlider

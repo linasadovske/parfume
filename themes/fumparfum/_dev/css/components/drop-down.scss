@@ -1,10 +1,10 @@
 .dropdown{
-  color:$gray;
+  color:$brand-primary;
   &:hover .expand-more{
-    color: $brand-primary;
+    color: $gray-light;
   }
   .expand-more{
-    color: $gray-darker;
+    color: $brand-primary;
     cursor: pointer;
     user-select: none;
 
@@ -20,8 +20,8 @@
     -moz-appearance: none;
     border: 0 none;
     outline: 0 none;
-    color: $gray-darker;
-    background: white;
+    color: $brand-primary;
+    background: $gray-darker;
   }
 }
 
@@ -31,3 +31,10 @@
   color: $brand-primary;
 }
 
+.dropdown-menu {
+    color: $brand-primary;
+    background: $gray;
+    > li {
+        a {font-size: .75rem;}
+    }
+}

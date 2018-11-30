@@ -22,6 +22,9 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+//const autoprefixer = require('autoprefixer');
+//const plugin = autoprefixer({ grid: true });
+//module.exports = { plugins: [ plugin ] }
 module.exports = {
   plugins: [
     require('autoprefixer')
